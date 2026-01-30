@@ -1,0 +1,33 @@
+archflow - Document-Driven Development Pipeline
+Copyright 2026 samdae
+
+This product includes software developed by samdae.
+(https://github.com/samdae/archflow)
+
+================================================================================
+
+archflow is a Claude Code / Cursor plugin that provides document-driven
+development methodology with Multi-Agent Debate for systematic software
+development workflows.
+
+Original Author:
+- samdae (https://github.com/samdae)
+
+================================================================================
+
+Third-Party Notices:
+
+This software is designed for use with:
+- Claude Code by Anthropic, PBC (https://www.anthropic.com)
+- Cursor IDE by Anysphere (https://cursor.com)
+
+These products are subject to their respective terms of service.
+
+================================================================================
+
+If you use this software, you must:
+1. Include this NOTICE file in any redistribution
+2. Retain all copyright and attribution notices
+3. Not use "archflow" trademark without permission from the original author
+
+For inquiries, contact via GitHub: https://github.com/samdae/archflow/issues
