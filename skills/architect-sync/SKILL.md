@@ -1,7 +1,12 @@
 ---
 id: architect-sync
 name: Architect Sync
-description: Synchronize changelog/enhancement results to architect document.
+description: |
+  Synchronize changelog/enhancement results to architect document.
+  Filters design-impacting changes and updates architect.md.
+
+  Triggers: architect-sync, sync design, update architect, 설계 동기화
+user-invocable: true
 version: 2.0.0
 triggers:
   - "architect-sync"
@@ -10,6 +15,11 @@ triggers:
 requires: ["bugfix", "architect-enhance"]
 platform: all
 recommended_model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - LS
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

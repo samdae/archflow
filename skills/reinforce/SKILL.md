@@ -1,7 +1,12 @@
 ---
 id: reinforce
 name: Reinforce
-description: Reinforce existing documents with new information. Use after reverse skill to fill gaps or when new information becomes available.
+description: |
+  Reinforce existing documents with new information.
+  Use after reverse skill to fill gaps or when new information becomes available.
+
+  Triggers: reinforce, fill gaps, complete documents, 문서 보강
+user-invocable: true
 version: 2.0.0
 triggers:
   - "reinforce"
@@ -12,6 +17,12 @@ triggers:
 requires: ["reverse"]
 platform: all
 recommended_model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - LS
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.
@@ -62,7 +73,7 @@ projectRoot/
 > Document + new information merging task doesn't require high-performance model.
 > Use Opus if complex reasoning is needed.
 >
-> **Input**: 
+> **Input**:
 > - `docs/{serviceName}/requirements.md`
 > - `docs/{serviceName}/architect.md`
 > - New information to add

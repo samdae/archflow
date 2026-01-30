@@ -1,7 +1,12 @@
 ---
 id: bugfix
 name: Bugfix
-description: Systematic bug fixing based on documents in Debug mode.
+description: |
+  Systematic bug fixing based on documents in Debug mode.
+  Cross-references error with design flow to find root cause.
+
+  Triggers: bugfix, fix bug, debug issue, 버그 수정
+user-invocable: true
 version: 2.0.0
 triggers:
   - "bug"
@@ -11,6 +16,14 @@ triggers:
 requires: ["architect"]
 platform: all
 recommended_model: opus
+allowed-tools:
+  - Read
+  - Write
+  - StrReplace
+  - Glob
+  - Grep
+  - LS
+  - Shell
 ---
 
 > **Language**: This skill is written in English for universal compatibility.
@@ -287,7 +300,7 @@ When called in the same session, it will use the previous conversation's context
 ### Verify changelogging Call
 
 > ⚠️ **Have you recorded this in the changelog?**
-> 
+>
 > To record this session's results in the changelog:
 > - Call "changelogging" skill
 > - Or request "write changelog"

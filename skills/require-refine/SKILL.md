@@ -1,7 +1,12 @@
 ---
 id: require-refine
 name: Require Refine
-description: Transform unstructured materials into refined requirements document.
+description: |
+  Transform unstructured materials into refined requirements document.
+  Collects service name and input materials, creates Q&A loop to clarify unclear points.
+
+  Triggers: require-refine, refine requirements, create requirements, 요구사항 정의
+user-invocable: true
 version: 2.0.0
 triggers:
   - "requirements"
@@ -11,6 +16,13 @@ triggers:
 requires: []
 platform: all
 recommended_model: opus
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - Grep
+  - LS
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

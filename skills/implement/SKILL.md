@@ -1,7 +1,12 @@
 ---
 id: implement
 name: Implement
-description: Automated implementation based on design document.
+description: |
+  Automated implementation based on design document.
+  Analyzes architect.md, creates dependency graph, executes step-by-step.
+
+  Triggers: implement, start implementation, code from design, 구현
+user-invocable: true
 version: 2.0.0
 triggers:
   - "implement"
@@ -11,6 +16,15 @@ triggers:
 requires: ["architect"]
 platform: all
 recommended_model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - StrReplace
+  - Glob
+  - Grep
+  - LS
+  - Shell
+  - Task
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

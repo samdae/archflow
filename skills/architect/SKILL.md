@@ -1,7 +1,12 @@
 ---
 id: architect
 name: Architect
-description: Multi-agent debate to derive optimal design through two perspectives.
+description: |
+  Multi-agent debate to derive optimal design through two perspectives.
+  Domain Architect + Best Practice Advisor collaborate in round-based debate.
+
+  Triggers: architect, design, create architecture, start design, 설계
+user-invocable: true
 version: 2.0.0
 triggers:
   - "design"
@@ -11,6 +16,16 @@ triggers:
 requires: ["require-refine"]
 platform: all
 recommended_model: opus
+agents:
+  debate: archflow:domain-architect, archflow:best-practice-advisor
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - Grep
+  - LS
+  - Task
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

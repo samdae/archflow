@@ -1,7 +1,12 @@
 ---
 id: architect-enhance
 name: Architect Enhance
-description: Design enhancement for existing features based on synced architect document.
+description: |
+  Design enhancement for existing features based on synced architect document.
+  Analyzes existing architect.md and designs improvements.
+
+  Triggers: architect-enhance, enhance design, improve architecture, 기능 개선
+user-invocable: true
 version: 2.0.0
 triggers:
   - "architect-enhance"
@@ -10,6 +15,16 @@ triggers:
 requires: ["architect"]
 platform: all
 recommended_model: opus
+agents:
+  debate: archflow:domain-architect, archflow:best-practice-advisor
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - Grep
+  - LS
+  - Task
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

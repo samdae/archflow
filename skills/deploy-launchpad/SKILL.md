@@ -1,7 +1,12 @@
 ---
 id: deploy-launchpad
 name: Deploy Launchpad
-description: Collect deployment information via Q&A to generate Launchpad document.
+description: |
+  Collect deployment information via Q&A to generate Launchpad document.
+  Creates comprehensive deployment guide without actual secrets.
+
+  Triggers: deploy-launchpad, deployment docs, create launchpad, 배포 문서
+user-invocable: true
 version: 2.0.0
 triggers:
   - "deploy-launchpad"
@@ -11,6 +16,12 @@ triggers:
 requires: []
 platform: all
 recommended_model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - LS
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.

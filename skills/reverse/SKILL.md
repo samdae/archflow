@@ -1,7 +1,12 @@
 ---
 id: reverse
 name: Reverse
-description: Reverse-engineer requirements and design documents from existing code.
+description: |
+  Reverse-engineer requirements and design documents from existing code.
+  Analyzes codebase and generates incomplete docs that need reinforcement.
+
+  Triggers: reverse, reverse engineer, document existing code, 역설계
+user-invocable: true
 version: 2.0.0
 triggers:
   - "reverse"
@@ -12,6 +17,13 @@ triggers:
 requires: []
 platform: all
 recommended_model: opus
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - Grep
+  - LS
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.
@@ -64,7 +76,7 @@ projectRoot/
 > Must infer business intent from code, so high-performance model is required.
 >
 > **Input**: serviceName + code scope
-> **Output**: 
+> **Output**:
 > - `docs/{serviceName}/requirements.md`
 > - `docs/{serviceName}/architect.md`
 >

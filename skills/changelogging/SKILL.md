@@ -1,7 +1,12 @@
 ---
 id: changelogging
 name: Changelogging
-description: Dedicated changelog writing skill.
+description: |
+  Dedicated changelog writing skill.
+  Records bug fixes, changes, and their design impact.
+
+  Triggers: changelogging, record change, update changelog, 변경 기록
+user-invocable: true
 version: 2.0.0
 triggers:
   - "changelogging"
@@ -11,6 +16,12 @@ triggers:
 requires: ["bugfix"]
 platform: all
 recommended_model: sonnet
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+  - LS
+  - AskQuestion
 ---
 
 > **Language**: This skill is written in English for universal compatibility.
