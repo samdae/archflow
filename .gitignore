@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local config (user-specific)
+archflow.config.yaml
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build output (if any)
+dist/
+
+# Test coverage
+coverage/
