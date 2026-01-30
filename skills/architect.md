@@ -1,0 +1,742 @@
+---
+id: architect
+name: Architect
+description: Multi-agent debate to derive optimal design through two perspectives.
+version: 2.0.0
+triggers:
+  - "design"
+  - "architect"
+  - "architecture"
+  - "feature design"
+requires: ["require-refine"]
+platform: all
+recommended_model: opus
+---
+
+> **Language**: This skill is written in English for universal compatibility.
+> Always respond in the user's language unless explicitly requested otherwise.
+> If uncertain about the user's language, ask for clarification.
+
+# Architect Workflow
+
+Two perspective sub-agents collaborate to derive optimal design.
+
+## 💡 Recommended Model
+
+**Opus Required** - Design quality determines implementation quality
+
+→ Even when cost savings are needed, maintain Opus for this phase
+
+## 🔄 Tool Fallback
+
+| Tool | Alternative when unavailable |
+|------|------------------------------|
+| **Read/Grep** | Request file path from user → ask for copy-paste |
+| **AskQuestion** | "Please select: 1) OptionA 2) OptionB 3) OptionC" format |
+| **Task** | Use Self-debate Pattern instead of sub-agent calls |
+
+## Sub-agent Alternative (when Task tool unavailable)
+
+When the `Task` tool is unavailable for multi-agent collaboration, use the **Self-Debate Pattern**:
+
+### Phase 1: Initial Prompt Split
+
+```
+You will play two roles in sequence to design this feature:
+
+**Role A: Domain Architect**
+- Context: Full project structure, requirements document
+- Goal: Design that fits this specific project
+- Considerations: Existing patterns, technical constraints, team familiarity
+
+**Role B: Best Practice Advisor**
+- Context: Feature requirements only (no project context)
+- Goal: Ideal design based on universal best practices
+- Considerations: Industry standards, scalability, maintainability
+
+Start with Role A. After your design, I will ask you to switch to Role B.
+```
+
+### Phase 2: Cross-Review (Round 1)
+
+```
+Now switch to Role B (Best Practice Advisor).
+
+Review the Role A design above and provide:
+1. What you agree with
+2. Concerns or risks
+3. Alternative suggestions
+4. Can we reach consensus? [Yes / Need discussion]
+```
+
+### Phase 3: Counter-Review (Round 2)
+
+```
+Now return to Role A (Domain Architect).
+
+Review Role B's feedback and provide:
+1. Valid points you can accept
+2. Points you must reject (with project-specific reasons)
+3. Proposed compromises
+4. Final stance: [Agreement / Need user decision]
+```
+
+### Phase 4: Synthesis
+
+```
+Now synthesize both perspectives into a final design.
+Document in "Risks & Tradeoffs" section:
+- Chosen approach
+- Rejected alternatives and why
+- Assumptions made
+- Points requiring user decision (if any)
+```
+
+**When to use**: Only when `Task` tool is unavailable and multi-perspective design is needed.
+
+## 📁 Document Structure
+
+```
+projectRoot/
+  └── docs/
+        └── {serviceName}/
+              ├── requirements.md   # require-refine skill output
+              ├── architect.md      # ← This skill's output
+              └── changelog.md      # bugfix skill output
+```
+
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/requirements.md`
+
+## ⚠️ Global Rule: Logical Inconsistency Handling
+
+When user feedback conflicts with Phase 0 Goal or existing design decisions:
+
+### Step 1: Detect and Report
+
+```markdown
+⚠️ **Logical Inconsistency Detected**
+
+**Existing Design**: {previously confirmed design content}
+**User Feedback**: {new conflicting input}
+**Conflict Point**: {which principle/decision is conflicting}
+```
+
+### Step 2: Present Decision Options
+
+**Use AskQuestion to request resolution:**
+
+```json
+{
+  "title": "Resolve Design Inconsistency",
+  "questions": [
+    {
+      "id": "resolution",
+      "prompt": "Existing design conflicts with new feedback. How should we proceed?",
+      "options": [
+        {"id": "keep_original", "label": "Keep original - Ignore new feedback"},
+        {"id": "accept_new", "label": "Accept new - Revise design"},
+        {"id": "merge", "label": "Merge - Incorporate both (explain how)"},
+        {"id": "re_debate", "label": "Re-debate - Restart discussion with new constraints"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by choice:**
+- `keep_original` → Log warning, maintain existing design
+- `accept_new` → Revise design, document reason in Risks & Tradeoffs
+- `merge` → Request user explanation of merge approach
+- `re_debate` → Return to Phase 3 and restart debate with new constraints
+
+## Role Definitions
+
+| Agent | Role | Context |
+|-------|------|---------|
+| domain-architect | Project context-based design | Requirements MD + project structure |
+| best-practice-advisor | Best practice suggestions | Feature request only (no context) |
+
+## Phase 0: Skill Entry
+
+### 0-0. Model Guidance (Display at start)
+
+> ⚠️ **This skill strongly recommends using the Opus model.**
+> Design quality determines implementation quality, so maintain Opus for this phase even when cost savings are needed.
+>
+> **Input**: `docs/{serviceName}/requirements.md`
+> **Output**: `docs/{serviceName}/architect.md`
+
+### 0-1. Collect Input Information
+
+When skill is invoked without input, **use AskQuestion to guide information collection**:
+
+```json
+{
+  "title": "Start Design Debate",
+  "questions": [
+    {
+      "id": "has_requirements",
+      "prompt": "Do you have a requirements document? (docs/{serviceName}/requirements.md)",
+      "options": [
+        {"id": "yes", "label": "Yes - I will provide via @filepath"},
+        {"id": "no", "label": "No - Need requirements refinement first"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `yes` → Request file path → Proceed to Phase 1
+- `no` → Guide to **require-refine** skill
+
+### 0-2. Infer serviceName
+
+Extract serviceName from provided file path:
+- Input: `docs/alert/requirements.md`
+- Extract: `serviceName = "alert"`
+- Output path: `docs/alert/architect.md`
+
+## Phase 1: Initial Input Collection
+
+Confirm with user:
+- Requirements document path (e.g., `@docs/alert/requirements.md`)
+- Feature description (if additional explanation needed)
+
+**If file is already provided** → Proceed directly to Phase 2
+
+## Phase 2: Parallel Initial Design
+
+### 2-A: Invoke Domain Architect
+
+**Use Task tool** to call `domain-architect` sub-agent:
+
+```
+Task(
+  subagent_type: "domain-architect",
+  description: "Project context-based design",
+  prompt: """
+    Requirements: {requirements MD content}
+    Feature description: {feature description}
+    Project structure: {project exploration results}
+
+    Based on the above information, provide a design proposal.
+  """
+)
+```
+
+Expected output:
+- Design proposal (implementation approach, file structure, dependencies)
+- Project constraint considerations
+- Concerns and tradeoffs
+
+### 2-B: Invoke Best Practice Advisor
+
+**Use Task tool** to call `best-practice-advisor` sub-agent:
+
+```
+Task(
+  subagent_type: "best-practice-advisor",
+  description: "Best practice-based design",
+  prompt: """
+    Feature description: {feature description only, no project context}
+
+    Provide an ideal design proposal for implementing this feature.
+  """
+)
+```
+
+Expected output:
+- Ideal design proposal (based on best practices)
+- Recommended patterns and anti-patterns
+- General considerations
+
+## Phase 3: Round 1 Debate (Automated)
+
+Forward the following prompt to both agents:
+
+```
+From now on, I will relay another LLM's response.
+That LLM was also instructed on the same feature definition.
+
+Other agent's design:
+{other_agent_response}
+
+Review from your perspective and provide:
+1. Points you agree with
+2. Concerns
+3. Alternative suggestions (if any)
+4. Can we reach consensus: [Agree / Need further discussion]
+```
+
+### Round 1
+- Domain Architect's design → Forward to Best Practice Advisor
+- Best Practice Advisor returns review feedback
+
+### Round 2
+- Best Practice Advisor's review → Forward to Domain Architect
+- Domain Architect returns revision/rebuttal
+
+## Phase 4: User Checkpoint
+
+After 2 rounds, **must** provide interim report to user.
+
+### Report Format
+
+| Item | Domain Architect | Best Practice Advisor |
+|------|------------------|----------------------|
+| Core argument | (1-2 sentence summary) | (1-2 sentence summary) |
+| Agreed points | (list) | (list) |
+| Disputed points | (list) | (list) |
+
+### Present User Options
+
+**Use AskQuestion tool** (content dynamically generated based on debate results):
+
+| Field | Description |
+|------|-------------|
+| title | Reflect debate topic (e.g., "Alert Scheduling Design Debate") |
+| prompt | Include above report format table summary |
+| options | Provide 4 basic options below, adjust based on situation |
+
+**Basic options:**
+- `domain`: Adopt Domain Architect's approach - Prioritize project reality
+- `best`: Adopt Best Practice approach - Prioritize ideal design
+- `continue`: Continue debate - Proceed with 2 more rounds
+- `custom`: Specify on disputed points - Directly combine
+
+**Option adjustment rules:**
+- If both agents agree → Exclude `continue`
+- If one is clearly superior → Mark that option as default recommendation
+
+**Note**: Run in Normal mode, not Plan mode. Can both intervene mid-process with AskQuestion + write final file.
+
+## Phase 5: Follow-up Processing
+
+### Options 1, 2, 4 → Proceed immediately to Phase 6
+- Organize final design reflecting user decision
+
+### Option 3 → Additional Debate
+- Proceed with Round 3-4
+- **Auto-terminate** after 4 rounds (prevent infinite loop)
+- If no consensus → Adopt Domain Architect approach + note Best Practice recommendations
+
+## Phase 5.5: Quality Gate Validation
+
+Before writing design document, **validate completeness of required fields**:
+
+### Required Validation Items
+
+| Item | Validation Criteria | If Incomplete |
+|------|-------------------|---------------|
+| DB Schema | All tables have full column definitions | Enter question loop |
+| Code Mapping | All features mapped to file/class/method | Enter question loop |
+| API Spec | All endpoints have Request/Response defined | Enter question loop |
+| Error Policy | Main error scenarios and responses defined | Enter question loop |
+
+### Question Loop on Incomplete Items
+
+```json
+{
+  "title": "Design Information Supplement Required",
+  "questions": [
+    {
+      "id": "missing_info",
+      "prompt": "The following information is missing:\n- {list of missing items}\n\nHow would you like to proceed?",
+      "options": [
+        {"id": "provide", "label": "Provide - I will provide the information"},
+        {"id": "infer", "label": "Allow inference - AI can estimate"},
+        {"id": "skip", "label": "Skip - I will supplement later"}
+      ]
+    }
+  ]
+}
+```
+
+- `provide` → Receive user input and supplement
+- `infer` → AI estimates, note in Assumptions section
+- `skip` → Mark item as "[TBD]" and proceed
+
+### Minimum Completion Criteria (Fail Gate)
+
+If **applicable items below are empty, return to debate phase**:
+
+| Condition | Minimum Requirement |
+|-----------|-------------------|
+| **If API exists** | Request/Response spec + at least 2 error responses |
+| **If Auth exists** | Role/Permission table with at least 1 entry |
+| **If Data (DB) exists** | Core entity with at least 5 fields defined |
+
+⚠️ If any item fails → Guide "Need supplemental information" and re-enter Phase 5.5
+
+**When all required items pass** → Proceed to Phase 6
+
+---
+
+## Phase 6: Write Design Document
+
+Write **implementation-ready design document** based on debate results.
+
+### Section-by-Section Writing Guide
+
+| Section | Content | Source |
+|---------|---------|--------|
+| 0. Summary | Goal/Non-goals/Success metrics | Extract from requirements MD |
+| 1. Scope | In/Out scope | Scope confirmed in debate |
+| 1.5. Tech Stack | Language, framework, DB, 3rd-party, infra | Project exploration or user input |
+| 2. Architecture Impact | Components, Data changes | Domain Architect design |
+| 3. Code Mapping | Feature → file/module mapping | Domain Architect design + project exploration |
+| 4. Implementation Plan | Implementation order | Agreed priority |
+| 5. Sequence Diagram | Main flow visualization | Main agent elaborates |
+| 6. API Specification | Endpoints, Request/Response | Main agent elaborates |
+| 7. Infra/Ops | Environment variables, deployment changes | Domain Architect design |
+| 8. Risks & Tradeoffs | **Core debate conclusion** | Both arguments + adoption reasoning |
+| 9. Error/Auth/Data Checklist | **3 essential checks** | Error handling, auth, data integrity |
+
+### Section 1.5 Details (Tech Stack)
+
+**Specify project tech stack:**
+
+| Item | Examples |
+|------|----------|
+| Language | Python 3.11 / TypeScript 5.x / Go 1.21 / Java 17 |
+| Framework | FastAPI / NestJS / Spring Boot / Gin |
+| DB | PostgreSQL 15 / MySQL 8 / MongoDB 6 |
+| ORM | SQLAlchemy / Prisma / TypeORM / GORM / None (Raw SQL) |
+| 3rd-party | Redis, Kafka, S3, Elasticsearch, etc. |
+| Infra | K8s / Docker / AWS / GCP / On-premise |
+
+**Verify through project exploration or user input**
+
+### Section 2 Details (Database Changes)
+
+**All tables must have full column definitions:**
+
+| Type | Content to Write |
+|------|-----------------|
+| New table | All column definitions (Column, Type, Constraints, Description) |
+| Existing table modification | **Full schema before/after** or **Current full schema + changes noted** |
+
+**Anti-patterns (Prohibited):**
+- "Delete X field from existing table" (→ change mentioned without full schema)
+- "Modify existing table" (→ unclear what columns exist)
+
+**Example:**
+
+| Column | Type | Change | Description |
+|--------|------|--------|-------------|
+| id | INTEGER | Maintain | PK |
+| event_type | VARCHAR(100) | Maintain | Event type |
+| reference_id | VARCHAR(100) | **New** | Related resource ID |
+| ~~is_read~~ | ~~BOOLEAN~~ | **Delete** | → Moved to separate table |
+
+### Section 2 Addition: Database Migration (when manual SQL selected)
+
+When migration method is "manual SQL", record the following for SQL generation in implementation phase:
+
+| Change Type | Table | Content |
+|------------|-------|---------|
+| CREATE TABLE | alert_read_status | New table |
+| ALTER TABLE | alert | Delete is_read column |
+| CREATE INDEX | alert_read_status | Add user_id index |
+
+**Note**: Actual SQL will be generated for specific DB type in implementation phase
+
+### Section 3 Details (Code Mapping - Integration)
+
+**External service integration requires specific call locations:**
+
+| Required Info | Description |
+|--------------|-------------|
+| File path | Full path (e.g., `apps/issue/src/services/quality_issue/service.py`) |
+| Class name | Class to modify |
+| **Method name** | Method to modify (e.g., `create_issue()`, `resolve_issue()`) |
+| **Call location** | Point in method (e.g., "After DB save, before response return") |
+| Code to call | Code snippet to add |
+
+**Anti-patterns (Prohibited):**
+- "Call AlertPublisher from Issue service" (→ which method?)
+- "src/services/*.py (modify)" (→ no specific file and method)
+
+**Example:**
+
+| Feature | File | Class | Method | Action |
+|---------|------|-------|--------|--------|
+| Quality Create | `.../quality_issue/service.py` | `QualityIssueService` | `create_issue()` | After DB save call `_publish_create_alert()` |
+| Quality Resolve | `.../quality_issue/service.py` | `QualityIssueService` | `resolve_issue()` | After status change call `_publish_resolve_alert()` |
+
+### Section 8 Details (Debate Conclusion)
+
+```markdown
+## 8. Risks & Tradeoffs (Debate Conclusion)
+
+### Chosen Option
+- (adopted design approach)
+
+### Rejected Alternatives
+- (unadopted items from Best Practice proposals and reasons)
+
+### Reasoning
+- Project constraints: ...
+- Best practice adoption: ...
+- Future improvement points: ...
+
+### Assumptions
+- **Confirmed**: (clearly decided in debate)
+- **Estimated**: (assumed due to lack of confirmation)
+```
+
+### Save Path
+
+**Path**: `docs/{serviceName}/architect.md`
+
+serviceName inferred from input file path:
+- Input: `docs/alert/requirements.md`
+- Output: `docs/alert/architect.md`
+
+---
+
+# Output Document Template
+
+```markdown
+# Feature Design Doc: {Feature Name}
+
+> Created: {date}
+> Service: {serviceName}
+> Requirements document: docs/{serviceName}/requirements.md
+
+## 0. Summary
+
+### Goal
+(Goal this feature aims to achieve - 1-2 sentences)
+
+### Non-goals
+- (Items excluded from this scope)
+
+### Success metrics
+- (List of success criteria)
+
+---
+
+## 1. Scope
+
+### In scope
+- (Items included in this implementation)
+
+### Out of scope
+- (Future improvements or excluded items)
+
+---
+
+## 1.5. Tech Stack
+
+| Item | Value |
+|------|-------|
+| Language | {language and version} |
+| Framework | {framework} |
+| DB | {DB type and version} |
+| ORM | {ORM package or "Raw SQL"} |
+| 3rd-party | {Redis, Kafka, etc.} |
+| Infra | {K8s, Docker, etc.} |
+
+---
+
+## 2. Architecture Impact
+
+### Components
+
+| Service / Module | Responsibility | Change type |
+|-----------------|----------------|-------------|
+| {service name} | {role} | new / modify |
+
+### Data
+
+#### Database changes
+
+**New table: `{table name}`**
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | INTEGER | PK, AUTO_INCREMENT | Primary key |
+| {column name} | {type} | {constraints} | {description} |
+| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Creation timestamp |
+
+**Existing table modification: `{table name}`**
+
+| Column | Type | Change | Description |
+|--------|------|--------|-------------|
+| id | INTEGER | Maintain | PK |
+| {column name} | {type} | **New** / **Delete** / Maintain | {description} |
+
+#### Migration Summary (when manual SQL selected)
+
+| Change Type | Table | Content |
+|------------|-------|---------|
+| CREATE TABLE | {table} | {description} |
+| ALTER TABLE | {table} | {change content} |
+| CREATE INDEX | {table} | {index description} |
+
+---
+
+## 3. Code Mapping
+
+| Feature | File | Class | Method | Action |
+|---------|------|-------|--------|--------|
+| {feature} | {full file path} | {class name} | {method name} | {call location and code to add} |
+
+---
+
+## 4. Implementation Plan
+
+### 📂 Required Reference Files (Must read before implementation)
+
+| File | Reference Purpose |
+|------|------------------|
+| {file path 1} | {What to check in this file - patterns, style, dependencies, etc.} |
+| {file path 2} | {reference purpose} |
+| {file path 3} | {reference purpose} |
+
+⚠️ **When running implement skill, read above files first to understand patterns**
+
+### Step-by-Step Implementation
+
+1. **Step 1: {step name}**
+   - {detailed task 1}
+   - {detailed task 2}
+
+2. **Step 2: {step name}**
+   - {detailed task}
+
+3. **Step 3: {step name}**
+   - {detailed task}
+
+---
+
+## 5. Sequence Diagram
+
+### {Flow name}
+
+\`\`\`mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Service
+    participant DB
+
+    Client->>API: {request}
+    API->>Service: {method call}
+    Service->>DB: {DB operation}
+    DB-->>Service: {result}
+    Service-->>API: {return}
+    API-->>Client: {response}
+\`\`\`
+
+---
+
+## 6. API Specification
+
+### {API name}
+
+**Endpoint**: `{METHOD} /api/v1/{path}`
+
+**Request**:
+\`\`\`json
+{
+  "field": "value"
+}
+\`\`\`
+
+**Response**:
+\`\`\`json
+{
+  "success": true,
+  "data": {}
+}
+\`\`\`
+
+---
+
+## 7. Infra/Ops
+
+### Environment Variables
+| Variable | Description | Default |
+|----------|-------------|---------|
+| {VAR_NAME} | {description} | {value} |
+
+### Deployment Changes
+- (If needed)
+
+---
+
+## 8. Risks & Tradeoffs (Debate Conclusion)
+
+### Chosen Option
+- {adopted design approach}
+
+### Rejected Alternatives
+- {unadopted items and reasons}
+
+### Reasoning
+- Project constraints: {reason}
+- Best practice adoption: {applied parts}
+- Future improvement points: {what to do later}
+
+### Assumptions
+- **Confirmed**: {clearly decided in debate}
+- **Estimated**: {assumed due to lack of confirmation - needs verification in implementation}
+
+---
+
+## 9. Error/Auth/Data Checklist (3 Essential Checks)
+
+### Error Handling
+
+| Situation | Location | Handling Method | Response |
+|-----------|----------|----------------|----------|
+| {exception scenario} | {file/method} | {try-catch/exception propagation/logging} | {HTTP code, error message} |
+
+### Authorization
+
+| Action | Required Permission | Validation Location | On Failure |
+|--------|-------------------|-------------------|-----------|
+| {API/feature} | {role/permission} | {middleware/service} | {403/401 response} |
+
+### Data Integrity
+
+| Validation Item | Validation Timing | On Failure |
+|----------------|------------------|-----------|
+| {FK existence} | {before save} | {400 + message} |
+| {Duplicate check} | {on create} | {409 Conflict} |
+| {Range validation} | {on input} | {422 + details} |
+
+⚠️ **If this section is empty, 80% of implementation will be unstable** - Must complete
+```
+
+---
+
+# Completion Guidance
+
+After saving document, inform user:
+
+> ✅ **Design Document Complete**
+>
+> Saved to: `docs/{serviceName}/architect.md`
+>
+> **Next Step**: Run `implement` skill to begin implementation.
+> → Recommended to switch to **Sonnet model** in new session (cost savings)
+
+---
+
+# Integration Flow
+
+```
+[require-refine] → docs/{serviceName}/requirements.md
+        ↓
+[architect] → docs/{serviceName}/architect.md
+        ↓
+[implement] → Implementation
+        ↓
+(Bug occurs)
+        ↓
+[bugfix] → docs/{serviceName}/changelog.md
+```

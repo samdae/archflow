@@ -1,0 +1,40 @@
+{
+  "name": "archflow",
+  "version": "1.0.0",
+  "description": "Document-driven development skills with Multi-Agent Debate for Claude Code & Cursor",
+  "main": "scripts/init.js",
+  "bin": {
+    "archflow": "scripts/init.js"
+  },
+  "files": [
+    "skills/",
+    "agents/",
+    "templates/",
+    "platform/",
+    "archflow.config.yaml",
+    "scripts/"
+  ],
+  "scripts": {
+    "test": "echo 'Manual testing required'"
+  },
+  "keywords": [
+    "claude",
+    "cursor",
+    "ai",
+    "development",
+    "skills",
+    "document-driven",
+    "multi-agent",
+    "debate",
+    "archflow"
+  ],
+  "author": "samdae",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdae/archflow"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
