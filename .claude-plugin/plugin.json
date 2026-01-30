@@ -2,7 +2,11 @@
   "name": "archflow",
   "version": "1.0.0",
   "description": "Document-driven development skills with Multi-Agent Debate for Claude Code",
-  "author": "samdae",
+  "author": {
+    "name": "samdae",
+    "email": "samdae@users.noreply.github.com",
+    "url": "https://github.com/samdae"
+  },
   "repository": "https://github.com/samdae/archflow",
   "license": "Apache-2.0",
   "keywords": [
@@ -12,28 +16,5 @@
     "document-driven",
     "architect",
     "development"
-  ],
-  "skills": [
-    "skills/require-refine.md",
-    "skills/architect.md",
-    "skills/implement.md",
-    "skills/bugfix.md",
-    "skills/changelogging.md",
-    "skills/architect-sync.md",
-    "skills/architect-enhance.md",
-    "skills/reinforce.md",
-    "skills/reverse.md",
-    "skills/deploy-launchpad.md"
-  ],
-  "agents": [
-    "agents/domain-architect.md",
-    "agents/best-practice-advisor.md"
-  ],
-  "templates": [
-    "templates/requirements-template.md",
-    "templates/architect-template.md",
-    "templates/changelog-template.md",
-    "templates/deploy-launchpad-template.md"
-  ],
-  "config": "archflow.config.yaml"
+  ]
 }
