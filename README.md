@@ -1,8 +1,8 @@
 # Archflow
 
-**Document-driven development skills with Multi-Agent Debate for Claude Code**
+**Document-driven development skills with Multi-Agent Debate for Cursor & Claude Code**
 
-Archflow is a Claude Code plugin that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
+Archflow is a set of AI agent skills that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
 
 ## Features
 
@@ -10,25 +10,23 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 - **Multi-Agent Debate**: Two specialized agents (Domain Architect and Best Practice Advisor) collaborate to produce optimal designs
 - **Systematic Workflows**: Pre-built skills for common development tasks
 - **Full Traceability**: Keep documentation synchronized with code changes
+- **Debug Mode Integration**: Systematic bug fixing with IDE debugging support (Cursor)
+
+## Platform Support
+
+| Feature | Cursor | Claude Code |
+|---------|--------|-------------|
+| Skills | ✅ Full | ✅ Full |
+| Multi-Agent Debate | ✅ Full | ✅ Full |
+| Debug Mode (bugfix) | ✅ Full | ⚠️ Manual error input |
+| Plugin Install | ❌ Manual copy | ✅ Marketplace |
+
+**Cursor** is the primary platform with full feature support.
+**Claude Code** is supported via plugin system with some limitations.
 
 ## Installation
 
-### Claude Code (Recommended)
-
-```bash
-# Step 1: Add archflow marketplace
-/plugin marketplace add samdae/archflow
-
-# Step 2: Install archflow plugin
-/plugin install archflow
-```
-
-Choose your installation scope:
-- **user scope**: Install for you globally
-- **project scope**: Install for all collaborators on this repository
-- **local scope**: Install for you, in this repo only
-
-### Cursor (Manual)
+### Cursor (Primary)
 
 Copy the `skills/` and `agents/` folders to your project:
 
@@ -41,23 +39,39 @@ cp -r archflow/skills/* your-project/.cursor/skills/
 cp -r archflow/agents/* your-project/.cursor/agents/
 ```
 
+Or download and copy manually from the [releases page](https://github.com/samdae/archflow/releases).
+
+### Claude Code (Plugin)
+
+```bash
+# Step 1: Add archflow marketplace
+/plugin marketplace add https://github.com/samdae/archflow
+
+# Step 2: Install archflow plugin
+/plugin install archflow
+```
+
+Choose your installation scope:
+- **user scope**: Install for you globally
+- **project scope**: Install for all collaborators on this repository
+- **local scope**: Install for you, in this repo only
+
 ## Quick Start
 
-After installation, use slash commands:
+After installation, use slash commands (or trigger keywords):
 
-| Command | Description |
-|---------|-------------|
-| `/archflow` | Show all available skills |
-| `/require-refine` | Transform materials into requirements.md |
-| `/architect` | Multi-agent debate → architect.md |
-| `/implement` | Automated implementation from design |
-| `/bugfix` | Systematic bug fixing (Debug mode) |
-| `/changelogging` | Record changes to changelog.md |
-| `/architect-sync` | Sync changes to architect.md |
-| `/architect-enhance` | Design enhancement for existing features |
-| `/reinforce` | Fill gaps in incomplete documents |
-| `/reverse` | Reverse-engineer docs from existing code |
-| `/deploy-launchpad` | Generate deployment documentation |
+| Command | Description | Trigger Keywords |
+|---------|-------------|------------------|
+| `/require-refine` | Transform materials into requirements.md | requirements, 요구사항 |
+| `/architect` | Multi-agent debate → architect.md | design, 설계 |
+| `/implement` | Automated implementation from design | implement, 구현 |
+| `/bugfix` | Systematic bug fixing | bug, 버그 |
+| `/changelogging` | Record changes to changelog.md | changelog, 변경 |
+| `/architect-sync` | Sync changes to architect.md | sync, 동기화 |
+| `/architect-enhance` | Design enhancement for existing features | enhance, 개선 |
+| `/reinforce` | Fill gaps in incomplete documents | reinforce, 보강 |
+| `/reverse` | Reverse-engineer docs from existing code | reverse, 역설계 |
+| `/deploy-launchpad` | Generate deployment documentation | deploy, 배포 |
 
 ## Workflow
 
@@ -67,10 +81,16 @@ After installation, use slash commands:
 /require-refine → /architect → /implement
 ```
 
-### Bug Fixing
+### Bug Fixing (Cursor with Debug Mode)
 
 ```
-/bugfix → /changelogging → /architect-sync (if design impact)
+[Debug Mode ON] → /bugfix → /changelogging → /architect-sync
+```
+
+### Bug Fixing (Claude Code)
+
+```
+[Provide error message/stack trace] → /bugfix → /changelogging → /architect-sync
 ```
 
 ### Legacy Code Documentation
@@ -141,6 +161,10 @@ samdae
 
 https://github.com/samdae/archflow
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ---
 
 ## Skill Development Guide
@@ -183,7 +207,7 @@ allowed-tools:
 | `id` | Unique skill identifier in kebab-case |
 | `name` | Human-readable skill name |
 | `description` | Brief description with triggers |
-| `user-invocable` | Must be `true` for slash command registration |
+| `user-invocable` | Must be `true` for slash command registration (Claude Code) |
 | `version` | Semantic versioning |
 | `allowed-tools` | List of tools this skill can use |
 
