@@ -1,13 +1,36 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "archflow-marketplace",
+  "version": "1.0.0",
+  "description": "Document-driven development skills with Multi-Agent Debate",
+  "owner": {
+    "name": "samdae",
+    "email": "dkknt001@gmail.com",
+    "url": "https://github.com/samdae"
+  },
   "plugins": [
     {
       "name": "archflow",
-      "description": "Document-driven development skills with Multi-Agent Debate",
+      "description": "Document-driven development skills with Multi-Agent Debate for Claude Code. Includes 10 skills, 2 agents for systematic development workflows.",
       "version": "1.0.0",
-      "author": "samdae",
+      "author": {
+        "name": "samdae",
+        "email": "dkknt001@gmail.com"
+      },
       "repository": "https://github.com/samdae/archflow",
-      "installPath": ".",
-      "tags": ["skills", "multi-agent", "debate", "architect", "document-driven"]
+      "source": {
+        "source": "url",
+        "url": "https://github.com/samdae/archflow.git"
+      },
+      "category": "development",
+      "keywords": [
+        "skills",
+        "multi-agent",
+        "debate",
+        "document-driven",
+        "architect",
+        "development"
+      ]
     }
   ]
 }
