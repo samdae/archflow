@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    {
+      "name": "archflow",
+      "description": "Document-driven development skills with Multi-Agent Debate",
+      "version": "1.0.0",
+      "author": "samdae",
+      "repository": "https://github.com/samdae/archflow",
+      "installPath": ".",
+      "tags": ["skills", "multi-agent", "debate", "architect", "document-driven"]
+    }
+  ]
+}
