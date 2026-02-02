@@ -27,6 +27,7 @@ Display the following help message:
 🚀 Core Pipeline (New Feature)
   /require-refine          Transform materials into requirements.md
   /architect               Multi-agent debate → architect.md
+  /architect-review        Verify design completeness (recommended)
   /implement               Automated implementation from design
 
 🐛 Bugfix & Maintenance
@@ -40,6 +41,7 @@ Display the following help message:
 📚 Document Management
   /reinforce               Fill gaps in incomplete documents
   /reverse                 Reverse-engineer docs from existing code
+  /overview                Generate 1-page project overview
 
 🚢 Deployment
   /deploy-launchpad        Generate deployment documentation
@@ -51,10 +53,11 @@ Display the following help message:
    ├── requirements.md     # from /require-refine
    ├── architect.md        # from /architect
    ├── changelog.md        # from /changelogging
+   ├── overview.md         # from /overview
    └── deploy-launchpad.md # from /deploy-launchpad
 
 💡 Recommended Flow:
-   New Feature:  /require-refine → /architect → /implement
+   New Feature:  /require-refine → /architect → /architect-review → /implement
    Bugfix:       /bugfix → /changelogging → /architect-sync
    Legacy Code:  /reverse → /reinforce → /architect-sync
    Enhancement:  /architect-enhance → /implement
@@ -69,12 +72,13 @@ Display the following help message:
 
 ## Skills Reference
 
-### Core Pipeline (3)
+### Core Pipeline (4)
 
 | Skill | Description |
 |-------|-------------|
 | `/require-refine` | Transform unstructured materials into refined requirements |
 | `/architect` | Multi-agent debate for optimal design |
+| `/architect-review` | Verify design completeness before implementation |
 | `/implement` | Automated implementation from design document |
 
 ### Bugfix & Maintenance (2)
@@ -91,12 +95,13 @@ Display the following help message:
 | `/architect-sync` | Synchronize changes to architect document |
 | `/architect-enhance` | Design enhancement for existing features |
 
-### Document Management (2)
+### Document Management (3)
 
 | Skill | Description |
 |-------|-------------|
 | `/reinforce` | Fill gaps in incomplete documents |
 | `/reverse` | Reverse-engineer docs from existing code |
+| `/overview` | Generate 1-page project overview for onboarding |
 
 ### Deployment (1)
 

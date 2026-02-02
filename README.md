@@ -58,6 +58,7 @@ After installation, use slash commands:
 | `/architect-enhance` | Design enhancement for existing features |
 | `/reinforce` | Fill gaps in incomplete documents |
 | `/reverse` | Reverse-engineer docs from existing code |
+| `/overview` | Generate 1-page project overview |
 | `/deploy-launchpad` | Generate deployment documentation |
 
 ## Workflow
@@ -100,6 +101,7 @@ After installation, use slash commands:
 | `architect-enhance` | Design enhancements for existing features | Opus |
 | `reinforce` | Enhance existing documentation | Sonnet |
 | `reverse` | Generate documentation from code | Opus |
+| `overview` | Generate 1-page project overview | Sonnet |
 | `deploy-launchpad` | Generate deployment documentation | Sonnet |
 
 ## Agents Included
