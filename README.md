@@ -89,20 +89,22 @@ After installation, use slash commands:
 
 ## Skills Included
 
-| Skill | Description | Recommended Model |
-|-------|-------------|-------------------|
-| `spec` | Refine raw requirements into structured docs | Opus |
-| `arch` | Multi-Agent Debate for feature design | Opus |
-| `check` | Verify design completeness before implementation | Sonnet |
-| `build` | Automated implementation from design docs | Sonnet |
-| `debug` | Systematic debugging with document context | Opus |
-| `trace` | Generate structured changelogs | Sonnet |
-| `sync` | Sync documentation after code changes | Sonnet |
-| `enhance` | Design enhancements for existing features | Opus |
-| `reinforce` | Enhance existing documentation | Sonnet |
-| `reverse` | Generate documentation from code | Opus |
-| `overview` | Generate 1-page project overview | Sonnet |
-| `runbook` | Generate deployment documentation | Sonnet |
+| Skill | Description | BE/FE | Recommended Model |
+|-------|-------------|-------|-------------------|
+| `spec` | Refine raw requirements into structured docs | - | Opus |
+| `arch` | Multi-Agent Debate for feature design | BE/FE | Opus |
+| `check` | Verify design completeness before implementation | BE/FE | Sonnet |
+| `build` | Automated implementation from design docs | BE/FE | Sonnet |
+| `debug` | Systematic debugging with document context | - | Opus |
+| `trace` | Generate structured changelogs | - | Sonnet |
+| `sync` | Sync documentation after code changes | - | Sonnet |
+| `enhance` | Design enhancements for existing features | - | Opus |
+| `reinforce` | Enhance existing documentation | - | Sonnet |
+| `reverse` | Generate documentation from code | BE/FE | Opus |
+| `overview` | Generate 1-page project overview | - | Sonnet |
+| `runbook` | Generate deployment documentation | - | Sonnet |
+
+> Skills marked with "BE/FE" support separate profiles for Backend and Frontend development.
 
 ## Agents Included
 
@@ -119,12 +121,15 @@ Skills that generate documentation follow this folder structure:
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md      # from /spec
-              ├── arch.md              # from /arch
-              ├── trace.md         # from /trace
-              ├── overview.md          # from /overview
-              └── runbook.md           # from /runbook
+              ├── spec.md           # from /spec
+              ├── arch-be.md        # from /arch (Backend)
+              ├── arch-fe.md        # from /arch (Frontend)
+              ├── trace.md          # from /trace
+              ├── overview.md       # from /overview
+              └── runbook.md        # from /runbook
 ```
+
+> Note: `arch` skill supports BE/FE separation. Use `arch-be.md` for backend design and `arch-fe.md` for frontend design.
 
 ## Language Support
 

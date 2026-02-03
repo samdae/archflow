@@ -56,12 +56,13 @@ Automated implementation based on design document (arch.md).
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md   # spec skill output
-              ├── arch.md      # ← This skill's input
+              ├── spec.md       # spec skill output
+              ├── arch-be.md    # ← This skill's input (Backend)
+              ├── arch-fe.md    # ← This skill's input (Frontend)
               └── trace.md      # debug skill output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/arch.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/arch-be.md` or `arch-fe.md`
 
 ## Prerequisites
 
@@ -76,7 +77,7 @@ projectRoot/
 > Design document is detailed, so high-performance model unnecessary. High token consumption makes cost savings significant.
 > **Switch model in a new session before running.**
 >
-> **Input**: `docs/{serviceName}/arch.md`
+> **Input**: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 
 ### 0-1. Verify Design Document
 
@@ -88,7 +89,7 @@ When skill invoked without input, **use AskQuestion to guide information collect
   "questions": [
     {
       "id": "has_design",
-      "prompt": "Do you have a design document? (docs/{serviceName}/arch.md)",
+      "prompt": "Do you have a design document? (docs/{serviceName}/arch-be.md or arch-fe.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - Need design document first"}
@@ -101,13 +102,22 @@ When skill invoked without input, **use AskQuestion to guide information collect
 - `no` → Guide to **arch** skill
 - `yes` → Request file path → Proceed to 0-2
 
-### 0-2. Infer serviceName
+### 0-2. Infer serviceName and Detect Profile
 
-Extract serviceName from provided file path:
-- Input: `docs/alert/arch.md`
-- Extract: `serviceName = "alert"`
+Extract serviceName and detect BE/FE from provided file path:
+- Input: `docs/alert/arch-be.md` → serviceName = "alert", profile = **BE**
+- Input: `docs/alert/arch-fe.md` → serviceName = "alert", profile = **FE**
+
+**Load Profile:**
+- If `arch-be.md` → **Read `profiles/be.md`** from this skill folder
+- If `arch-fe.md` → **Read `profiles/fe.md`** from this skill folder
+
+> ⚠️ **MUST read the profile file before proceeding.**
+> The profile defines project settings questions, dependency graph, and completion report template.
 
 ### 0-3. Verify Project Settings
+
+> Use questions from the loaded profile (profiles/be.md or profiles/fe.md)
 
 ```json
 {
@@ -509,7 +519,7 @@ CREATE INDEX ...;
 > ✅ **Implementation Complete**
 >
 > If bugs occur, run `debug` skill in **Debug mode**.
-> Document paths: `docs/{serviceName}/spec.md`, `arch.md`
+> Document paths: `docs/{serviceName}/spec.md`, `arch-be.md` or `arch-fe.md`
 ```
 
 ### Commit Handling
@@ -527,9 +537,10 @@ CREATE INDEX ...;
 ```
 [spec] → docs/{serviceName}/spec.md
         ↓
-[arch] → docs/{serviceName}/arch.md
+[arch] → docs/{serviceName}/arch-be.md  (Backend)
+       → docs/{serviceName}/arch-fe.md  (Frontend)
         ↓
-[build] → Implementation
+[build] → Implementation (uses profile: profiles/be.md or profiles/fe.md)
         ↓
 (Bug occurs)
         ↓

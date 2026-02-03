@@ -20,34 +20,46 @@ allowed-tools:
 
 Invoke the **reverse** skill for legacy code documentation.
 
+## BE/FE Support
+
+This skill asks for code type and loads appropriate profile:
+- **Backend**: uses `profiles/be.md` → generates `arch-be.md`
+- **Frontend**: uses `profiles/fe.md` → generates `arch-fe.md`
+
 ## What it does
 
 1. **Collect Inputs**
    - Service name
+   - Code type (Backend or Frontend)
    - Code scope (directories, files)
 
-2. **Analyze Codebase**
-   - File structure analysis
-   - Core file identification
-   - Pattern recognition
+2. **Analyze Codebase (Backend)**
+   - Router/Controller → API endpoints
+   - Model/Entity → DB schema
+   - Service/Usecase → Business logic
 
-3. **Extract Information**
-   - Code Mapping (existing files, dependencies)
-   - API Specification (from routes, controllers)
-   - DB Schema (from models, migrations)
+3. **Analyze Codebase (Frontend)**
+   - Pages/Routes → Route structure
+   - Components → Component hierarchy
+   - Hooks/Store → State management
 
-4. **Infer Requirements**
-   - Goal (from README, comments)
+4. **Extract Information**
+   - Code Mapping / Component Structure
+   - API Specification (BE) or API Integration (FE)
+   - DB Schema (BE) or State Schema (FE)
+
+5. **Infer Requirements**
+   - Goal (from API patterns / UI patterns)
    - Features (from code structure)
    - Constraints (from dependencies)
 
-5. **Q&A Loop**
+6. **Q&A Loop**
    - Ask about unknown/ambiguous items
    - Mark unconfirmed items with ❓
 
-6. **Generate Output**
+7. **Generate Output**
    - `docs/{serviceName}/spec.md` (incomplete)
-   - `docs/{serviceName}/arch.md` (incomplete)
+   - `docs/{serviceName}/arch-be.md` or `arch-fe.md` (incomplete)
 
 ## Recommended Model
 
@@ -57,7 +69,8 @@ Invoke the **reverse** skill for legacy code documentation.
 
 Documents marked with ❓ for unconfirmed items:
 - `docs/{serviceName}/spec.md`
-- `docs/{serviceName}/arch.md`
+- `docs/{serviceName}/arch-be.md` (Backend)
+- `docs/{serviceName}/arch-fe.md` (Frontend)
 
 ## Next Step
 
@@ -68,12 +81,17 @@ Run `/reinforce` to fill gaps in generated documents.
 ```
 /reverse
 → "Service name?" → "legacy-api"
+→ "Code type?" → "Backend"
 → "Code scope?" → @src/api/ @src/models/
 → Analyzing file structure...
 → Found 23 files, 5 API endpoints, 8 models
-→ Inferring requirements...
-→ Q: "What is the business purpose of this service?"
-→ "Order management for e-commerce"
 → Documents generated (12 items marked ❓)
-→ Run /reinforce to complete
+
+/reverse
+→ "Service name?" → "dashboard"
+→ "Code type?" → "Frontend"
+→ "Code scope?" → @src/pages/ @src/components/
+→ Analyzing component structure...
+→ Found 15 components, 8 routes, 3 stores
+→ Documents generated (8 items marked ❓)
 ```

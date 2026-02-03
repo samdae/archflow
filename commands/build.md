@@ -20,22 +20,29 @@ allowed-tools:
 
 # /build
 
-Invoke the **implement** skill for automated implementation.
+Invoke the **build** skill for automated implementation.
+
+## BE/FE Support
+
+This skill auto-detects profile from input file:
+- **Backend**: `arch-be.md` → uses `profiles/be.md`
+- **Frontend**: `arch-fe.md` → uses `profiles/fe.md`
 
 ## What it does
 
 1. **Analyze Design Document**
-   - Read `docs/{serviceName}/arch.md`
-   - Extract Code Mapping section
+   - Read `docs/{serviceName}/arch-be.md` or `arch-fe.md`
+   - Auto-load appropriate profile (BE or FE)
+   - Extract Code Mapping / Component Structure
 
 2. **Create Dependency Graph**
-   - Identify file dependencies
-   - Determine implementation order
+   - **Backend**: Model → Repository → Service → Controller
+   - **Frontend**: Types → API → Store → Components → Pages
 
 3. **Step-by-Step Execution**
    - Sub-agent based parallel/sequential execution
    - Create files according to Code Mapping
-   - Implement APIs, DB schemas, business logic
+   - Implement APIs, DB schemas (BE) or components, state (FE)
 
 4. **Validation**
    - Cross-reference implementation with Code Mapping
@@ -44,6 +51,7 @@ Invoke the **implement** skill for automated implementation.
 5. **Generate Report**
    - Completion status
    - Files created/modified
+   - Migration SQL (BE) or Build commands (FE)
 
 ## Recommended Model
 
@@ -51,7 +59,7 @@ Invoke the **implement** skill for automated implementation.
 
 ## Prerequisites
 
-- `docs/{serviceName}/arch.md` from `/arch`
+- `docs/{serviceName}/arch-be.md` or `arch-fe.md` from `/arch`
 
 ## Next Step
 
@@ -60,11 +68,17 @@ If bugs occur, run `/debug` in Debug mode.
 ## Usage Examples
 
 ```
-/build
-→ Loads arch.md
+/build @docs/auth/arch-be.md
+→ Detected: Backend profile
 → Analyzing Code Mapping...
 → Creating: src/auth/service.py
 → Creating: src/auth/repository.py
-→ Creating: tests/auth/test_service.py
 → Implementation complete: 12 files created
+
+/build @docs/dashboard/arch-fe.md
+→ Detected: Frontend profile
+→ Analyzing Component Structure...
+→ Creating: src/components/Dashboard/
+→ Creating: src/hooks/useDashboard.ts
+→ Implementation complete: 8 files created
 ```

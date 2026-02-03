@@ -179,7 +179,7 @@ When user feedback conflicts with Phase 0 Goal or existing design decisions:
 > Design quality determines implementation quality, so maintain Opus for this phase even when cost savings are needed.
 >
 > **Input**: `docs/{serviceName}/spec.md`
-> **Output**: `docs/{serviceName}/arch.md`
+> **Output**: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 
 ### 0-1. Collect Input Information
 
@@ -202,15 +202,42 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 ```
 
 **Processing by response:**
-- `yes` → Request file path → Proceed to Phase 1
+- `yes` → Request file path → Proceed to 0-1.5
 - `no` → Guide to **spec** skill
+
+### 0-1.5. Select Architecture Type (BE/FE)
+
+```json
+{
+  "title": "Architecture Type",
+  "questions": [
+    {
+      "id": "arch_type",
+      "prompt": "What type of architecture are you designing?",
+      "options": [
+        {"id": "be", "label": "Backend - API server, business logic, database"},
+        {"id": "fe", "label": "Frontend - Web app, SPA, components"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `be` → **Read `templates/be.md`** from this skill folder, use as output template
+- `fe` → **Read `templates/fe.md`** from this skill folder, use as output template
+
+> ⚠️ **MUST read the template file before proceeding to Phase 1.**
+> The template defines the document structure for this architecture type.
 
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
 - Input: `docs/alert/spec.md`
 - Extract: `serviceName = "alert"`
-- Output path: `docs/alert/arch.md`
+- Output path:
+  - BE: `docs/alert/arch-be.md`
+  - FE: `docs/alert/arch-fe.md`
 
 ## Phase 1: Initial Input Collection
 
@@ -503,18 +530,31 @@ When migration method is "manual SQL", record the following for SQL generation i
 
 ### Save Path
 
-**Path**: `docs/{serviceName}/arch.md`
+**Path**: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 
 serviceName inferred from input file path:
 - Input: `docs/alert/spec.md`
-- Output: `docs/alert/arch.md`
+- Output (BE): `docs/alert/arch-be.md`
+- Output (FE): `docs/alert/arch-fe.md`
 
 ---
 
 # Output Document Template
 
+> ⚠️ **Use the template from Phase 0-1.5 selection.**
+>
+> - **Backend**: Use template from `templates/be.md`
+> - **Frontend**: Use template from `templates/fe.md`
+>
+> The templates are located in `skills/arch/templates/` folder.
+> Read the selected template file and use it as the output document structure.
+
+---
+
+# Template Reference (Backend - for inline reference)
+
 ```markdown
-# Feature Design Doc: {Feature Name}
+# Backend Design Doc: {Feature Name}
 
 > Created: {date}
 > Service: {serviceName}
@@ -781,7 +821,7 @@ After saving document, inform user:
 
 > ✅ **Design Document Complete**
 >
-> Saved to: `docs/{serviceName}/arch.md`
+> Saved to: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 >
 > **Next Step**: Run `build` skill to begin implementation.
 > → Recommended to switch to **Sonnet model** in new session (cost savings)
@@ -793,7 +833,8 @@ After saving document, inform user:
 ```
 [spec] → docs/{serviceName}/spec.md
         ↓
-[arch] → docs/{serviceName}/arch.md
+[arch] → docs/{serviceName}/arch-be.md  (Backend)
+       → docs/{serviceName}/arch-fe.md  (Frontend)
         ↓
 [build] → Implementation
         ↓

@@ -55,15 +55,16 @@ Analyze codebase to reverse-engineer spec.md and arch.md documents.
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md   # ← This skill's output 1
-              ├── arch.md      # ← This skill's output 2
+              ├── spec.md       # ← This skill's output 1
+              ├── arch-be.md    # ← This skill's output 2 (Backend)
+              ├── arch-fe.md    # ← This skill's output 2 (Frontend)
               └── trace.md      # (generated later by debug)
 ```
 
 ## ⚠️ Warnings
 
 - **spec.md is inference**: The "why" is not directly visible in code. May be incomplete.
-- **arch.md is extraction**: Code Mapping, API Spec, DB Schema are directly extracted from code.
+- **arch-be/fe.md is extraction**: Code Mapping, API Spec, DB Schema (BE) or Component Structure, Routes, State (FE) are directly extracted from code.
 - **Reinforce for enhancement**: Use reinforce skill to progressively enhance incomplete parts.
 
 ---
@@ -75,10 +76,10 @@ projectRoot/
 > ⚠️ **This skill strongly recommends using the Opus model.**
 > Must infer business intent from code, so high-performance model is required.
 >
-> **Input**: serviceName + code scope
+> **Input**: serviceName + code scope + code type (BE/FE)
 > **Output**:
 > - `docs/{serviceName}/spec.md`
-> - `docs/{serviceName}/arch.md`
+> - `docs/{serviceName}/arch-be.md` (Backend) or `docs/{serviceName}/arch-fe.md` (Frontend)
 >
 > ⚠️ Generated documents may be incomplete. Enhance with `reinforce` skill.
 
@@ -96,10 +97,25 @@ When skill is invoked alone, **use AskQuestion to guide information collection**
       "options": [
         {"id": "input", "label": "I will provide directly"}
       ]
+    },
+    {
+      "id": "code_type",
+      "prompt": "What type of code are you analyzing?",
+      "options": [
+        {"id": "be", "label": "Backend - API server, business logic, database"},
+        {"id": "fe", "label": "Frontend - Web app, SPA, components"}
+      ]
     }
   ]
 }
 ```
+
+**Load Profile based on code_type:**
+- `be` → **Read `profiles/be.md`** from this skill folder
+- `fe` → **Read `profiles/fe.md`** from this skill folder
+
+> ⚠️ **MUST read the profile file before proceeding.**
+> The profile defines file patterns, extraction methods, and output templates.
 
 ### 0-2. Code Scope Specification
 
@@ -158,13 +174,27 @@ Collect file list using Glob:
 
 ### 1-2. Identify Core Files
 
+> ⚠️ **Use the file patterns from the loaded profile (profiles/be.md or profiles/fe.md).**
+
+**For Backend (profiles/be.md):**
 | File Type | Extraction Target |
-|----------|----------|
-| **Router/Controller** | API endpoints |
-| **Model/Entity** | DB schema |
-| **Service/Usecase** | Business logic |
-| **Schema/DTO** | Data structures |
-| **Config files** | Tech Stack |
+|----------|------------------|
+| Router/Controller | API endpoints |
+| Model/Entity | DB schema |
+| Service/Usecase | Business logic |
+| Repository/DAO | Data access |
+| Schema/DTO | Data structures |
+| Config files | Tech Stack |
+
+**For Frontend (profiles/fe.md):**
+| File Type | Extraction Target |
+|----------|------------------|
+| Pages/Routes | Route structure |
+| Components | Component hierarchy |
+| Hooks | Custom logic |
+| Store/State | State management |
+| API Layer | API integration |
+| Types | Type definitions |
 
 ### 1-3. Read Code
 
@@ -180,21 +210,33 @@ Analyze core files using Read:
 
 ### 2-1. Direct Extraction (for architect)
 
+> ⚠️ **Use extraction methods from the loaded profile.**
+
+**For Backend (profiles/be.md):**
 | Item | Extraction Method |
-|------|----------|
-| **Tech Stack** | Analyze import statements, dependency files |
-| **Code Mapping** | File/class/method structure |
-| **API Spec** | Router decorators, endpoint definitions |
-| **DB Schema** | Model classes, migration files |
-| **Sequence Flow** | Track function call relationships |
+|------|------------------|
+| Tech Stack | Analyze import statements, dependency files |
+| Code Mapping | File/class/method structure |
+| API Spec | Router decorators, endpoint definitions |
+| DB Schema | Model classes, migration files |
+| Sequence Flow | Track function call relationships |
+
+**For Frontend (profiles/fe.md):**
+| Item | Extraction Method |
+|------|------------------|
+| Tech Stack | Analyze package.json, config files |
+| Component Structure | File/component hierarchy |
+| State Management | Store files, hooks |
+| Route Definition | Router config, file-based routing |
+| API Integration | API hooks, service files |
 
 ### 2-2. Inference Required (for requirements)
 
 | Item | Inference Method |
-|------|----------|
-| **Goal** | Infer from API names, comments, overall structure |
-| **Feature specs** | Infer from endpoint behavior |
-| **Data contracts** | Infer from schemas/DTOs |
+|------|------------------|
+| **Goal** | Infer from API names (BE) / UI patterns (FE), comments |
+| **Feature specs** | Infer from endpoint behavior (BE) / route structure (FE) |
+| **Data contracts** | Infer from schemas/DTOs (BE) / types (FE) |
 | **Exception policy** | Infer from try-catch, error handlers |
 
 ### 2-3. Cannot Extract (collect via Q&A)
@@ -372,7 +414,8 @@ Display at top of document:
 
 ```
 docs/{serviceName}/spec.md
-docs/{serviceName}/arch.md
+docs/{serviceName}/arch-be.md  (if Backend)
+docs/{serviceName}/arch-fe.md  (if Frontend)
 ```
 
 ### 6-2. Completion Report
@@ -384,9 +427,9 @@ docs/{serviceName}/arch.md
 | Document | Path | Completeness |
 |------|------|--------|
 | spec.md | docs/{serviceName}/spec.md | {N}% |
-| arch.md | docs/{serviceName}/arch.md | {N}% |
+| arch-be/fe.md | docs/{serviceName}/arch-be.md or arch-fe.md | {N}% |
 
-### Completeness Details
+### Completeness Details (Backend)
 | Item | Status |
 |------|------|
 | Goal | ✅ Confirmed / ❓ Inferred / ❌ Unconfirmed |
@@ -394,6 +437,15 @@ docs/{serviceName}/arch.md
 | API Spec | ✅ Extracted |
 | DB Schema | ✅ Extracted |
 | Risks | ❓ Unconfirmed |
+
+### Completeness Details (Frontend)
+| Item | Status |
+|------|------|
+| Goal | ✅ Confirmed / ❓ Inferred / ❌ Unconfirmed |
+| Component Structure | ✅ Extracted |
+| Routes | ✅ Extracted |
+| State Management | ✅ Extracted |
+| User Flows | ❓ Inferred |
 
 ### Unconfirmed Items (require reinforce enhancement)
 - {item 1}
@@ -412,9 +464,9 @@ docs/{serviceName}/arch.md
 ```
 [Legacy Code]
       │
-      ▼
+      ▼ (Select BE or FE profile)
   [reverse] → spec.md (incomplete)
-      │      → arch.md (incomplete)
+      │      → arch-be.md or arch-fe.md (incomplete)
       ▼
   [reinforce] → spec.md (enhanced)
       │        → arch.md (enhanced)

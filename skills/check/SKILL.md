@@ -49,8 +49,9 @@ Verify design document completeness and identify missing details that will be ne
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md  # Input (optional)
-              └── arch.md     # Input & Output (updated)
+              ├── spec.md      # Input (optional)
+              ├── arch-be.md   # Input & Output (Backend)
+              └── arch-fe.md   # Input & Output (Frontend)
 ```
 
 ---
@@ -62,19 +63,21 @@ projectRoot/
 > 💡 **Sonnet is sufficient for this skill.**
 > This is an analysis task, not a creative design task.
 
-### 0-2. Collect Service Name
+### 0-2. Collect Design Document
 
 **Use AskQuestion:**
 
 ```json
 {
-  "title": "Architect Review",
+  "title": "Architecture Review",
   "questions": [
     {
-      "id": "service_name",
-      "prompt": "Which service's design document do you want to review?",
+      "id": "design_doc",
+      "prompt": "Which design document do you want to review?",
       "options": [
-        {"id": "input", "label": "I will type the service name"}
+        {"id": "be", "label": "Backend (arch-be.md)"},
+        {"id": "fe", "label": "Frontend (arch-fe.md)"},
+        {"id": "filepath", "label": "I will provide via @filepath"}
       ]
     }
   ]
@@ -83,9 +86,16 @@ projectRoot/
 
 Or detect from context if user provides file path.
 
-### 0-3. Load Design Document
+### 0-3. Load Design Document and Profile
 
-Read `docs/{serviceName}/arch.md`
+**Detect from file path or user selection:**
+- `arch-be.md` → **Read `profiles/be.md`** from this skill folder
+- `arch-fe.md` → **Read `profiles/fe.md`** from this skill folder
+
+> ⚠️ **MUST read the profile file before proceeding.**
+> The profile defines component detection checklist and gap analysis items.
+
+Read `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 
 If not found → Error: "Design document not found. Run /arch first."
 
@@ -93,98 +103,54 @@ If not found → Error: "Design document not found. Run /arch first."
 
 ## Phase 1: Component Detection
 
-Scan the design document and detect which components are defined:
+Scan the design document and detect which components are defined.
 
-### Detection Checklist
+> ⚠️ **Use the checklist from the loaded profile (profiles/be.md or profiles/fe.md).**
+> The profile contains component-specific detection methods and triggers.
 
-| Component | Detection Method | Triggers Additional Checks |
-|-----------|-----------------|---------------------------|
-| **Authentication** | "인증", "auth", "OAuth", "JWT" in document | Token refresh, Session management |
-| **Database** | DB schema tables defined | Soft delete, Indexes, Migrations |
-| **REST API** | API endpoints defined | Pagination, Rate limiting, Versioning |
-| **External API calls** | External API list exists | Retry policy, Caching, Fallback |
-| **Async processing** | Celery, Queue, Worker mentioned | Error handling, Retry, DLQ |
-| **Real-time** | SSE, WebSocket mentioned | Connection management, Heartbeat |
-| **File storage** | Upload, S3, file mentioned | Size limits, Cleanup policy |
-| **Caching** | Redis, Cache mentioned | TTL policy, Invalidation |
-| **K8s/Docker** | Deployment config exists | Health check, Resource limits |
-| **LLM/AI** | LLM, OpenAI, Claude mentioned | Cost control, Token limits |
+### Detection Checklist (Profile Reference)
+
+**For Backend (profiles/be.md):**
+- Authentication, Database, REST API, External API
+- Async processing, Real-time, File storage
+- Caching, K8s/Docker, LLM/AI
+
+**For Frontend (profiles/fe.md):**
+- Component Structure, State Management, Routing
+- Form Handling, API Integration, Authentication UI
+- UX States, Accessibility, Responsive Design, Performance
 
 ---
 
 ## Phase 2: Gap Analysis
 
-For each detected component, check if required details are defined:
+For each detected component, check if required details are defined.
 
-### Authentication Gaps
+> ⚠️ **Use the gap analysis checklists from the loaded profile.**
+> Each profile contains component-specific gap checklists.
 
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Token refresh logic | Is refresh token flow defined? | Ask user |
-| Token expiration time | Is expiry duration specified? | Ask user |
-| Session invalidation | How to logout/revoke? | Ask user |
+### Gap Analysis (Profile Reference)
 
-### Database Gaps
+**For Backend (profiles/be.md):**
+- Authentication Gaps (token refresh, expiration, session)
+- Database Gaps (soft delete, indexes, migration)
+- REST API Gaps (pagination, rate limiting, versioning)
+- External API Gaps (retry, caching, fallback, timeout)
+- Async Processing Gaps (error handling, DLQ, idempotency)
+- Real-time Gaps (timeout, reconnection, heartbeat)
+- Infrastructure Gaps (health check, probes, logging)
+- LLM/AI Gaps (cost tracking, limits, fallback)
 
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Soft delete vs Hard delete | Is deletion strategy defined? | Ask user |
-| Index strategy | Are indexes defined for query patterns? | Suggest based on API |
-| Migration strategy | Is Alembic/migration mentioned? | Suggest |
-
-### REST API Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Pagination | Is pagination defined for list APIs? | Ask user |
-| Rate limiting | Is rate limit policy defined? | Ask user |
-| API versioning | Is /v1/ or versioning mentioned? | Suggest |
-| Request validation | Is validation logic defined? | Suggest |
-
-### External API Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Retry policy | Is retry count/backoff defined? | Ask user |
-| Caching strategy | Is response caching defined? | Ask user |
-| Fallback behavior | What if external API fails? | Ask user |
-| Timeout settings | Is timeout defined? | Suggest default |
-
-### Async Processing Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Error handling | What if task fails? | Ask user |
-| Retry policy | Is retry count defined? | Ask user |
-| Dead letter queue | Is DLQ/failed task handling defined? | Suggest |
-| Idempotency | Can task be safely retried? | Ask user |
-
-### Real-time Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Connection timeout | Is SSE/WS timeout defined? | Suggest default |
-| Reconnection logic | Client reconnection strategy? | Suggest |
-| Heartbeat | Is keep-alive mechanism defined? | Suggest |
-
-### Infrastructure Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Health check endpoint | Is /health or probe defined? | Suggest |
-| Liveness/Readiness | Are K8s probes defined? | Suggest if K8s |
-| Graceful shutdown | Is shutdown handling defined? | Suggest |
-| Logging strategy | Is log format/level defined? | Ask user |
-| Monitoring | Is metrics/alerting defined? | Ask user |
-
-### LLM/AI Gaps
-
-| Required Detail | Check | If Missing |
-|-----------------|-------|------------|
-| Cost tracking | Is token/cost logging defined? | Suggest |
-| Usage limits | Is per-user limit defined? | Already in doc? |
-| Fallback model | What if primary model fails? | Ask user |
-| Prompt versioning | Is prompt management defined? | Suggest |
+**For Frontend (profiles/fe.md):**
+- Component Structure Gaps (prop types, composition)
+- State Management Gaps (scope, persistence, initialization)
+- Routing Gaps (guards, 404 handling, lazy loading)
+- Form Handling Gaps (validation, error display, submit)
+- API Integration Gaps (loading, error, empty states)
+- UX States Gaps (skeleton, error boundary, feedback)
+- Accessibility Gaps (keyboard, focus, ARIA)
+- Responsive Gaps (breakpoints, mobile layout)
+- Performance Gaps (code splitting, memoization)
 
 ---
 
@@ -295,7 +261,7 @@ Present review summary to user:
 - Log aggregation
 
 ### Document Updated
-`docs/{serviceName}/arch.md` - 12. Additional Design Details section added
+`docs/{serviceName}/arch-be.md` or `arch-fe.md` - Section 12 added
 
 ### Next Step
 Run `/build` to start implementation.
@@ -305,9 +271,9 @@ Run `/build` to start implementation.
 
 ## Completion Message
 
-> ✅ **Architect Review Complete**
+> ✅ **Architecture Review Complete**
 >
-> Output: `docs/{serviceName}/arch.md` (updated)
+> Output: `docs/{serviceName}/arch-be.md` or `arch-fe.md` (updated)
 >
 > - Gaps filled: {N}
 > - Skipped (TBD): {M}
