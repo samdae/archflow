@@ -61,12 +61,12 @@ Combining runtime information (error log, stack trace, variable state) provided 
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # spec skill output (input)
+              ├── spec.md   # spec skill output (input)
               ├── arch.md      # arch skill output (input)
-              └── changelog.md      # ← This skill's output
+              └── trace.md      # ← This skill's output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/requirements.md` or `arch.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/spec.md` or `arch.md`
 
 ---
 
@@ -80,9 +80,9 @@ projectRoot/
 > **Recommended Model**: Try Sonnet first, Opus for complex bugs
 >
 > **Required Documents** (`docs/{serviceName}/` folder):
-> - requirements.md (required)
+> - spec.md (required)
 > - arch.md (required)
-> - changelog.md (optional - will be created in this session if not present)
+> - trace.md (optional - will be created in this session if not present)
 
 ### 0-1. Collect Document Input
 
@@ -92,7 +92,7 @@ projectRoot/
   "questions": [
     {
       "id": "has_requirements",
-      "prompt": "Do you have a requirements document? (docs/{serviceName}/requirements.md)",
+      "prompt": "Do you have a requirements document? (docs/{serviceName}/spec.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - I don't have it"}
@@ -108,7 +108,7 @@ projectRoot/
     },
     {
       "id": "has_changelog",
-      "prompt": "Do you have a changelog? (docs/{serviceName}/changelog.md)",
+      "prompt": "Do you have a changelog? (docs/{serviceName}/trace.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - Will be created upon completion"}
@@ -146,9 +146,9 @@ When proceeding without requirements/design documents:
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
-- Input: `docs/alert/requirements.md` or `docs/alert/arch.md`
+- Input: `docs/alert/spec.md` or `docs/alert/arch.md`
 - Extract: `serviceName = "alert"`
-- Output path: `docs/alert/changelog.md`
+- Output path: `docs/alert/trace.md`
 
 ### 0-3. Verify Error Information
 
@@ -170,9 +170,9 @@ Read provided documents and identify key information:
 
 | Document | Information to Extract |
 |----------|----------------------|
-| requirements.md | Expected behavior, normal scenario |
+| spec.md | Expected behavior, normal scenario |
 | arch.md | Flow (call order), Code Mapping |
-| changelog.md | Recent changes (may be bug cause) |
+| trace.md | Recent changes (may be bug cause) |
 
 ### 1-2. Cross-reference Error Location with Design Flow
 
@@ -312,7 +312,7 @@ When called in the same session, it will use the previous conversation's context
 # Integration Flow
 
 ```
-[spec] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/spec.md
         ↓
 [arch] → docs/{serviceName}/arch.md
         ↓
@@ -322,7 +322,7 @@ When called in the same session, it will use the previous conversation's context
         ↓
 [debug] (Debug mode) → Analysis/fix
         ↓
-[trace] → docs/{serviceName}/changelog.md
+[trace] → docs/{serviceName}/trace.md
         ↓ (when design impact exists)
 [sync] → arch.md synchronization
 ```

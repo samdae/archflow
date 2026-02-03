@@ -24,7 +24,7 @@ Invoke the **arch** skill for multi-agent debate design.
 ## What it does
 
 1. **Load Requirements**
-   - Read `docs/{serviceName}/requirements.md`
+   - Read `docs/{serviceName}/spec.md`
 
 2. **Multi-Agent Debate**
    - **Domain Architect**: Project context, existing patterns, domain knowledge
@@ -58,7 +58,7 @@ docs/{serviceName}/arch.md
 
 ## Prerequisites
 
-- `docs/{serviceName}/requirements.md` from `/spec`
+- `docs/{serviceName}/spec.md` from `/spec`
 
 ## Next Step
 
@@ -68,7 +68,7 @@ After completion, run `/build` to start implementation.
 
 ```
 /arch
-→ Loads requirements.md
+→ Loads spec.md
 → Domain Architect proposes...
 → Best Practice Advisor challenges...
 → Round 2...

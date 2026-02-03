@@ -52,9 +52,9 @@ Reinforce existing documents by adding new information to incomplete documentati
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # ← Input/Output
+              ├── spec.md   # ← Input/Output
               ├── arch.md      # ← Input/Output
-              └── changelog.md
+              └── trace.md
 ```
 
 ## ⚠️ When to Use
@@ -74,11 +74,11 @@ projectRoot/
 > Use Opus if complex reasoning is needed.
 >
 > **Input**:
-> - `docs/{serviceName}/requirements.md`
+> - `docs/{serviceName}/spec.md`
 > - `docs/{serviceName}/arch.md`
 > - New information to add
 >
-> **Output**: Updated requirements.md, arch.md
+> **Output**: Updated spec.md, arch.md
 
 ### 0-1. Document Input
 
@@ -101,12 +101,12 @@ projectRoot/
 ```
 
 - `no` → Guide to **reverse** skill
-- `yes` → Request requirements.md, arch.md file paths
+- `yes` → Request spec.md, arch.md file paths
 
 ### 0-2. Extract serviceName
 
 Extract serviceName from input file path:
-- Input: `docs/alert/requirements.md`
+- Input: `docs/alert/spec.md`
 - Extract: `serviceName = "alert"`
 
 ---
@@ -115,7 +115,7 @@ Extract serviceName from input file path:
 
 ### 1-1. Load Documents
 
-Read requirements.md and arch.md
+Read spec.md and arch.md
 
 ### 1-2. Identify Unconfirmed Items
 
@@ -131,7 +131,7 @@ Extract items marked with:
 ```markdown
 ## Current Document Status
 
-### requirements.md
+### spec.md
 | Section | Status |
 |---------|--------|
 | Goal | ✅ Confirmed / ❓ Inferred / ❌ Unconfirmed |
@@ -219,9 +219,9 @@ Analyze and classify user-provided information:
 
 | Information Type | Target Document |
 |-----------------|----------------|
-| Business purpose/intent | requirements.md - Goal, Non-goals |
-| Feature description/behavior | requirements.md - Feature Specification |
-| Priority/importance | requirements.md - Priority |
+| Business purpose/intent | spec.md - Goal, Non-goals |
+| Feature description/behavior | spec.md - Feature Specification |
+| Priority/importance | spec.md - Priority |
 | Technical decision rationale | arch.md - Risks & Tradeoffs |
 | Architecture changes | arch.md - Architecture, Code Mapping |
 | API changes | arch.md - API Spec |
@@ -238,8 +238,8 @@ Analyze and classify user-provided information:
       "id": "classify",
       "prompt": "Your input:\n\"{user input summary}\"\n\nWhere should this information be reflected?",
       "options": [
-        {"id": "requirements", "label": "Requirements (requirements.md)"},
-        {"id": "architect", "label": "Design (arch.md)"},
+        {"id": "requirements", "label": "Requirements (spec.md)"},
+        {"id": "arch", "label": "Architecture (arch.md)"},
         {"id": "both", "label": "Both"},
         {"id": "auto", "label": "You decide"}
       ]
@@ -252,7 +252,7 @@ Analyze and classify user-provided information:
 
 ## Phase 4: Update Documents
 
-### 4-1. Update requirements.md (If Applicable)
+### 4-1. Update spec.md (If Applicable)
 
 | Section | Update Method |
 |---------|--------------|
@@ -301,7 +301,7 @@ Add reinforcement history at the bottom of documents:
 ```markdown
 ## Changes to be Applied
 
-### requirements.md
+### spec.md
 | Section | Before | After |
 |---------|--------|-------|
 | {section} | {previous state} | {new content} |
@@ -318,7 +318,7 @@ Ask user for confirmation:
 ### 5-2. Save Files
 
 ```
-docs/{serviceName}/requirements.md (updated)
+docs/{serviceName}/spec.md (updated)
 docs/{serviceName}/arch.md (updated)
 ```
 
@@ -330,13 +330,13 @@ docs/{serviceName}/arch.md (updated)
 ### Update Summary
 | Document | Changed Sections | Change Type |
 |----------|-----------------|-------------|
-| requirements.md | {sections} | {fill_blank/correct/add_new} |
+| spec.md | {sections} | {fill_blank/correct/add_new} |
 | arch.md | {sections} | {fill_blank/correct/add_new} |
 
 ### Current Completion Rate
 | Document | Before | After |
 |----------|--------|-------|
-| requirements.md | {N}% | {N}% |
+| spec.md | {N}% | {N}% |
 | arch.md | {N}% | {N}% |
 
 ### Remaining Unconfirmed Items

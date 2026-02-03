@@ -18,7 +18,7 @@ allowed-tools:
   - Skill
 ---
 
-# /implement
+# /build
 
 Invoke the **implement** skill for automated implementation.
 
@@ -55,7 +55,7 @@ Invoke the **implement** skill for automated implementation.
 
 ## Next Step
 
-If bugs occur, run `/bugfix` in Debug mode.
+If bugs occur, run `/debug` in Debug mode.
 
 ## Usage Examples
 

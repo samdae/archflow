@@ -2,7 +2,7 @@
 id: overview
 name: Overview
 description: |
-  Generate a 1-page project overview from requirements and architect documents.
+  Generate a 1-page project overview from requirements and arch documents.
   Perfect for onboarding new team members or quick project introduction.
 
   Triggers: overview, project overview, onboarding, 온보딩, 프로젝트 소개
@@ -54,7 +54,7 @@ This is a "5-minute read" document, NOT a detailed spec.
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md  # Source
+              ├── spec.md  # Source
               └── arch.md     # Source
 ```
 
@@ -92,7 +92,7 @@ projectRoot/
 ### 0-2. Load Source Documents
 
 Read:
-- `docs/{serviceName}/requirements.md`
+- `docs/{serviceName}/spec.md`
 - `docs/{serviceName}/arch.md`
 
 If not found → Error: "Source documents not found. Run /spec and /arch first."
@@ -103,7 +103,7 @@ If not found → Error: "Source documents not found. Run /spec and /arch first."
 
 Extract from existing documents:
 
-### From requirements.md
+### From spec.md
 
 | Field | Location |
 |-------|----------|
@@ -252,7 +252,7 @@ docker-compose up -d  # or equivalent 2-3 commands
 
 | Doc | What's inside |
 |-----|---------------|
-| [Requirements](requirements.md) | 기능 요구사항 |
+| [Requirements](spec.md) | 기능 요구사항 |
 | [Architecture](arch.md) | 상세 설계, API 명세, DB 스키마 |
 
 ---
@@ -396,7 +396,7 @@ docker-compose up -d
 
 | Doc | What's inside |
 |-----|---------------|
-| [Requirements](requirements.md) | 기능 요구사항, 분석 프레임워크 |
+| [Requirements](spec.md) | 기능 요구사항, 분석 프레임워크 |
 | [Architecture](arch.md) | API 명세, DB 스키마, 시퀀스 다이어그램 |
 
 ---

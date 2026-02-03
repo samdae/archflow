@@ -37,7 +37,7 @@ Invoke the **enhance** skill for feature enhancement design.
    - Migration needed?
 
 4. **Enhancement Design**
-   - Sub-agent collaboration (like /architect)
+   - Sub-agent collaboration (like /arch)
    - Domain awareness + Best practices
    - Minimal change principle
 

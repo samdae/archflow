@@ -22,7 +22,7 @@ Invoke the **overview** skill to generate project overview.
 ## What it does
 
 1. **Load Source Documents**
-   - Read `docs/{serviceName}/requirements.md`
+   - Read `docs/{serviceName}/spec.md`
    - Read `docs/{serviceName}/arch.md`
 
 2. **Extract Key Information**
@@ -58,7 +58,7 @@ docs/{serviceName}/overview.md
 
 ## Prerequisites
 
-- `docs/{serviceName}/requirements.md` from `/spec`
+- `docs/{serviceName}/spec.md` from `/spec`
 - `docs/{serviceName}/arch.md` from `/arch`
 
 ## Usage Examples
@@ -66,7 +66,7 @@ docs/{serviceName}/overview.md
 ```
 /overview
 → "Service name?" → "auth-service"
-→ Loading requirements.md, arch.md...
+→ Loading spec.md, arch.md...
 → Extracting key information...
 → Generating diagrams...
 → docs/auth-service/overview.md generated

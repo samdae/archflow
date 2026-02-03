@@ -52,7 +52,7 @@ After installation, you can trigger Archflow skills directly in your Claude Code
 
 1. **Refine Requirements**: Start by transforming rough ideas into structured requirements
 
-   Say: `require-refine` or `requirements`
+   Say: `spec` or `requirements`
    
    Claude Code will guide you through:
    - Collecting your unstructured materials (Notion docs, chat history, images)
@@ -60,11 +60,11 @@ After installation, you can trigger Archflow skills directly in your Claude Code
    - Asking clarifying questions
    - Generating a complete requirements document
    
-   Output: `docs/{serviceName}/requirements.md`
+   Output: `docs/{serviceName}/spec.md`
 
 2. **Design the Architecture**: Let two AI agents debate the optimal design
 
-   Say: `architect` or `design`
+   Say: `arch` or `design`
    
    The Multi-Agent Debate process:
    - **Domain Architect**: Designs based on your specific project context
@@ -88,7 +88,7 @@ After installation, you can trigger Archflow skills directly in your Claude Code
 
 4. **Fix Bugs Systematically**: Debug with document context
 
-   Say: `bugfix` or `bug fix`
+   Say: `debug` or `bug fix`
    
    Systematic debugging process:
    - Analyze error in context of design documents
@@ -96,24 +96,24 @@ After installation, you can trigger Archflow skills directly in your Claude Code
    - Propose fix with impact analysis
    - Update documentation if needed
    
-   Output: Bug fix + `docs/{serviceName}/changelog.md`
+   Output: Bug fix + `docs/{serviceName}/trace.md`
 
 ### Example Session
 
 ```
-You: require-refine
+You: spec
 
 Claude: I'll help you create a requirements document. Let me ask a few questions...
 
 [Interactive Q&A follows]
 
 Claude: ✅ Requirements Document Complete
-        Saved to: docs/alert/requirements.md
+        Saved to: docs/alert/spec.md
         
         Next Step: Run 'architect' to begin design.
-        → Reference: @docs/alert/requirements.md
+        → Reference: @docs/alert/spec.md
 
-You: architect @docs/alert/requirements.md
+You: architect @docs/alert/spec.md
 
 Claude: Starting Multi-Agent Debate for design...
 
@@ -161,12 +161,12 @@ platform:
 # Workflow settings
 workflow:
   enable_debate: true  # Enable Multi-Agent Debate
-  auto_sync_architect: true  # Auto-sync docs after changes
-  auto_changelog: true  # Auto-generate changelog after bugfix
+  auto_sync_arch: true  # Auto-sync docs after changes
+  auto_changelog: true  # Auto-generate changelog after debug
 
 # Documentation settings
 documentation:
-  architect_root: "docs"
+  arch_root: "docs"
   requirements_root: "docs/requirements"
   changelog_root: "docs/changelog"
 
@@ -211,14 +211,14 @@ projectRoot/
   ├── archflow.config.yaml
   ├── docs/
   │     └── {serviceName}/
-  │           ├── requirements.md   # require-refine output
-  │           ├── arch.md      # architect output
-  │           └── changelog.md      # bugfix output
+  │           ├── spec.md   # spec output
+  │           ├── arch.md      # arch output
+  │           └── trace.md      # debug output
   └── .codebuddy/
         ├── skills/
-        │     ├── require-refine.md
+        │     ├── spec.md
         │     ├── arch.md
-        │     ├── implement.md
+        │     ├── build.md
         │     └── ...
         └── agents/
               ├── domain-arch.md
@@ -280,23 +280,23 @@ projectRoot/
 
 ### 1. Start with Requirements
 
-Always begin with `require-refine` before jumping into design or implementation. Clear requirements prevent wasted effort.
+Always begin with `spec` before jumping into design or implementation. Clear requirements prevent wasted effort.
 
 ### 2. Trust the Debate Process
 
-When using `architect`, let both agents fully present their perspectives before synthesis. Don't rush to a solution.
+When using `arch`, let both agents fully present their perspectives before synthesis. Don't rush to a solution.
 
 ### 3. Reference Documents
 
-Always use `@docs/{serviceName}/requirements.md` notation to pass documents between skills. This ensures Claude has full context.
+Always use `@docs/{serviceName}/spec.md` notation to pass documents between skills. This ensures Claude has full context.
 
 ### 4. Maintain Documentation
 
-Run `architect-sync` after manual code changes to keep docs in sync. This prevents documentation drift.
+Run `sync` after manual code changes to keep docs in sync. This prevents documentation drift.
 
 ### 5. Use Version Control
 
-Commit generated documents (`requirements.md`, `arch.md`, `changelog.md`) to git. This creates an audit trail of all design decisions.
+Commit generated documents (`spec.md`, `arch.md`, `trace.md`) to git. This creates an audit trail of all design decisions.
 
 ## Advanced Usage
 
@@ -317,8 +317,8 @@ Add specialized agents for domain-specific debates:
 ### Workflow Automation
 
 Enable automation options in config:
-- `auto_sync_architect: true` - Automatically sync docs after code changes
-- `auto_changelog: true` - Automatically generate changelog after bugfix
+- `auto_sync_arch: true` - Automatically sync docs after code changes
+- `auto_changelog: true` - Automatically generate changelog after debug
 - `auto_fix_lints: true` - Automatically fix linter errors during implementation
 
 ## Learn More
@@ -336,4 +336,4 @@ Enable automation options in config:
 
 ---
 
-**Ready to start?** Try `require-refine` in your next Claude Code chat to transform your development workflow!
+**Ready to start?** Try `spec` in your next Claude Code chat to transform your development workflow!

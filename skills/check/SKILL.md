@@ -49,7 +49,7 @@ Verify design document completeness and identify missing details that will be ne
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md  # Input (optional)
+              ├── spec.md  # Input (optional)
               └── arch.md     # Input & Output (updated)
 ```
 
@@ -87,7 +87,7 @@ Or detect from context if user provides file path.
 
 Read `docs/{serviceName}/arch.md`
 
-If not found → Error: "Design document not found. Run /architect first."
+If not found → Error: "Design document not found. Run /arch first."
 
 ---
 
@@ -261,7 +261,7 @@ Add new section or update existing sections:
 Add to Sync History section:
 
 ```markdown
-| {date} | review | architect-review | 설계 완성도 검증 - {N}개 항목 추가 |
+| {date} | review | check | 설계 완성도 검증 - {N}개 항목 추가 |
 ```
 
 ---

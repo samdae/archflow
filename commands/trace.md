@@ -36,13 +36,13 @@ Invoke the **trace** skill to record changes.
    - API changes?
 
 4. **Generate/Update Changelog**
-   - Creates or updates `docs/{serviceName}/changelog.md`
+   - Creates or updates `docs/{serviceName}/trace.md`
    - Structured format with date, description, impact
 
 ## Output Structure
 
 ```
-docs/{serviceName}/changelog.md
+docs/{serviceName}/trace.md
 ├── [Date] - Change Title
 │   ├── Type: bugfix/feature/refactor
 │   ├── Description
@@ -72,6 +72,6 @@ If design impact exists, run `/sync`.
 → [Auto-extracted from debug session]
 → Type: bugfix
 → Design Impact: Yes (new validation pattern)
-→ changelog.md updated
+→ trace.md updated
 → "Run /sync to update design"
 ```

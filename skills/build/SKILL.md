@@ -56,16 +56,16 @@ Automated implementation based on design document (arch.md).
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # spec skill output
+              ├── spec.md   # spec skill output
               ├── arch.md      # ← This skill's input
-              └── changelog.md      # debug skill output
+              └── trace.md      # debug skill output
 ```
 
 **serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/arch.md`
 
 ## Prerequisites
 
-- **architect** skill output design document required
+- **arch** skill output design document required
 - Design document must have Implementation Plan, Code Mapping, Tech Stack sections
 
 ## Phase 0: Skill Entry
@@ -98,7 +98,7 @@ When skill invoked without input, **use AskQuestion to guide information collect
 }
 ```
 
-- `no` → Guide to **architect** skill
+- `no` → Guide to **arch** skill
 - `yes` → Request file path → Proceed to 0-2
 
 ### 0-2. Infer serviceName
@@ -509,7 +509,7 @@ CREATE INDEX ...;
 > ✅ **Implementation Complete**
 >
 > If bugs occur, run `debug` skill in **Debug mode**.
-> Document paths: `docs/{serviceName}/requirements.md`, `arch.md`
+> Document paths: `docs/{serviceName}/spec.md`, `arch.md`
 ```
 
 ### Commit Handling
@@ -525,7 +525,7 @@ CREATE INDEX ...;
 # Integration Flow
 
 ```
-[spec] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/spec.md
         ↓
 [arch] → docs/{serviceName}/arch.md
         ↓
@@ -533,7 +533,7 @@ CREATE INDEX ...;
         ↓
 (Bug occurs)
         ↓
-[debug] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/trace.md
 ```
 
 ---

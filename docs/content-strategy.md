@@ -50,9 +50,9 @@ examples/
 └── blog-demo/
     ├── README.md (이 예제 설명, 영상 타임스탬프)
     ├── docs/
-    │   ├── requirements.md
-    │   ├── architect.md
-    │   └── changelog.md
+    │   ├── spec.md
+    │   ├── arch.md
+    │   └── trace.md
     └── src/
         └── (생성된 코드)
 ```

@@ -16,9 +16,9 @@ allowed-tools:
   - Skill
 ---
 
-# /require-refine
+# /spec
 
-Invoke the **require-refine** skill to transform unstructured materials into a refined requirements document.
+Invoke the **spec** skill to transform unstructured materials into a refined requirements document.
 
 ## What it does
 
@@ -36,12 +36,12 @@ Invoke the **require-refine** skill to transform unstructured materials into a r
    - Iterate until requirements are clear
 
 4. **Generate Output**
-   - Creates `docs/{serviceName}/requirements.md`
+   - Creates `docs/{serviceName}/spec.md`
 
 ## Output Structure
 
 ```
-docs/{serviceName}/requirements.md
+docs/{serviceName}/spec.md
 ├── Goal
 ├── Core Features
 ├── Non-Functional Requirements
@@ -64,5 +64,5 @@ After completion, run `/architect` to start design.
 → "Service name?" → "auth-service"
 → "Input materials?" → @meeting-notes.md @api-sketch.png
 → Q&A loop...
-→ docs/auth-service/requirements.md generated
+→ docs/auth-service/spec.md generated
 ```

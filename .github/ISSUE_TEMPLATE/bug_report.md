@@ -32,16 +32,17 @@ What actually happened.
 
 ## Skill Involved
 
-- [ ] require-refine
-- [ ] architect
-- [ ] implement
-- [ ] bugfix
-- [ ] changelogging
-- [ ] architect-sync
-- [ ] architect-enhance
+- [ ] spec
+- [ ] arch
+- [ ] check
+- [ ] build
+- [ ] debug
+- [ ] trace
+- [ ] sync
+- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
-- [ ] deploy-launchpad
+- [ ] runbook
 - [ ] Other: ___
 
 ## Error Messages

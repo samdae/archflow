@@ -30,16 +30,17 @@ Closes #(issue number)
 
 ## Skills Affected
 
-- [ ] require-refine
-- [ ] architect
-- [ ] implement
-- [ ] bugfix
-- [ ] changelogging
-- [ ] architect-sync
-- [ ] architect-enhance
+- [ ] spec
+- [ ] arch
+- [ ] check
+- [ ] build
+- [ ] debug
+- [ ] trace
+- [ ] sync
+- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
-- [ ] deploy-launchpad
+- [ ] runbook
 - [ ] agents
 - [ ] commands
 - [ ] Other: ___

@@ -48,12 +48,12 @@ After installation, use slash commands:
 | Command | Description |
 |---------|-------------|
 | `/archflow` | Show all available skills |
-| `/spec` | Transform materials into requirements.md |
+| `/spec` | Transform materials into spec.md |
 | `/arch` | Multi-agent debate → arch.md |
 | `/check` | Verify design completeness |
 | `/build` | Automated implementation from design |
 | `/debug` | Systematic bug fixing (Debug mode) |
-| `/trace` | Record changes to changelog.md |
+| `/trace` | Record changes to trace.md |
 | `/sync` | Sync changes to arch.md |
 | `/enhance` | Design enhancement for existing features |
 | `/reinforce` | Fill gaps in incomplete documents |
@@ -119,9 +119,9 @@ Skills that generate documentation follow this folder structure:
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md      # from /spec
+              ├── spec.md      # from /spec
               ├── arch.md              # from /arch
-              ├── changelog.md         # from /trace
+              ├── trace.md         # from /trace
               ├── overview.md          # from /overview
               └── runbook.md           # from /runbook
 ```

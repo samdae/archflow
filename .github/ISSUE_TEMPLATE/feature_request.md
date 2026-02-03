@@ -29,16 +29,17 @@ Have you considered any alternative solutions or workarounds?
 
 Which existing skills would this affect or relate to?
 
-- [ ] require-refine
-- [ ] architect
-- [ ] implement
-- [ ] bugfix
-- [ ] changelogging
-- [ ] architect-sync
-- [ ] architect-enhance
+- [ ] spec
+- [ ] arch
+- [ ] check
+- [ ] build
+- [ ] debug
+- [ ] trace
+- [ ] sync
+- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
-- [ ] deploy-launchpad
+- [ ] runbook
 - [ ] New skill needed
 - [ ] Core functionality
 
@@ -49,4 +50,4 @@ Add any other context, screenshots, or examples here.
 ## Willingness to Contribute
 
 - [ ] I'm willing to submit a PR for this feature
-- [ ] I need help implementing this
+- [ ] I need help building this

@@ -11,7 +11,7 @@ Archflow is a comprehensive set of AI agent skills that transforms how you build
 - **Document-Driven Development**: Keep requirements, designs, and changelogs synchronized with your code
 - **Multi-Agent Debate**: Two specialized AI agents (Domain Architect and Best Practice Advisor) collaborate to produce optimal designs
 - **Systematic Workflows**: Pre-built skills for common development tasks
-- **Full Traceability**: Track every decision from initial requirements to final implementation
+- **Full Traceability**: Track every decision from initial requirements to final buildation
 - **Quality Assurance**: Built-in validation gates ensure completeness before moving forward
 - **Task Tool Integration**: Leverages Cursor's native Task tool for true parallel multi-agent execution
 
@@ -54,9 +54,9 @@ projectRoot/
   ├── archflow.config.yaml
   └── .cursor/
         ├── skills/
-        │     ├── require-refine.md
+        │     ├── spec.md
         │     ├── arch.md
-        │     ├── implement.md
+        │     ├── build.md
         │     └── ...
         └── agents/
               ├── domain-arch.md
@@ -71,7 +71,7 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
 
 1. **Refine Requirements**: Start by transforming rough ideas into structured requirements
 
-   Say: `require-refine` or `requirements`
+   Say: `spec` or `requirements`
    
    Cursor will guide you through:
    - Collecting your unstructured materials (Notion docs, chat history, images)
@@ -79,11 +79,11 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
    - Asking clarifying questions using the AskQuestion tool
    - Generating a complete requirements document
    
-   Output: `docs/{serviceName}/requirements.md`
+   Output: `docs/{serviceName}/spec.md`
 
 2. **Design the Architecture**: Let two AI agents debate the optimal design
 
-   Say: `architect` or `design`
+   Say: `arch` or `design`
    
    The Multi-Agent Debate process:
    - **Domain Architect**: Designs based on your specific project context
@@ -93,9 +93,9 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
    
    Output: `docs/{serviceName}/arch.md`
 
-3. **Implement the Code**: Automated implementation from design documents
+3. **Implement the Code**: Automated buildation from design documents
 
-   Say: `implement`
+   Say: `build`
    
    Cursor will:
    - Parse the design document step-by-step
@@ -104,11 +104,11 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
    - Handle errors and edge cases
    - Use ReadLints tool to check for errors
    
-   Output: Working code implementation
+   Output: Working code buildation
 
 4. **Fix Bugs Systematically**: Debug with document context
 
-   Say: `bugfix` or `bug fix`
+   Say: `debug` or `bug fix`
    
    Systematic debugging process:
    - Analyze error in context of design documents
@@ -116,24 +116,24 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
    - Propose fix with impact analysis
    - Update documentation if needed
    
-   Output: Bug fix + `docs/{serviceName}/changelog.md`
+   Output: Bug fix + `docs/{serviceName}/trace.md`
 
 ### Example Session
 
 ```
-You: require-refine
+You: spec
 
 Cursor: I'll help you create a requirements document. Let me ask a few questions...
 
 [Interactive Q&A follows using AskQuestion tool]
 
 Cursor: ✅ Requirements Document Complete
-        Saved to: docs/alert/requirements.md
+        Saved to: docs/alert/spec.md
         
         Next Step: Run 'architect' to begin design.
-        → Reference: @docs/alert/requirements.md
+        → Reference: @docs/alert/spec.md
 
-You: architect @docs/alert/requirements.md
+You: architect @docs/alert/spec.md
 
 Cursor: Starting Multi-Agent Debate for design...
 
@@ -142,7 +142,7 @@ Cursor: Starting Multi-Agent Debate for design...
 Cursor: ✅ Architect Design Complete
         Saved to: docs/alert/arch.md
         
-        Next Step: Run 'implement' to begin coding.
+        Next Step: Run 'build' to begin coding.
         → Reference: @docs/alert/arch.md
 ```
 
@@ -154,8 +154,8 @@ Archflow includes 10 specialized skills:
 |-------|-----------------|---------|
 | **spec** | `spec`, `specification`, `요구사항 정의` | Transform unstructured materials into refined requirements |
 | **arch** | `arch`, `architecture`, `설계` | Multi-Agent Debate for optimal feature design |
-| **check** | `check`, `verify`, `검증` | Verify design completeness before implementation |
-| **build** | `build`, `compile`, `구현` | Automated implementation from design docs |
+| **check** | `check`, `verify`, `검증` | Verify design completeness before buildation |
+| **build** | `build`, `compile`, `구현` | Automated buildation from design docs |
 | **debug** | `debug`, `fix`, `버그 수정` | Systematic debugging with document context |
 | **trace** | `trace`, `log`, `변경 기록` | Generate structured changelogs |
 | **sync** | `sync`, `synchronize`, `동기화` | Sync documentation after code changes |
@@ -184,12 +184,12 @@ workflow:
   debate_agents:
     - "domain-architect"
     - "best-practice-advisor"
-  auto_sync_architect: true  # Auto-sync docs after changes
-  auto_changelog: true  # Auto-generate changelog after bugfix
+  auto_sync_arch: true  # Auto-sync docs after changes
+  auto_trace: true  # Auto-generate changelog after debug
 
 # Documentation settings
 documentation:
-  architect_root: "docs"
+  arch_root: "docs"
   requirements_root: "docs/requirements"
   changelog_root: "docs/changelog"
   template_style: "standard"  # "standard" or "minimal"
@@ -213,7 +213,7 @@ Cursor provides several tools that enhance Archflow's capabilities:
 
 ### Task Tool (TodoWrite)
 
-The `architect` skill leverages Cursor's Task tool for true parallel multi-agent debate:
+The `arch` skill leverages Cursor's Task tool for true parallel multi-agent debate:
 
 - **Domain Architect** and **Best Practice Advisor** work simultaneously
 - Each agent maintains independent context and perspective
@@ -231,11 +231,11 @@ All skills use Cursor's interactive `AskQuestion` tool for structured Q&A:
 
 ### ReadLints Tool
 
-The `implement` and `bugfix` skills use `ReadLints` to check code quality:
+The `build` and `debug` skills use `ReadLints` to check code quality:
 
 - Automatically detects linter errors after code generation
 - Provides context-aware error messages
-- Enables immediate fixes during implementation
+- Enables immediate fixes during buildation
 - Maintains code quality throughout the workflow
 
 ### File Operations
@@ -253,11 +253,11 @@ Cursor has full tool support for Archflow workflows:
 
 | Tool | Status | Used By |
 |------|--------|---------|
-| **Task (TodoWrite)** | ✅ Available | `architect`, `implement`, `bugfix` |
+| **Task (TodoWrite)** | ✅ Available | `arch`, `build`, `debug` |
 | **AskQuestion** | ✅ Available | All skills requiring user input |
 | **Read/Grep** | ✅ Available | All skills reading code/docs |
-| **StrReplace** | ✅ Available | `implement`, `bugfix`, `architect-sync` |
-| **ReadLints** | ✅ Available | `implement`, `bugfix` |
+| **StrReplace** | ✅ Available | `build`, `debug`, `sync` |
+| **ReadLints** | ✅ Available | `build`, `debug` |
 
 All Archflow skills work at full capacity in Cursor with no fallback patterns needed.
 
@@ -270,21 +270,21 @@ projectRoot/
   ├── archflow.config.yaml
   ├── docs/
   │     └── {serviceName}/
-  │           ├── requirements.md   # require-refine output
+  │           ├── spec.md   # spec output
   │           ├── arch.md      # architect output
-  │           └── changelog.md      # bugfix output
+  │           └── trace.md      # debug output
   └── .cursor/
         ├── skills/
-        │     ├── require-refine.md
+        │     ├── spec.md
         │     ├── arch.md
-        │     ├── implement.md
-        │     ├── bugfix.md
-        │     ├── changelogging.md
-        │     ├── architect-enhance.md
-        │     ├── architect-sync.md
+        │     ├── build.md
+        │     ├── debug.md
+        │     ├── trace.md
+        │     ├── enhance.md
+        │     ├── sync.md
         │     ├── reinforce.md
         │     ├── reverse.md
-        │     └── deploy-launchpad.md
+        │     └── runbook.md
         └── agents/
               ├── domain-arch.md
               └── best-practice-advisor.md
@@ -348,7 +348,7 @@ projectRoot/
 
 ### ReadLints Showing Errors
 
-**Problem**: Linter errors appear after implementation
+**Problem**: Linter errors appear after buildation
 
 **Solutions**:
 - This is expected - `ReadLints` helps catch quality issues early
@@ -361,31 +361,31 @@ projectRoot/
 
 ### 1. Start with Requirements
 
-Always begin with `require-refine` before jumping into design or implementation. Clear requirements prevent wasted effort.
+Always begin with `spec` before jumping into design or buildation. Clear requirements prevent wasted effort.
 
 ### 2. Trust the Debate Process
 
-When using `architect`, let both agents fully present their perspectives before synthesis. Don't interrupt the Task workflow.
+When using `arch`, let both agents fully present their perspectives before synthesis. Don't interrupt the Task workflow.
 
 ### 3. Reference Documents
 
-Always use `@docs/{serviceName}/requirements.md` notation to pass documents between skills. This ensures Cursor has full context.
+Always use `@docs/{serviceName}/spec.md` notation to pass documents between skills. This ensures Cursor has full context.
 
 ### 4. Maintain Documentation
 
-Run `architect-sync` after manual code changes to keep docs in sync. This prevents documentation drift.
+Run `sync` after manual code changes to keep docs in sync. This prevents documentation drift.
 
 ### 5. Use Version Control
 
-Commit generated documents (`requirements.md`, `arch.md`, `changelog.md`) to git. This creates an audit trail of all design decisions.
+Commit generated documents (`spec.md`, `arch.md`, `trace.md`) to git. This creates an audit trail of all design decisions.
 
 ### 6. Leverage Task Tool
 
-Monitor the Task panel in Cursor during `architect` skill execution to see agent progress in real-time.
+Monitor the Task panel in Cursor during `arch` skill execution to see agent progress in real-time.
 
 ### 7. Review Lints Early
 
-After `implement` completes, review `ReadLints` output immediately. Fix issues before moving to next phase.
+After `build` completes, review `ReadLints` output immediately. Fix issues before moving to next phase.
 
 ### 8. Commit Strategy
 
@@ -453,13 +453,13 @@ Enable automation options in config for streamlined workflows:
 
 ```yaml
 workflow:
-  auto_sync_architect: true  # Auto-sync docs after code changes
-  auto_changelog: true       # Auto-generate changelog after bugfix
+  auto_sync_arch: true  # Auto-sync docs after code changes
+  auto_trace: true       # Auto-generate changelog after debug
 
 advanced:
-  auto_fix_lints: true       # Auto-fix linter errors during implementation
-  generate_tests: true       # Generate unit tests during implementation
-  commit_strategy: "auto"    # Auto-commit after successful implementation
+  auto_fix_lints: true       # Auto-fix linter errors during buildation
+  generate_tests: true       # Generate unit tests during buildation
+  commit_strategy: "auto"    # Auto-commit after successful buildation
 ```
 
 ### Skill Chaining
@@ -467,7 +467,7 @@ advanced:
 Chain skills together for complete feature development:
 
 ```
-require-refine → architect → implement → (test) → (bugfix if needed) → changelogging → architect-sync
+spec → arch → build → (test) → (debug if needed) → trace → sync
 ```
 
 Use Cursor's chat history to maintain context across the chain.
@@ -512,4 +512,4 @@ To debug skill execution:
 
 ---
 
-**Ready to start?** Try `require-refine` in your next Cursor chat to transform your development workflow!
+**Ready to start?** Try `spec` in your next Cursor chat to transform your development workflow!

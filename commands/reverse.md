@@ -46,7 +46,7 @@ Invoke the **reverse** skill for legacy code documentation.
    - Mark unconfirmed items with ❓
 
 6. **Generate Output**
-   - `docs/{serviceName}/requirements.md` (incomplete)
+   - `docs/{serviceName}/spec.md` (incomplete)
    - `docs/{serviceName}/arch.md` (incomplete)
 
 ## Recommended Model
@@ -56,7 +56,7 @@ Invoke the **reverse** skill for legacy code documentation.
 ## Output
 
 Documents marked with ❓ for unconfirmed items:
-- `docs/{serviceName}/requirements.md`
+- `docs/{serviceName}/spec.md`
 - `docs/{serviceName}/arch.md`
 
 ## Next Step

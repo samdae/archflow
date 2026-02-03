@@ -25,14 +25,14 @@ Display the following help message:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🚀 Core Pipeline (New Feature)
-  /spec                    Transform materials into requirements.md
+  /spec                    Transform materials into spec.md
   /arch                    Multi-agent debate → arch.md
   /check                   Verify design completeness (recommended)
   /build                   Automated implementation from design
 
 🐛 Bugfix & Maintenance
   /debug                   Systematic bug fixing (Debug mode)
-  /trace                   Record changes to changelog.md
+  /trace                   Record changes to trace.md
 
 🔄 Design Evolution
   /sync                    Sync changelog/enhancement to arch.md
@@ -50,9 +50,9 @@ Display the following help message:
 
 📁 Document Structure:
    docs/{serviceName}/
-   ├── requirements.md     # from /spec
+   ├── spec.md     # from /spec
    ├── arch.md             # from /arch
-   ├── changelog.md        # from /trace
+   ├── trace.md        # from /trace
    ├── overview.md         # from /overview
    └── runbook.md          # from /runbook
 

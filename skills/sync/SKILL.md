@@ -49,16 +49,16 @@ Synchronize design-impacting items from changelog or enhancement design results 
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md
+              ├── spec.md
               ├── arch.md      # ← Sync target
-              └── changelog.md      # ← Input (design-impacting items)
+              └── trace.md      # ← Input (design-impacting items)
 ```
 
 ## ⚠️ Execution Timing
 
 Run in following situations:
 1. **After debug completion** - When "Design Impact: Yes" items added to changelog
-2. **After enhance completion** - When integrating enhancement design to existing architect
+2. **After /enhance completion** - When integrating enhancement design to existing arch
 
 ---
 
@@ -69,7 +69,7 @@ Run in following situations:
 > 💡 **This skill recommends the Sonnet model.**
 > Document merging task, so high-performance model unnecessary.
 >
-> **Input**: changelog.md (design-impacting items) or enhancement design result
+> **Input**: trace.md (design-impacting items) or enhancement design result
 > **Output**: Updated arch.md
 
 ### 0-1. Verify Sync Type
@@ -99,14 +99,14 @@ Run in following situations:
   "questions": [
     {
       "id": "has_changelog",
-      "prompt": "Please provide changelog file path (docs/{serviceName}/changelog.md)",
+      "prompt": "Please provide changelog file path (docs/{serviceName}/trace.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"}
       ]
     },
     {
-      "id": "has_architect",
-      "prompt": "Please provide architect file path (docs/{serviceName}/arch.md)",
+      "id": "has_arch",
+      "prompt": "Please provide arch file path (docs/{serviceName}/arch.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"}
       ]
@@ -121,14 +121,14 @@ Run in following situations:
 ### 0-3. Infer serviceName
 
 Extract serviceName from input file path:
-- Input: `docs/alert/changelog.md`
+- Input: `docs/alert/trace.md`
 - Extract: `serviceName = "alert"`
 
 ---
 
 ## Phase 1: Analyze Changes
 
-### 1-1. Bugfix Sync (changelog → architect)
+### 1-1. Debug Sync (trace → arch)
 
 Filter only **"Design Impact: Yes"** items from changelog:
 
@@ -140,7 +140,7 @@ Analyze changelog:
       → Identify affected sections (Code Mapping, API Spec, DB Schema, etc.)
 ```
 
-### 1-2. Enhancement Sync (enhancement result → architect)
+### 1-2. Enhancement Sync (enhancement result → arch)
 
 Identify changes/additions from enhancement design results:
 - New APIs
@@ -195,7 +195,7 @@ Identify changes/additions from enhancement design results:
 
 ### 2-1. Check for Conflicts
 
-Compare existing architect content with new changes:
+Compare existing arch content with new changes:
 
 | Conflict Type | Example | Resolution |
 |--------------|---------|------------|
@@ -290,13 +290,13 @@ Save updated arch.md (overwrite existing file)
 ```
 [debug] → changelog (design-impacting items)
                 ↓
-         [sync] → Update architect
+         [sync] → Update arch
                 ↓
            [build] (if needed)
 
 [enhance] → Enhancement design
                 ↓
-         [sync] → Update architect
+         [sync] → Update arch
                 ↓
            [build]
 ```

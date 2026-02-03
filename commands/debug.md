@@ -26,9 +26,9 @@ Invoke the **debug** skill for systematic bug fixing.
 ## What it does
 
 1. **Load Context**
-   - Read `docs/{serviceName}/requirements.md`
+   - Read `docs/{serviceName}/spec.md`
    - Read `docs/{serviceName}/arch.md`
-   - Read `docs/{serviceName}/changelog.md` (if exists)
+   - Read `docs/{serviceName}/trace.md` (if exists)
 
 2. **Analyze Error**
    - Cross-reference error location with design flow
@@ -54,7 +54,7 @@ Invoke the **debug** skill for systematic bug fixing.
 
 ## Prerequisites
 
-- `docs/{serviceName}/requirements.md`
+- `docs/{serviceName}/spec.md`
 - `docs/{serviceName}/arch.md`
 
 ## Next Step
@@ -66,7 +66,7 @@ After completion, `/trace` is automatically called.
 ```
 /debug
 → "What's the error?" → [paste error or use Debug mode]
-→ Loads requirements.md, arch.md
+→ Loads spec.md, arch.md
 → Tracing error through Code Mapping...
 → Root cause: Missing null check in UserService.validate()
 → Applying fix...

@@ -53,9 +53,9 @@ Transform unstructured materials into refined requirements documentation.
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # ← This skill's output
+              ├── spec.md   # ← This skill's output
               ├── arch.md           # arch skill output
-              └── changelog.md      # bugfix skill output
+              └── trace.md      # debug skill output
 ```
 
 ## ⚠️ Global Rule: Logical Inconsistency Handling
@@ -118,7 +118,7 @@ When user feedback conflicts with Section 1 (purpose) or existing analysis:
 > 💡 **This skill performs best with the Opus model.**
 > Sonnet is acceptable if cost savings are needed, but may impact design quality.
 >
-> **Output location**: `docs/{serviceName}/requirements.md`
+> **Output location**: `docs/{serviceName}/spec.md`
 
 ### 0-1. Collect Service Name and Input Information
 
@@ -246,7 +246,7 @@ Present completed draft to user:
 ## Phase 5: Save Final Document
 
 Save as MD file upon approval:
-- **Path**: `docs/{serviceName}/requirements.md`
+- **Path**: `docs/{serviceName}/spec.md`
 - Create folder if it doesn't exist
 
 ### Post-Completion Guidance
@@ -255,10 +255,10 @@ After saving document, inform user:
 
 > ✅ **Requirements Document Complete**
 >
-> Saved to: `docs/{serviceName}/requirements.md`
+> Saved to: `docs/{serviceName}/spec.md`
 >
-> **Next Step**: Run the `architect` skill to begin design.
-> → Pass `@docs/{serviceName}/requirements.md` file.
+> **Next Step**: Run the `arch` skill to begin design.
+> → Pass `@docs/{serviceName}/spec.md` file.
 
 ---
 
@@ -375,13 +375,13 @@ After saving document, inform user:
 # Integration Flow
 
 ```
-[spec] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/spec.md
         ↓
 [arch] → docs/{serviceName}/arch.md
         ↓
-[implement] → Implementation
+[build] → Implementation
         ↓
 (Bug occurs)
         ↓
-[debug] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/trace.md
 ```

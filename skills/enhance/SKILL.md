@@ -34,13 +34,13 @@ allowed-tools:
 
 # Enhance Workflow
 
-Add enhancement requirements to existing architect document and update the design accordingly.
+Add enhancement requirements to existing arch document and update the design accordingly.
 
 ## 💡 Recommended Model
 
 **Opus Required** - Consistency analysis with existing design is critical
 
-→ Existing architect + new requirements + conflict validation = complex analysis
+→ Existing arch + new requirements + conflict validation = complex analysis
 
 ## 🔄 Tool Fallback
 
@@ -56,10 +56,10 @@ Add enhancement requirements to existing architect document and update the desig
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md        # Original requirements
+              ├── spec.md        # Original requirements
               ├── requirements-v2.md     # ← Enhancement requirements (spec output)
               ├── arch.md           # ← Existing design (synced state recommended)
-              └── changelog.md
+              └── trace.md
 ```
 
 ## ⚠️ Prerequisites
@@ -108,7 +108,7 @@ projectRoot/
   "title": "Existing Design Document",
   "questions": [
     {
-      "id": "has_architect",
+      "id": "has_arch",
       "prompt": "Do you have an existing arch.md?",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
@@ -129,7 +129,7 @@ projectRoot/
 ```
 
 - `is_synced: no` → Recommend running **sync** first
-- `has_architect: no` → Guide to regular **architect** skill (new feature)
+- `has_arch: no` → Guide to regular **arch** skill (new feature)
 
 ### 0-2. Infer serviceName
 
@@ -374,7 +374,7 @@ Save existing arch.md with integrated enhancement content.
 # Integration Flow
 
 ```
-[spec] → existing requirements.md
+[spec] → existing spec.md
 
 (Enhancement needed)
         ↓
@@ -392,7 +392,7 @@ Updated arch.md
 # Important Notes
 
 1. **Run sync first (recommended)**
-   - Existing architect must be up-to-date for accurate analysis
+   - Existing arch must be up-to-date for accurate analysis
 
 2. **Existing feature compatibility**
    - Must verify enhancement doesn't break existing features

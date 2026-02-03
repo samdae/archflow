@@ -30,7 +30,7 @@ allowed-tools:
 
 # Trace Workflow
 
-Records bug fixes, analysis results, and changes in changelog.md.
+Records bug fixes, analysis results, and changes in trace.md.
 
 ## 💡 Recommended Model
 
@@ -49,13 +49,13 @@ Records bug fixes, analysis results, and changes in changelog.md.
 projectRoot/
   └── docs/
         └── {serviceName}/
-              └── changelog.md   # ← This skill's output
+              └── trace.md   # ← This skill's output
 ```
 
 ## ⚠️ Invocation Timing
 
 1. **Automatically called from debug skill** - After analysis/fix completion
-2. **Manually called by user** - When not called from bugfix, or when recording independently
+2. **Manually called by user** - When not called from debug, or when recording independently
 
 ---
 
@@ -75,7 +75,7 @@ projectRoot/
       "id": "has_context",
       "prompt": "Do you have content to record?",
       "options": [
-        {"id": "bugfix", "label": "Bug fix result - I analyzed/fixed in this session"},
+        {"id": "debug", "label": "Bug fix result - I analyzed/fixed in this session"},
         {"id": "manual", "label": "Manual record - I will explain directly"}
       ]
     }
@@ -221,7 +221,7 @@ Extract the following information from previous conversation:
 | Regression test | {related feature test} | {existing features normal} |
 
 ### Related Documents
-- Requirements: docs/{serviceName}/requirements.md
+- Requirements: docs/{serviceName}/spec.md
 - Design: docs/{serviceName}/arch.md
 
 ---
@@ -251,7 +251,7 @@ Extract the following information from previous conversation:
 ### 4-1. Save
 
 ```
-docs/{serviceName}/changelog.md
+docs/{serviceName}/trace.md
 ```
 
 ### 4-2. Completion Report
@@ -267,7 +267,7 @@ docs/{serviceName}/changelog.md
 | Design Impact | Yes / No |
 
 ### Files
-- Updated: `docs/{serviceName}/changelog.md`
+- Updated: `docs/{serviceName}/trace.md`
 
 ### Next Steps
 - **When design impact exists**: Execute `sync` skill
@@ -282,7 +282,7 @@ docs/{serviceName}/changelog.md
 [debug] → Analysis/fix complete
               │
               ▼
-        [trace] → Write changelog.md
+        [trace] → Write trace.md
               │
               ▼ (when design impact exists)
         [sync] → Synchronize arch.md

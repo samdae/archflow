@@ -32,7 +32,7 @@ allowed-tools:
 
 # Reverse Workflow
 
-Analyze codebase to reverse-engineer requirements.md and arch.md documents.
+Analyze codebase to reverse-engineer spec.md and arch.md documents.
 
 ## 💡 Recommended Model
 
@@ -55,14 +55,14 @@ Analyze codebase to reverse-engineer requirements.md and arch.md documents.
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # ← This skill's output 1
+              ├── spec.md   # ← This skill's output 1
               ├── arch.md      # ← This skill's output 2
-              └── changelog.md      # (generated later by debug)
+              └── trace.md      # (generated later by debug)
 ```
 
 ## ⚠️ Warnings
 
-- **requirements.md is inference**: The "why" is not directly visible in code. May be incomplete.
+- **spec.md is inference**: The "why" is not directly visible in code. May be incomplete.
 - **arch.md is extraction**: Code Mapping, API Spec, DB Schema are directly extracted from code.
 - **Reinforce for enhancement**: Use reinforce skill to progressively enhance incomplete parts.
 
@@ -77,7 +77,7 @@ projectRoot/
 >
 > **Input**: serviceName + code scope
 > **Output**:
-> - `docs/{serviceName}/requirements.md`
+> - `docs/{serviceName}/spec.md`
 > - `docs/{serviceName}/arch.md`
 >
 > ⚠️ Generated documents may be incomplete. Enhance with `reinforce` skill.
@@ -263,7 +263,7 @@ Analyze core files using Read:
 
 ---
 
-## Phase 4: Generate requirements.md
+## Phase 4: Generate spec.md
 
 ### 4-1. Template
 
@@ -371,7 +371,7 @@ Display at top of document:
 ### 6-1. Save Files
 
 ```
-docs/{serviceName}/requirements.md
+docs/{serviceName}/spec.md
 docs/{serviceName}/arch.md
 ```
 
@@ -383,7 +383,7 @@ docs/{serviceName}/arch.md
 ### Generated Documents
 | Document | Path | Completeness |
 |------|------|--------|
-| requirements.md | docs/{serviceName}/requirements.md | {N}% |
+| spec.md | docs/{serviceName}/spec.md | {N}% |
 | arch.md | docs/{serviceName}/arch.md | {N}% |
 
 ### Completeness Details
@@ -413,10 +413,10 @@ docs/{serviceName}/arch.md
 [Legacy Code]
       │
       ▼
-  [reverse] → requirements.md (incomplete)
+  [reverse] → spec.md (incomplete)
       │      → arch.md (incomplete)
       ▼
-  [reinforce] → requirements.md (enhanced)
+  [reinforce] → spec.md (enhanced)
       │        → arch.md (enhanced)
       ▼
    (Documents complete)
@@ -434,7 +434,7 @@ docs/{serviceName}/arch.md
    - Distinguish reliability with confidence indicators
    - Verification is mandatory
 
-2. **architect is extraction + inference**
+2. **arch is extraction + inference**
    - Code Mapping, API Spec, DB Schema are reliable
    - Goal, Scope, Risks are inference, require verification
 

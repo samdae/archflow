@@ -687,7 +687,7 @@ projectRoot/
 |------|---------|
 | Created | {date} |
 | Last Modified | {date} |
-| Skill Version | deploy-launchpad 2.0.0 |
+| Skill Version | runbook 2.0.0 |
 ```
 
 ### 8-2. Save
@@ -729,7 +729,7 @@ When deploying:
 # Integration Flow
 
 ```
-[deploy-launchpad] → runbook.md created
+[runbook] → runbook.md created
                             │
                             ▼
                     (When deployment needed)

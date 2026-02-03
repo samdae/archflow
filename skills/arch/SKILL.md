@@ -115,12 +115,12 @@ Document in "Risks & Tradeoffs" section:
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # spec skill output
+              ├── spec.md   # spec skill output
               ├── arch.md      # ← This skill's output
-              └── changelog.md      # bugfix skill output
+              └── trace.md      # debug skill output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/requirements.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/spec.md`
 
 ## ⚠️ Global Rule: Logical Inconsistency Handling
 
@@ -178,7 +178,7 @@ When user feedback conflicts with Phase 0 Goal or existing design decisions:
 > ⚠️ **This skill strongly recommends using the Opus model.**
 > Design quality determines implementation quality, so maintain Opus for this phase even when cost savings are needed.
 >
-> **Input**: `docs/{serviceName}/requirements.md`
+> **Input**: `docs/{serviceName}/spec.md`
 > **Output**: `docs/{serviceName}/arch.md`
 
 ### 0-1. Collect Input Information
@@ -191,7 +191,7 @@ When skill is invoked without input, **use AskQuestion to guide information coll
   "questions": [
     {
       "id": "has_requirements",
-      "prompt": "Do you have a requirements document? (docs/{serviceName}/requirements.md)",
+      "prompt": "Do you have a requirements document? (docs/{serviceName}/spec.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - Need requirements refinement first"}
@@ -208,14 +208,14 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
-- Input: `docs/alert/requirements.md`
+- Input: `docs/alert/spec.md`
 - Extract: `serviceName = "alert"`
 - Output path: `docs/alert/arch.md`
 
 ## Phase 1: Initial Input Collection
 
 Confirm with user:
-- Requirements document path (e.g., `@docs/alert/requirements.md`)
+- Requirements document path (e.g., `@docs/alert/spec.md`)
 - Feature description (if additional explanation needed)
 
 **If file is already provided** → Proceed directly to Phase 2
@@ -506,7 +506,7 @@ When migration method is "manual SQL", record the following for SQL generation i
 **Path**: `docs/{serviceName}/arch.md`
 
 serviceName inferred from input file path:
-- Input: `docs/alert/requirements.md`
+- Input: `docs/alert/spec.md`
 - Output: `docs/alert/arch.md`
 
 ---
@@ -518,7 +518,7 @@ serviceName inferred from input file path:
 
 > Created: {date}
 > Service: {serviceName}
-> Requirements document: docs/{serviceName}/requirements.md
+> Requirements document: docs/{serviceName}/spec.md
 
 ## 0. Summary
 
@@ -640,7 +640,7 @@ migrations:
 | {file path 2} | {reference purpose} |
 | {file path 3} | {reference purpose} |
 
-⚠️ **When running implement skill, read above files first to understand patterns**
+⚠️ **When running build skill, read above files first to understand patterns**
 
 ### Step-by-Step Implementation
 
@@ -791,7 +791,7 @@ After saving document, inform user:
 # Integration Flow
 
 ```
-[spec] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/spec.md
         ↓
 [arch] → docs/{serviceName}/arch.md
         ↓
@@ -799,5 +799,5 @@ After saving document, inform user:
         ↓
 (Bug occurs)
         ↓
-[debug] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/trace.md
 ```

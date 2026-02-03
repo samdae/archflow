@@ -21,7 +21,7 @@ Invoke the **sync** skill to synchronize design documents.
 ## What it does
 
 1. **Filter Design-Impacting Items**
-   - Scan `docs/{serviceName}/changelog.md`
+   - Scan `docs/{serviceName}/trace.md`
    - Find entries with "Design Impact: Yes"
 
 2. **Analyze Changes**
@@ -46,7 +46,7 @@ Invoke the **sync** skill to synchronize design documents.
 
 ## When to Use
 
-- After `/bugfix` when "Design Impact: Yes"
+- After `/debug` when "Design Impact: Yes"
 - After `/enhance` to integrate enhancement design
 
 ## Next Step
@@ -57,7 +57,7 @@ If implementation needed, run `/build`.
 
 ```
 /sync
-→ Scanning changelog.md...
+→ Scanning trace.md...
 → Found 2 design-impacting changes
 → Analyzing integration points...
 → Updating Code Mapping section...
