@@ -1,10 +1,10 @@
 ---
-name: architect-sync
+name: sync
 description: |
-  Synchronize changelog/enhancement results to architect document.
-  Filters design-impacting changes and updates architect.md.
+  Synchronize changelog/enhancement results to arch document.
+  Filters design-impacting changes and updates arch.md.
 
-  Triggers: architect-sync, sync design, update architect
+  Triggers: sync, synchronize
 user-invocable: true
 allowed-tools:
   - Read
@@ -14,9 +14,9 @@ allowed-tools:
   - Skill
 ---
 
-# /architect-sync
+# /sync
 
-Invoke the **architect-sync** skill to synchronize design documents.
+Invoke the **sync** skill to synchronize design documents.
 
 ## What it does
 
@@ -26,14 +26,14 @@ Invoke the **architect-sync** skill to synchronize design documents.
 
 2. **Analyze Changes**
    - Extract patterns, API changes, schema updates
-   - Determine integration points in architect.md
+   - Determine integration points in arch.md
 
 3. **Check for Conflicts**
    - Compare with existing design decisions
    - Identify potential inconsistencies
 
 4. **Update Architect**
-   - Integrate changes into `docs/{serviceName}/architect.md`
+   - Integrate changes into `docs/{serviceName}/arch.md`
    - Update Code Mapping, API Spec, DB Schema as needed
 
 5. **Add Sync History**
@@ -47,20 +47,20 @@ Invoke the **architect-sync** skill to synchronize design documents.
 ## When to Use
 
 - After `/bugfix` when "Design Impact: Yes"
-- After `/architect-enhance` to integrate enhancement design
+- After `/enhance` to integrate enhancement design
 
 ## Next Step
 
-If implementation needed, run `/implement`.
+If implementation needed, run `/build`.
 
 ## Usage Examples
 
 ```
-/architect-sync
+/sync
 → Scanning changelog.md...
 → Found 2 design-impacting changes
 → Analyzing integration points...
 → Updating Code Mapping section...
-→ architect.md synchronized
+→ arch.md synchronized
 → Sync history added
 ```

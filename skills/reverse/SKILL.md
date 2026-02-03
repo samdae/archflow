@@ -32,7 +32,7 @@ allowed-tools:
 
 # Reverse Workflow
 
-Analyze codebase to reverse-engineer requirements.md and architect.md documents.
+Analyze codebase to reverse-engineer requirements.md and arch.md documents.
 
 ## 💡 Recommended Model
 
@@ -56,14 +56,14 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md   # ← This skill's output 1
-              ├── architect.md      # ← This skill's output 2
-              └── changelog.md      # (generated later by bugfix)
+              ├── arch.md      # ← This skill's output 2
+              └── changelog.md      # (generated later by debug)
 ```
 
 ## ⚠️ Warnings
 
 - **requirements.md is inference**: The "why" is not directly visible in code. May be incomplete.
-- **architect.md is extraction**: Code Mapping, API Spec, DB Schema are directly extracted from code.
+- **arch.md is extraction**: Code Mapping, API Spec, DB Schema are directly extracted from code.
 - **Reinforce for enhancement**: Use reinforce skill to progressively enhance incomplete parts.
 
 ---
@@ -78,7 +78,7 @@ projectRoot/
 > **Input**: serviceName + code scope
 > **Output**:
 > - `docs/{serviceName}/requirements.md`
-> - `docs/{serviceName}/architect.md`
+> - `docs/{serviceName}/arch.md`
 >
 > ⚠️ Generated documents may be incomplete. Enhance with `reinforce` skill.
 
@@ -336,7 +336,7 @@ Analyze core files using Read:
 
 ---
 
-## Phase 5: Generate architect.md
+## Phase 5: Generate arch.md
 
 ### 5-1. Generate in FEATURE_DESIGN_DOC_TEMPLATE format
 
@@ -372,7 +372,7 @@ Display at top of document:
 
 ```
 docs/{serviceName}/requirements.md
-docs/{serviceName}/architect.md
+docs/{serviceName}/arch.md
 ```
 
 ### 6-2. Completion Report
@@ -384,7 +384,7 @@ docs/{serviceName}/architect.md
 | Document | Path | Completeness |
 |------|------|--------|
 | requirements.md | docs/{serviceName}/requirements.md | {N}% |
-| architect.md | docs/{serviceName}/architect.md | {N}% |
+| arch.md | docs/{serviceName}/arch.md | {N}% |
 
 ### Completeness Details
 | Item | Status |
@@ -414,15 +414,15 @@ docs/{serviceName}/architect.md
       │
       ▼
   [reverse] → requirements.md (incomplete)
-      │      → architect.md (incomplete)
+      │      → arch.md (incomplete)
       ▼
   [reinforce] → requirements.md (enhanced)
-      │        → architect.md (enhanced)
+      │        → arch.md (enhanced)
       ▼
    (Documents complete)
       │
       ▼
-  Can use sync/enhance/implement afterwards
+  Can use sync/enhance/build afterwards
 ```
 
 ---

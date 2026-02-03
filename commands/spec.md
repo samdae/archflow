@@ -1,10 +1,10 @@
 ---
-name: require-refine
+name: spec
 description: |
   Transform unstructured materials into refined requirements document.
   Collects service name and input materials, creates Q&A loop to clarify unclear points.
 
-  Triggers: require-refine, refine requirements, create requirements
+  Triggers: spec, specification, define requirements
 user-invocable: true
 allowed-tools:
   - Read
@@ -60,7 +60,7 @@ After completion, run `/architect` to start design.
 ## Usage Examples
 
 ```
-/require-refine
+/spec
 → "Service name?" → "auth-service"
 → "Input materials?" → @meeting-notes.md @api-sketch.png
 → Q&A loop...

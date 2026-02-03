@@ -21,22 +21,22 @@ Display the following help message:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📐 archflow - Document-Driven Development Pipeline v1.0.0
+📐 archflow - The Design Compiler v2.0.0
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🚀 Core Pipeline (New Feature)
-  /require-refine          Transform materials into requirements.md
-  /architect               Multi-agent debate → architect.md
-  /architect-review        Verify design completeness (recommended)
-  /implement               Automated implementation from design
+  /spec                    Transform materials into requirements.md
+  /arch                    Multi-agent debate → arch.md
+  /check                   Verify design completeness (recommended)
+  /build                   Automated implementation from design
 
 🐛 Bugfix & Maintenance
-  /bugfix                  Systematic bug fixing (Debug mode)
-  /changelogging           Record changes to changelog.md
+  /debug                   Systematic bug fixing (Debug mode)
+  /trace                   Record changes to changelog.md
 
 🔄 Design Evolution
-  /architect-sync          Sync changelog/enhancement to architect.md
-  /architect-enhance       Design enhancement for existing features
+  /sync                    Sync changelog/enhancement to arch.md
+  /enhance                 Design enhancement for existing features
 
 📚 Document Management
   /reinforce               Fill gaps in incomplete documents
@@ -44,27 +44,27 @@ Display the following help message:
   /overview                Generate 1-page project overview
 
 🚢 Deployment
-  /deploy-launchpad        Generate deployment documentation
+  /runbook                 Generate deployment documentation
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📁 Document Structure:
    docs/{serviceName}/
-   ├── requirements.md     # from /require-refine
-   ├── architect.md        # from /architect
-   ├── changelog.md        # from /changelogging
+   ├── requirements.md     # from /spec
+   ├── arch.md             # from /arch
+   ├── changelog.md        # from /trace
    ├── overview.md         # from /overview
-   └── deploy-launchpad.md # from /deploy-launchpad
+   └── runbook.md          # from /runbook
 
 💡 Recommended Flow:
-   New Feature:  /require-refine → /architect → /architect-review → /implement
-   Bugfix:       /bugfix → /changelogging → /architect-sync
-   Legacy Code:  /reverse → /reinforce → /architect-sync
-   Enhancement:  /architect-enhance → /implement
+   New Feature:  /spec → /arch → /check → /build
+   Bugfix:       /debug → /trace → /sync
+   Legacy Code:  /reverse → /reinforce → /sync
+   Enhancement:  /enhance → /build
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️  Note: Skills may not have autocomplete in CLI.
-    Type the command directly (e.g., /require-refine)
+    Type the command directly (e.g., /spec)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -76,24 +76,24 @@ Display the following help message:
 
 | Skill | Description |
 |-------|-------------|
-| `/require-refine` | Transform unstructured materials into refined requirements |
-| `/architect` | Multi-agent debate for optimal design |
-| `/architect-review` | Verify design completeness before implementation |
-| `/implement` | Automated implementation from design document |
+| `/spec` | Transform unstructured materials into refined requirements |
+| `/arch` | Multi-agent debate for optimal design |
+| `/check` | Verify design completeness before implementation |
+| `/build` | Automated implementation from design document |
 
 ### Bugfix & Maintenance (2)
 
 | Skill | Description |
 |-------|-------------|
-| `/bugfix` | Systematic bug fixing with Debug mode |
-| `/changelogging` | Record changes and fixes to changelog |
+| `/debug` | Systematic bug fixing with Debug mode |
+| `/trace` | Record changes and fixes to changelog |
 
 ### Design Evolution (2)
 
 | Skill | Description |
 |-------|-------------|
-| `/architect-sync` | Synchronize changes to architect document |
-| `/architect-enhance` | Design enhancement for existing features |
+| `/sync` | Synchronize changes to arch document |
+| `/enhance` | Design enhancement for existing features |
 
 ### Document Management (3)
 
@@ -107,4 +107,4 @@ Display the following help message:
 
 | Skill | Description |
 |-------|-------------|
-| `/deploy-launchpad` | Generate deployment documentation |
+| `/runbook` | Generate deployment documentation |

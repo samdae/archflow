@@ -1,19 +1,19 @@
 ---
-id: changelogging
-name: Changelogging
+id: trace
+name: Trace
 description: |
-  Dedicated changelog writing skill.
-  Records bug fixes, changes, and their design impact.
+  Record bug fixes, changes, and their design impact to changelog.
+  Trace changes for future reference.
 
-  Triggers: changelogging, record change, update changelog, 변경 기록
+  Triggers: trace, log, record, 추적, 변경 기록
 user-invocable: true
 version: 2.0.0
 triggers:
-  - "changelogging"
+  - "trace"
+  - "log"
+  - "record"
   - "changelog"
-  - "change log"
-  - "record changes"
-requires: ["bugfix"]
+requires: ["debug"]
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -28,7 +28,7 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Changelogging Workflow
+# Trace Workflow
 
 Records bug fixes, analysis results, and changes in changelog.md.
 
@@ -54,7 +54,7 @@ projectRoot/
 
 ## ⚠️ Invocation Timing
 
-1. **Automatically called from bugfix skill** - After analysis/fix completion
+1. **Automatically called from debug skill** - After analysis/fix completion
 2. **Manually called by user** - When not called from bugfix, or when recording independently
 
 ---
@@ -63,7 +63,7 @@ projectRoot/
 
 ### 0-1. Context Verification
 
-**When called from bugfix session:**
+**When called from debug session:**
 > Use context from previous conversation (cause, fix content, etc.) as is
 
 **When called independently:**
@@ -128,7 +128,7 @@ projectRoot/
 
 ## Phase 2: Information Gathering
 
-### 2-1. Extract from Context (bugfix session)
+### 2-1. Extract from Context (debug session)
 
 Extract the following information from previous conversation:
 - Symptom (user-reported issue)
@@ -152,7 +152,7 @@ Extract the following information from previous conversation:
   "questions": [
     {
       "id": "design_impact",
-      "prompt": "Does this change impact the design (architect.md)?",
+      "prompt": "Does this change impact the design (arch.md)?",
       "options": [
         {"id": "yes", "label": "Yes - API/DB/structure changed"},
         {"id": "no", "label": "No - Bug fix only"},
@@ -163,7 +163,7 @@ Extract the following information from previous conversation:
 }
 ```
 
-- `yes` → Write detailed design impact section + guide to architect-sync
+- `yes` → Write detailed design impact section + guide to sync
 - `no` → Mark as no design impact
 
 ---
@@ -198,7 +198,7 @@ Extract the following information from previous conversation:
 | DB Schema | {table/column changes - if applicable} |
 | Sequence Diagram | {flow changes - if applicable} |
 
-⚠️ **When design impact exists**: Need to synchronize architect.md with `architect-sync` skill
+⚠️ **When design impact exists**: Need to synchronize arch.md with `sync` skill
 
 ### Change Reasoning
 - **Why did this problem occur**: {root cause analysis}
@@ -222,7 +222,7 @@ Extract the following information from previous conversation:
 
 ### Related Documents
 - Requirements: docs/{serviceName}/requirements.md
-- Design: docs/{serviceName}/architect.md
+- Design: docs/{serviceName}/arch.md
 
 ---
 
@@ -270,7 +270,7 @@ docs/{serviceName}/changelog.md
 - Updated: `docs/{serviceName}/changelog.md`
 
 ### Next Steps
-- **When design impact exists**: Execute `architect-sync` skill
+- **When design impact exists**: Execute `sync` skill
 - **When testing needed**: Proceed with testing according to verification method
 ```
 
@@ -279,13 +279,13 @@ docs/{serviceName}/changelog.md
 # Integration Flow
 
 ```
-[bugfix] → Analysis/fix complete
+[debug] → Analysis/fix complete
               │
               ▼
-        [changelogging] → Write changelog.md
+        [trace] → Write changelog.md
               │
               ▼ (when design impact exists)
-        [architect-sync] → Synchronize architect.md
+        [sync] → Synchronize arch.md
 ```
 
 ---
@@ -293,7 +293,7 @@ docs/{serviceName}/changelog.md
 # Important Notes
 
 1. **Recommended to call in same session**
-   - Automatic extraction possible when bugfix context exists
+   - Automatic extraction possible when debug context exists
    - Manual input required if different session
 
 2. **Design Impact Judgment**

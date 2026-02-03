@@ -48,61 +48,61 @@ After installation, use slash commands:
 | Command | Description |
 |---------|-------------|
 | `/archflow` | Show all available skills |
-| `/require-refine` | Transform materials into requirements.md |
-| `/architect` | Multi-agent debate → architect.md |
-| `/architect-review` | Verify design completeness |
-| `/implement` | Automated implementation from design |
-| `/bugfix` | Systematic bug fixing (Debug mode) |
-| `/changelogging` | Record changes to changelog.md |
-| `/architect-sync` | Sync changes to architect.md |
-| `/architect-enhance` | Design enhancement for existing features |
+| `/spec` | Transform materials into requirements.md |
+| `/arch` | Multi-agent debate → arch.md |
+| `/check` | Verify design completeness |
+| `/build` | Automated implementation from design |
+| `/debug` | Systematic bug fixing (Debug mode) |
+| `/trace` | Record changes to changelog.md |
+| `/sync` | Sync changes to arch.md |
+| `/enhance` | Design enhancement for existing features |
 | `/reinforce` | Fill gaps in incomplete documents |
 | `/reverse` | Reverse-engineer docs from existing code |
 | `/overview` | Generate 1-page project overview |
-| `/deploy-launchpad` | Generate deployment documentation |
+| `/runbook` | Generate deployment documentation |
 
 ## Workflow
 
 ### New Feature Development
 
 ```
-/require-refine → /architect → /architect-review (권장) → /implement
+/spec → /arch → /check (recommended) → /build
 ```
 
 ### Bug Fixing
 
 ```
-/bugfix → /changelogging → /architect-sync (if design impact)
+/debug → /trace → /sync (if design impact)
 ```
 
 ### Legacy Code Documentation
 
 ```
-/reverse → /reinforce → /architect-sync
+/reverse → /reinforce → /sync
 ```
 
 ### Feature Enhancement
 
 ```
-/architect-enhance → /implement
+/enhance → /build
 ```
 
 ## Skills Included
 
 | Skill | Description | Recommended Model |
 |-------|-------------|-------------------|
-| `require-refine` | Refine raw requirements into structured docs | Opus |
-| `architect` | Multi-Agent Debate for feature design | Opus |
-| `architect-review` | Verify design completeness before implementation | Sonnet |
-| `implement` | Automated implementation from design docs | Sonnet |
-| `bugfix` | Systematic debugging with document context | Opus |
-| `changelogging` | Generate structured changelogs | Sonnet |
-| `architect-sync` | Sync documentation after code changes | Sonnet |
-| `architect-enhance` | Design enhancements for existing features | Opus |
+| `spec` | Refine raw requirements into structured docs | Opus |
+| `arch` | Multi-Agent Debate for feature design | Opus |
+| `check` | Verify design completeness before implementation | Sonnet |
+| `build` | Automated implementation from design docs | Sonnet |
+| `debug` | Systematic debugging with document context | Opus |
+| `trace` | Generate structured changelogs | Sonnet |
+| `sync` | Sync documentation after code changes | Sonnet |
+| `enhance` | Design enhancements for existing features | Opus |
 | `reinforce` | Enhance existing documentation | Sonnet |
 | `reverse` | Generate documentation from code | Opus |
 | `overview` | Generate 1-page project overview | Sonnet |
-| `deploy-launchpad` | Generate deployment documentation | Sonnet |
+| `runbook` | Generate deployment documentation | Sonnet |
 
 ## Agents Included
 
@@ -119,10 +119,11 @@ Skills that generate documentation follow this folder structure:
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md      # from /require-refine
-              ├── architect.md         # from /architect
-              ├── changelog.md         # from /changelogging
-              └── deploy-launchpad.md  # from /deploy-launchpad
+              ├── requirements.md      # from /spec
+              ├── arch.md              # from /arch
+              ├── changelog.md         # from /trace
+              ├── overview.md          # from /overview
+              └── runbook.md           # from /runbook
 ```
 
 ## Language Support
@@ -130,8 +131,8 @@ projectRoot/
 All skills are written in English but automatically respond in the user's language.
 
 Supported trigger keywords include:
-- English: `architect`, `implement`, `bugfix`, etc.
-- Korean: `설계`, `구현`, `버그 수정`, etc.
+- English: `arch`, `build`, `debug`, etc.
+- Korean: `설계`, `구현`, `디버그`, etc.
 
 ## License
 
@@ -155,18 +156,19 @@ Every skill file must begin with YAML front matter:
 
 ```yaml
 ---
-id: require-refine
-name: Require Refine
+id: spec
+name: Spec
 description: |
   Transform unstructured materials into refined requirements document.
   Collects service name and input materials, creates Q&A loop.
 
-  Triggers: require-refine, 요구사항 정의
+  Triggers: spec, specification, 요구사항 정의
 user-invocable: true
 version: 2.0.0
 triggers:
+  - "spec"
+  - "specification"
   - "requirements"
-  - "require-refine"
 requires: []
 platform: all
 recommended_model: opus

@@ -1,19 +1,19 @@
 ---
-id: implement
-name: Implement
+id: build
+name: Build
 description: |
   Automated implementation based on design document.
-  Analyzes architect.md, creates dependency graph, executes step-by-step.
+  Analyzes arch.md, creates dependency graph, executes step-by-step.
 
-  Triggers: implement, start implementation, code from design, 구현
+  Triggers: build, compile, implement, 빌드, 구현
 user-invocable: true
 version: 2.0.0
 triggers:
+  - "build"
+  - "compile"
   - "implement"
-  - "implementation"
-  - "develop"
-  - "code implementation"
-requires: ["architect"]
+  - "generate code"
+requires: ["arch"]
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -31,9 +31,9 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Implement Workflow
+# Build Workflow
 
-Automated implementation based on design document (architect.md).
+Automated implementation based on design document (arch.md).
 
 ## 💡 Recommended Model
 
@@ -56,12 +56,12 @@ Automated implementation based on design document (architect.md).
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # require-refine skill output
-              ├── architect.md      # ← This skill's input
-              └── changelog.md      # bugfix skill output
+              ├── requirements.md   # spec skill output
+              ├── arch.md      # ← This skill's input
+              └── changelog.md      # debug skill output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/architect.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/arch.md`
 
 ## Prerequisites
 
@@ -76,7 +76,7 @@ projectRoot/
 > Design document is detailed, so high-performance model unnecessary. High token consumption makes cost savings significant.
 > **Switch model in a new session before running.**
 >
-> **Input**: `docs/{serviceName}/architect.md`
+> **Input**: `docs/{serviceName}/arch.md`
 
 ### 0-1. Verify Design Document
 
@@ -88,7 +88,7 @@ When skill invoked without input, **use AskQuestion to guide information collect
   "questions": [
     {
       "id": "has_design",
-      "prompt": "Do you have a design document? (docs/{serviceName}/architect.md)",
+      "prompt": "Do you have a design document? (docs/{serviceName}/arch.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - Need design document first"}
@@ -104,7 +104,7 @@ When skill invoked without input, **use AskQuestion to guide information collect
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
-- Input: `docs/alert/architect.md`
+- Input: `docs/alert/arch.md`
 - Extract: `serviceName = "alert"`
 
 ### 0-3. Verify Project Settings
@@ -508,8 +508,8 @@ CREATE INDEX ...;
 ### Next Steps Guide
 > ✅ **Implementation Complete**
 >
-> If bugs occur, run `bugfix` skill in **Debug mode**.
-> Document paths: `docs/{serviceName}/requirements.md`, `architect.md`
+> If bugs occur, run `debug` skill in **Debug mode**.
+> Document paths: `docs/{serviceName}/requirements.md`, `arch.md`
 ```
 
 ### Commit Handling
@@ -525,15 +525,15 @@ CREATE INDEX ...;
 # Integration Flow
 
 ```
-[require-refine] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/architect.md
+[architect] → docs/{serviceName}/arch.md
         ↓
-[implement] → Implementation
+[build] → Implementation
         ↓
 (Bug occurs)
         ↓
-[bugfix] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/changelog.md
 ```
 
 ---

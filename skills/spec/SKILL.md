@@ -1,18 +1,18 @@
 ---
-id: require-refine
-name: Require Refine
+id: spec
+name: Spec
 description: |
   Transform unstructured materials into refined requirements document.
   Collects service name and input materials, creates Q&A loop to clarify unclear points.
 
-  Triggers: require-refine, refine requirements, create requirements, 요구사항 정의
+  Triggers: spec, specification, define requirements, 요구사항 정의, 명세
 user-invocable: true
 version: 2.0.0
 triggers:
+  - "spec"
+  - "specification"
   - "requirements"
-  - "require-refine"
   - "define requirements"
-  - "feature definition"
 requires: []
 platform: all
 recommended_model: opus
@@ -29,7 +29,7 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Require Refine Workflow
+# Spec Workflow
 
 Transform unstructured materials into refined requirements documentation.
 
@@ -375,7 +375,7 @@ After saving document, inform user:
 # Integration Flow
 
 ```
-[require-refine] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/requirements.md
         ↓
 [architect] → docs/{serviceName}/architect.md
         ↓
@@ -383,5 +383,5 @@ After saving document, inform user:
         ↓
 (Bug occurs)
         ↓
-[bugfix] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/changelog.md
 ```

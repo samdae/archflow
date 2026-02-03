@@ -1,18 +1,18 @@
 ---
-id: deploy-launchpad
-name: Deploy Launchpad
+id: runbook
+name: Runbook
 description: |
-  Collect deployment information via Q&A to generate Launchpad document.
+  Collect deployment information via Q&A to generate runbook document.
   Creates comprehensive deployment guide without actual secrets.
 
-  Triggers: deploy-launchpad, deployment docs, create launchpad, 배포 문서
+  Triggers: runbook, deploy, ops, 배포 문서, 운영 문서
 user-invocable: true
 version: 2.0.0
 triggers:
-  - "deploy-launchpad"
-  - "deployment doc"
-  - "deployment setup"
-  - "launchpad"
+  - "runbook"
+  - "deploy"
+  - "ops"
+  - "deployment"
 requires: []
 platform: all
 recommended_model: sonnet
@@ -28,7 +28,7 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Deploy Launchpad Workflow
+# Runbook Workflow
 
 Collect all necessary deployment information through Q&A to generate a Launchpad document.
 
@@ -49,7 +49,7 @@ Collect all necessary deployment information through Q&A to generate a Launchpad
 projectRoot/
   └── docs/
         └── {serviceName}/
-              └── deploy-launchpad.md   # ← This skill's output
+              └── runbook.md   # ← This skill's output
 ```
 
 ## ⚠️ Secrets Warning
@@ -93,7 +93,7 @@ projectRoot/
   "questions": [
     {
       "id": "existing_doc",
-      "prompt": "Does deploy-launchpad.md already exist?",
+      "prompt": "Does runbook.md already exist?",
       "options": [
         {"id": "yes", "label": "Yes - Update it"},
         {"id": "no", "label": "No - Create new"}
@@ -693,7 +693,7 @@ projectRoot/
 ### 8-2. Save
 
 ```
-docs/{serviceName}/deploy-launchpad.md
+docs/{serviceName}/runbook.md
 ```
 
 ---
@@ -712,11 +712,11 @@ docs/{serviceName}/deploy-launchpad.md
 | Environments | {environments} |
 
 ### File
-- Created: `docs/{serviceName}/deploy-launchpad.md`
+- Created: `docs/{serviceName}/runbook.md`
 
 ### Usage
 When deploying:
-> "{serviceName} please deploy" + @deploy-launchpad.md
+> "{serviceName} please deploy" + @runbook.md
 > → LLM reads the document and guides deployment commands
 
 ### Next Steps
@@ -729,12 +729,12 @@ When deploying:
 # Integration Flow
 
 ```
-[deploy-launchpad] → deploy-launchpad.md created
+[deploy-launchpad] → runbook.md created
                             │
                             ▼
                     (When deployment needed)
                             │
-                    User: "Deploy please" + @deploy-launchpad.md
+                    User: "Deploy please" + @runbook.md
                             │
                             ▼
                     LLM reads document and guides deployment commands

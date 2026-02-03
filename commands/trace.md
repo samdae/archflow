@@ -1,10 +1,10 @@
 ---
-name: changelogging
+name: trace
 description: |
-  Dedicated changelog writing skill.
-  Records bug fixes, changes, and their design impact.
+  Record bug fixes, changes, and their design impact to changelog.
+  Trace changes for future reference.
 
-  Triggers: changelogging, record change, update changelog
+  Triggers: trace, log, record
 user-invocable: true
 allowed-tools:
   - Read
@@ -15,14 +15,14 @@ allowed-tools:
   - Skill
 ---
 
-# /changelogging
+# /trace
 
-Invoke the **changelogging** skill to record changes.
+Invoke the **trace** skill to record changes.
 
 ## What it does
 
 1. **Extract Context**
-   - From bugfix session (automatic)
+   - From debug session (automatic)
    - Or manual input
 
 2. **Classify Result Type**
@@ -31,7 +31,7 @@ Invoke the **changelogging** skill to record changes.
    - 🔍 Investigation Required
 
 3. **Check Design Impact**
-   - Does this change affect architect.md?
+   - Does this change affect arch.md?
    - New patterns discovered?
    - API changes?
 
@@ -58,20 +58,20 @@ docs/{serviceName}/changelog.md
 
 ## When to Use
 
-- Automatically called from `/bugfix`
+- Automatically called from `/debug`
 - Manually call to record independent changes
 
 ## Next Step
 
-If design impact exists, run `/architect-sync`.
+If design impact exists, run `/sync`.
 
 ## Usage Examples
 
 ```
-/changelogging
-→ [Auto-extracted from bugfix session]
+/trace
+→ [Auto-extracted from debug session]
 → Type: bugfix
 → Design Impact: Yes (new validation pattern)
 → changelog.md updated
-→ "Run /architect-sync to update design"
+→ "Run /sync to update design"
 ```

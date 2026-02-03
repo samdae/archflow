@@ -1,10 +1,10 @@
 ---
-name: architect-enhance
+name: enhance
 description: |
   Design enhancement for existing features.
-  Analyzes existing architect.md and designs improvements.
+  Analyzes existing arch.md and designs improvements.
 
-  Triggers: architect-enhance, enhance design, improve architecture
+  Triggers: enhance, improve, extend
 user-invocable: true
 allowed-tools:
   - Read
@@ -17,18 +17,18 @@ allowed-tools:
   - Skill
 ---
 
-# /architect-enhance
+# /enhance
 
-Invoke the **architect-enhance** skill for feature enhancement design.
+Invoke the **enhance** skill for feature enhancement design.
 
 ## What it does
 
 1. **Analyze Existing Design**
-   - Read `docs/{serviceName}/architect.md`
+   - Read `docs/{serviceName}/arch.md`
    - Understand current architecture
 
 2. **Analyze Enhancement Requirements**
-   - From `/require-refine` output
+   - From `/spec` output
    - Or direct user input
 
 3. **Impact Analysis**
@@ -42,7 +42,7 @@ Invoke the **architect-enhance** skill for feature enhancement design.
    - Minimal change principle
 
 5. **Integrate with Existing**
-   - Merge enhancement into architect.md
+   - Merge enhancement into arch.md
    - Update Code Mapping, API Spec
 
 ## Recommended Model
@@ -51,20 +51,20 @@ Invoke the **architect-enhance** skill for feature enhancement design.
 
 ## Prerequisites
 
-- Existing `docs/{serviceName}/architect.md` (synced state recommended)
-- Enhancement requirements (from `/require-refine`)
+- Existing `docs/{serviceName}/arch.md` (synced state recommended)
+- Enhancement requirements (from `/spec`)
 
 ## Next Step
 
-After completion, run `/implement` for enhancement implementation.
+After completion, run `/build` for enhancement implementation.
 
 ## Usage Examples
 
 ```
-/architect-enhance
+/enhance
 → "Enhancement?" → "Add OAuth2 support to auth-service"
-→ Loading existing architect.md...
+→ Loading existing arch.md...
 → Impact analysis: AuthService, TokenRepository affected
 → Designing enhancement...
-→ architect.md updated with OAuth2 section
+→ arch.md updated with OAuth2 section
 ```

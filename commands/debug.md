@@ -1,10 +1,10 @@
 ---
-name: bugfix
+name: debug
 description: |
   Systematic bug fixing based on documents in Debug mode.
   Cross-references error with design flow to find root cause.
 
-  Triggers: bugfix, fix bug, debug issue
+  Triggers: debug, fix, bugfix
 user-invocable: true
 allowed-tools:
   - Read
@@ -17,9 +17,9 @@ allowed-tools:
   - Skill
 ---
 
-# /bugfix
+# /debug
 
-Invoke the **bugfix** skill for systematic bug fixing.
+Invoke the **debug** skill for systematic bug fixing.
 
 ⚠️ **Run in Debug mode for best results**
 
@@ -27,7 +27,7 @@ Invoke the **bugfix** skill for systematic bug fixing.
 
 1. **Load Context**
    - Read `docs/{serviceName}/requirements.md`
-   - Read `docs/{serviceName}/architect.md`
+   - Read `docs/{serviceName}/arch.md`
    - Read `docs/{serviceName}/changelog.md` (if exists)
 
 2. **Analyze Error**
@@ -37,7 +37,7 @@ Invoke the **bugfix** skill for systematic bug fixing.
 
 3. **Root Cause Analysis**
    - Compare expected behavior (from requirements)
-   - Compare implementation (from architect)
+   - Compare implementation (from arch)
    - Identify discrepancy
 
 4. **Implement Fix**
@@ -45,7 +45,7 @@ Invoke the **bugfix** skill for systematic bug fixing.
    - Verify fix doesn't break other components
 
 5. **Record Results**
-   - Auto-call `/changelogging` to record fix
+   - Auto-call `/trace` to record fix
 
 ## Recommended Model
 
@@ -55,20 +55,20 @@ Invoke the **bugfix** skill for systematic bug fixing.
 ## Prerequisites
 
 - `docs/{serviceName}/requirements.md`
-- `docs/{serviceName}/architect.md`
+- `docs/{serviceName}/arch.md`
 
 ## Next Step
 
-After completion, `/changelogging` is automatically called.
+After completion, `/trace` is automatically called.
 
 ## Usage Examples
 
 ```
-/bugfix
+/debug
 → "What's the error?" → [paste error or use Debug mode]
-→ Loads requirements.md, architect.md
+→ Loads requirements.md, arch.md
 → Tracing error through Code Mapping...
 → Root cause: Missing null check in UserService.validate()
 → Applying fix...
-→ Calling /changelogging...
+→ Calling /trace...
 ```

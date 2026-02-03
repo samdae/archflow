@@ -1,19 +1,19 @@
 ---
-id: architect
-name: Architect
+id: arch
+name: Arch
 description: |
   Multi-agent debate to derive optimal design through two perspectives.
   Domain Architect + Best Practice Advisor collaborate in round-based debate.
 
-  Triggers: architect, design, create architecture, start design, 설계
+  Triggers: arch, architecture, blueprint, 설계, 아키텍처
 user-invocable: true
 version: 2.0.0
 triggers:
-  - "design"
-  - "architect"
+  - "arch"
   - "architecture"
+  - "blueprint"
   - "feature design"
-requires: ["require-refine"]
+requires: ["spec"]
 platform: all
 recommended_model: opus
 agents:
@@ -32,7 +32,7 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Architect Workflow
+# Arch Workflow
 
 Two perspective sub-agents collaborate to derive optimal design.
 
@@ -115,8 +115,8 @@ Document in "Risks & Tradeoffs" section:
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # require-refine skill output
-              ├── architect.md      # ← This skill's output
+              ├── requirements.md   # spec skill output
+              ├── arch.md      # ← This skill's output
               └── changelog.md      # bugfix skill output
 ```
 
@@ -179,7 +179,7 @@ When user feedback conflicts with Phase 0 Goal or existing design decisions:
 > Design quality determines implementation quality, so maintain Opus for this phase even when cost savings are needed.
 >
 > **Input**: `docs/{serviceName}/requirements.md`
-> **Output**: `docs/{serviceName}/architect.md`
+> **Output**: `docs/{serviceName}/arch.md`
 
 ### 0-1. Collect Input Information
 
@@ -203,14 +203,14 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 
 **Processing by response:**
 - `yes` → Request file path → Proceed to Phase 1
-- `no` → Guide to **require-refine** skill
+- `no` → Guide to **spec** skill
 
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
 - Input: `docs/alert/requirements.md`
 - Extract: `serviceName = "alert"`
-- Output path: `docs/alert/architect.md`
+- Output path: `docs/alert/arch.md`
 
 ## Phase 1: Initial Input Collection
 
@@ -503,11 +503,11 @@ When migration method is "manual SQL", record the following for SQL generation i
 
 ### Save Path
 
-**Path**: `docs/{serviceName}/architect.md`
+**Path**: `docs/{serviceName}/arch.md`
 
 serviceName inferred from input file path:
 - Input: `docs/alert/requirements.md`
-- Output: `docs/alert/architect.md`
+- Output: `docs/alert/arch.md`
 
 ---
 
@@ -781,9 +781,9 @@ After saving document, inform user:
 
 > ✅ **Design Document Complete**
 >
-> Saved to: `docs/{serviceName}/architect.md`
+> Saved to: `docs/{serviceName}/arch.md`
 >
-> **Next Step**: Run `implement` skill to begin implementation.
+> **Next Step**: Run `build` skill to begin implementation.
 > → Recommended to switch to **Sonnet model** in new session (cost savings)
 
 ---
@@ -791,13 +791,13 @@ After saving document, inform user:
 # Integration Flow
 
 ```
-[require-refine] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/architect.md
+[architect] → docs/{serviceName}/arch.md
         ↓
-[implement] → Implementation
+[build] → Implementation
         ↓
 (Bug occurs)
         ↓
-[bugfix] → docs/{serviceName}/changelog.md
+[debug] → docs/{serviceName}/changelog.md
 ```

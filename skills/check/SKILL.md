@@ -1,19 +1,19 @@
 ---
-id: architect-review
-name: Architect Review
+id: check
+name: Check
 description: |
   Verify design document completeness before implementation.
   Identifies missing details based on defined components and asks user to fill gaps.
 
-  Triggers: architect-review, design review, verify design, 설계 검증
+  Triggers: check, verify, validate design, 설계 검증, 검증
 user-invocable: true
 version: 1.0.0
 triggers:
-  - "architect-review"
+  - "check"
+  - "verify"
+  - "validate"
   - "design review"
-  - "verify design"
-  - "check design"
-requires: ["architect"]
+requires: ["arch"]
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -50,7 +50,7 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md  # Input (optional)
-              └── architect.md     # Input & Output (updated)
+              └── arch.md     # Input & Output (updated)
 ```
 
 ---
@@ -85,7 +85,7 @@ Or detect from context if user provides file path.
 
 ### 0-3. Load Design Document
 
-Read `docs/{serviceName}/architect.md`
+Read `docs/{serviceName}/arch.md`
 
 If not found → Error: "Design document not found. Run /architect first."
 
@@ -229,7 +229,7 @@ If user selects "Skip for now":
 
 ## Phase 4: Document Update
 
-Update `docs/{serviceName}/architect.md` with filled gaps.
+Update `docs/{serviceName}/arch.md` with filled gaps.
 
 ### Update Location
 
@@ -295,10 +295,10 @@ Present review summary to user:
 - Log aggregation
 
 ### Document Updated
-`docs/{serviceName}/architect.md` - 12. Additional Design Details section added
+`docs/{serviceName}/arch.md` - 12. Additional Design Details section added
 
 ### Next Step
-Run `/implement` to start implementation.
+Run `/build` to start implementation.
 ```
 
 ---
@@ -307,12 +307,12 @@ Run `/implement` to start implementation.
 
 > ✅ **Architect Review Complete**
 >
-> Output: `docs/{serviceName}/architect.md` (updated)
+> Output: `docs/{serviceName}/arch.md` (updated)
 >
 > - Gaps filled: {N}
 > - Skipped (TBD): {M}
 >
-> **Next Step**: Run `/implement` to start implementation.
+> **Next Step**: Run `/build` to start implementation.
 
 ---
 

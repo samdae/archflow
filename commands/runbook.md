@@ -1,10 +1,10 @@
 ---
-name: deploy-launchpad
+name: runbook
 description: |
-  Collect deployment information via Q&A to generate Launchpad document.
+  Collect deployment information via Q&A to generate runbook document.
   Creates comprehensive deployment guide without actual secrets.
 
-  Triggers: deploy-launchpad, deployment docs, create launchpad
+  Triggers: runbook, deploy, ops
 user-invocable: true
 allowed-tools:
   - Read
@@ -15,9 +15,9 @@ allowed-tools:
   - Skill
 ---
 
-# /deploy-launchpad
+# /runbook
 
-Invoke the **deploy-launchpad** skill to create deployment documentation.
+Invoke the **runbook** skill to create deployment documentation.
 
 ## What it does
 
@@ -51,7 +51,7 @@ Invoke the **deploy-launchpad** skill to create deployment documentation.
    - Alerting setup
 
 7. **Generate Output**
-   - Creates `docs/{serviceName}/deploy-launchpad.md`
+   - Creates `docs/{serviceName}/runbook.md`
 
 ## Recommended Model
 
@@ -59,25 +59,25 @@ Invoke the **deploy-launchpad** skill to create deployment documentation.
 
 ## Output
 
-`docs/{serviceName}/deploy-launchpad.md`
+`docs/{serviceName}/runbook.md`
 
 ⚠️ **Never includes actual secret values** - only records where/how to retrieve them
 
 ## Usage After Creation
 
 ```
-"Deploy {serviceName}" + @deploy-launchpad.md
+"Deploy {serviceName}" + @runbook.md
 → LLM reads document and guides deployment
 ```
 
 ## Usage Examples
 
 ```
-/deploy-launchpad
+/runbook
 → "Service name?" → "auth-service"
 → "Platform?" → "Kubernetes"
 → "CI/CD tool?" → "GitHub Actions"
 → "Environment variables?" → "DB_URL, JWT_SECRET, REDIS_URL"
 → "Where are secrets stored?" → "AWS Secrets Manager"
-→ deploy-launchpad.md generated
+→ runbook.md generated
 ```

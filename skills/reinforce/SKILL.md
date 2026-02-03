@@ -53,7 +53,7 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md   # ← Input/Output
-              ├── architect.md      # ← Input/Output
+              ├── arch.md      # ← Input/Output
               └── changelog.md
 ```
 
@@ -75,10 +75,10 @@ projectRoot/
 >
 > **Input**:
 > - `docs/{serviceName}/requirements.md`
-> - `docs/{serviceName}/architect.md`
+> - `docs/{serviceName}/arch.md`
 > - New information to add
 >
-> **Output**: Updated requirements.md, architect.md
+> **Output**: Updated requirements.md, arch.md
 
 ### 0-1. Document Input
 
@@ -101,7 +101,7 @@ projectRoot/
 ```
 
 - `no` → Guide to **reverse** skill
-- `yes` → Request requirements.md, architect.md file paths
+- `yes` → Request requirements.md, arch.md file paths
 
 ### 0-2. Extract serviceName
 
@@ -115,7 +115,7 @@ Extract serviceName from input file path:
 
 ### 1-1. Load Documents
 
-Read requirements.md and architect.md
+Read requirements.md and arch.md
 
 ### 1-2. Identify Unconfirmed Items
 
@@ -139,7 +139,7 @@ Extract items marked with:
 | Feature Specification | {status} |
 | Priority | {status} |
 
-### architect.md
+### arch.md
 | Section | Status |
 |---------|--------|
 | Summary | {status} |
@@ -222,9 +222,9 @@ Analyze and classify user-provided information:
 | Business purpose/intent | requirements.md - Goal, Non-goals |
 | Feature description/behavior | requirements.md - Feature Specification |
 | Priority/importance | requirements.md - Priority |
-| Technical decision rationale | architect.md - Risks & Tradeoffs |
-| Architecture changes | architect.md - Architecture, Code Mapping |
-| API changes | architect.md - API Spec |
+| Technical decision rationale | arch.md - Risks & Tradeoffs |
+| Architecture changes | arch.md - Architecture, Code Mapping |
+| API changes | arch.md - API Spec |
 
 ### 3-2. Confirm Classification (If Ambiguous)
 
@@ -239,7 +239,7 @@ Analyze and classify user-provided information:
       "prompt": "Your input:\n\"{user input summary}\"\n\nWhere should this information be reflected?",
       "options": [
         {"id": "requirements", "label": "Requirements (requirements.md)"},
-        {"id": "architect", "label": "Design (architect.md)"},
+        {"id": "architect", "label": "Design (arch.md)"},
         {"id": "both", "label": "Both"},
         {"id": "auto", "label": "You decide"}
       ]
@@ -262,7 +262,7 @@ Analyze and classify user-provided information:
 | Priority | Empty → Fill with content |
 | Unclear Items | Remove resolved items |
 
-### 4-2. Update architect.md (If Applicable)
+### 4-2. Update arch.md (If Applicable)
 
 | Section | Update Method |
 |---------|--------------|
@@ -306,7 +306,7 @@ Add reinforcement history at the bottom of documents:
 |---------|--------|-------|
 | {section} | {previous state} | {new content} |
 
-### architect.md
+### arch.md
 | Section | Before | After |
 |---------|--------|-------|
 | {section} | {previous state} | {new content} |
@@ -319,7 +319,7 @@ Ask user for confirmation:
 
 ```
 docs/{serviceName}/requirements.md (updated)
-docs/{serviceName}/architect.md (updated)
+docs/{serviceName}/arch.md (updated)
 ```
 
 ### 5-3. Completion Report
@@ -331,13 +331,13 @@ docs/{serviceName}/architect.md (updated)
 | Document | Changed Sections | Change Type |
 |----------|-----------------|-------------|
 | requirements.md | {sections} | {fill_blank/correct/add_new} |
-| architect.md | {sections} | {fill_blank/correct/add_new} |
+| arch.md | {sections} | {fill_blank/correct/add_new} |
 
 ### Current Completion Rate
 | Document | Before | After |
 |----------|--------|-------|
 | requirements.md | {N}% | {N}% |
-| architect.md | {N}% | {N}% |
+| arch.md | {N}% | {N}% |
 
 ### Remaining Unconfirmed Items
 | Item | Document |
@@ -346,7 +346,7 @@ docs/{serviceName}/architect.md (updated)
 
 ### Next Steps
 - **Need more reinforcement**: Run `reinforce` again
-- **Documents complete**: Can now use sync/enhance/implement
+- **Documents complete**: Can now use sync/enhance/build
 ```
 
 ---
@@ -364,7 +364,7 @@ docs/{serviceName}/architect.md (updated)
          documents
                │
                ▼ (when complete)
-         Can use sync/enhance/implement
+         Can use sync/enhance/build
 ```
 
 ---

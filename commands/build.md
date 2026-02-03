@@ -1,10 +1,10 @@
 ---
-name: implement
+name: build
 description: |
   Automated implementation based on design document.
-  Analyzes architect.md, creates dependency graph, executes step-by-step.
+  Analyzes arch.md, creates dependency graph, executes step-by-step.
 
-  Triggers: implement, start implementation, code from design
+  Triggers: build, compile, implement
 user-invocable: true
 allowed-tools:
   - Read
@@ -25,7 +25,7 @@ Invoke the **implement** skill for automated implementation.
 ## What it does
 
 1. **Analyze Design Document**
-   - Read `docs/{serviceName}/architect.md`
+   - Read `docs/{serviceName}/arch.md`
    - Extract Code Mapping section
 
 2. **Create Dependency Graph**
@@ -51,7 +51,7 @@ Invoke the **implement** skill for automated implementation.
 
 ## Prerequisites
 
-- `docs/{serviceName}/architect.md` from `/architect`
+- `docs/{serviceName}/arch.md` from `/arch`
 
 ## Next Step
 
@@ -60,8 +60,8 @@ If bugs occur, run `/bugfix` in Debug mode.
 ## Usage Examples
 
 ```
-/implement
-→ Loads architect.md
+/build
+→ Loads arch.md
 → Analyzing Code Mapping...
 → Creating: src/auth/service.py
 → Creating: src/auth/repository.py

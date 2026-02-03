@@ -55,11 +55,11 @@ projectRoot/
   └── .cursor/
         ├── skills/
         │     ├── require-refine.md
-        │     ├── architect.md
+        │     ├── arch.md
         │     ├── implement.md
         │     └── ...
         └── agents/
-              ├── domain-architect.md
+              ├── domain-arch.md
               └── best-practice-advisor.md
 ```
 
@@ -91,7 +91,7 @@ After installation, you can trigger Archflow skills directly in your Cursor chat
    - **Cross-Review**: Each agent critiques the other's design in parallel
    - **Synthesis**: Produces final design with documented tradeoffs
    
-   Output: `docs/{serviceName}/architect.md`
+   Output: `docs/{serviceName}/arch.md`
 
 3. **Implement the Code**: Automated implementation from design documents
 
@@ -140,10 +140,10 @@ Cursor: Starting Multi-Agent Debate for design...
 [Two agents debate in parallel using Task tool and synthesize design]
 
 Cursor: ✅ Architect Design Complete
-        Saved to: docs/alert/architect.md
+        Saved to: docs/alert/arch.md
         
         Next Step: Run 'implement' to begin coding.
-        → Reference: @docs/alert/architect.md
+        → Reference: @docs/alert/arch.md
 ```
 
 ## Available Skills
@@ -152,16 +152,18 @@ Archflow includes 10 specialized skills:
 
 | Skill | Trigger Keywords | Purpose |
 |-------|-----------------|---------|
-| **require-refine** | `require-refine`, `requirements`, `요구사항 정리` | Transform unstructured materials into refined requirements |
-| **architect** | `architect`, `design`, `설계` | Multi-Agent Debate for optimal feature design |
-| **architect-enhance** | `architect-enhance`, `기능 고도화` | Design enhancements for existing features |
-| **architect-sync** | `architect-sync`, `설계 동기화` | Sync documentation after code changes |
-| **implement** | `implement`, `구현`, `develop` | Automated implementation from design docs |
-| **bugfix** | `bugfix`, `bug fix`, `버그 수정` | Systematic debugging with document context |
-| **changelogging** | `changelogging`, `changelog`, `변경 기록` | Generate structured changelogs |
+| **spec** | `spec`, `specification`, `요구사항 정의` | Transform unstructured materials into refined requirements |
+| **arch** | `arch`, `architecture`, `설계` | Multi-Agent Debate for optimal feature design |
+| **check** | `check`, `verify`, `검증` | Verify design completeness before implementation |
+| **build** | `build`, `compile`, `구현` | Automated implementation from design docs |
+| **debug** | `debug`, `fix`, `버그 수정` | Systematic debugging with document context |
+| **trace** | `trace`, `log`, `변경 기록` | Generate structured changelogs |
+| **sync** | `sync`, `synchronize`, `동기화` | Sync documentation after code changes |
+| **enhance** | `enhance`, `improve`, `기능 개선` | Design enhancements for existing features |
 | **reinforce** | `reinforce`, `보강` | Enhance existing documentation |
 | **reverse** | `reverse`, `문서화` | Generate documentation from existing code |
-| **deploy-launchpad** | `deploy-launchpad`, `배포 문서` | Collect deployment information for release |
+| **overview** | `overview`, `onboarding` | Generate 1-page project overview |
+| **runbook** | `runbook`, `deploy`, `배포 문서` | Collect deployment information for release |
 
 ## Configuration
 
@@ -269,12 +271,12 @@ projectRoot/
   ├── docs/
   │     └── {serviceName}/
   │           ├── requirements.md   # require-refine output
-  │           ├── architect.md      # architect output
+  │           ├── arch.md      # architect output
   │           └── changelog.md      # bugfix output
   └── .cursor/
         ├── skills/
         │     ├── require-refine.md
-        │     ├── architect.md
+        │     ├── arch.md
         │     ├── implement.md
         │     ├── bugfix.md
         │     ├── changelogging.md
@@ -284,7 +286,7 @@ projectRoot/
         │     ├── reverse.md
         │     └── deploy-launchpad.md
         └── agents/
-              ├── domain-architect.md
+              ├── domain-arch.md
               └── best-practice-advisor.md
 ```
 
@@ -308,7 +310,7 @@ projectRoot/
 **Solutions**:
 - Verify `workflow.enable_debate: true` in `archflow.config.yaml`
 - Check that both agent files exist in `.cursor/agents/`
-- Ensure agent filenames match config: `domain-architect.md`, `best-practice-advisor.md`
+- Ensure agent filenames match config: `domain-arch.md`, `best-practice-advisor.md`
 - Try running in Debug mode to see Task tool calls
 - If Task tool is unavailable, skill will automatically fall back to Self-Debate Pattern
 
@@ -375,7 +377,7 @@ Run `architect-sync` after manual code changes to keep docs in sync. This preven
 
 ### 5. Use Version Control
 
-Commit generated documents (`requirements.md`, `architect.md`, `changelog.md`) to git. This creates an audit trail of all design decisions.
+Commit generated documents (`requirements.md`, `arch.md`, `changelog.md`) to git. This creates an audit trail of all design decisions.
 
 ### 6. Leverage Task Tool
 

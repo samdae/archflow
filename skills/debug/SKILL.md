@@ -1,19 +1,19 @@
 ---
-id: bugfix
-name: Bugfix
+id: debug
+name: Debug
 description: |
   Systematic bug fixing based on documents in Debug mode.
   Cross-references error with design flow to find root cause.
 
-  Triggers: bugfix, fix bug, debug issue, 버그 수정
+  Triggers: debug, fix, bugfix, 디버그, 버그 수정
 user-invocable: true
 version: 2.0.0
 triggers:
-  - "bug"
+  - "debug"
+  - "fix"
   - "bugfix"
   - "error fix"
-  - "fix bug"
-requires: ["architect"]
+requires: ["arch"]
 platform: all
 recommended_model: opus
 allowed-tools:
@@ -30,7 +30,7 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Bugfix Workflow
+# Debug Workflow
 
 Systematically fix bugs by combining runtime context from Debug mode with documentation.
 
@@ -61,12 +61,12 @@ Combining runtime information (error log, stack trace, variable state) provided 
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── requirements.md   # require-refine skill output (input)
-              ├── architect.md      # architect skill output (input)
+              ├── requirements.md   # spec skill output (input)
+              ├── arch.md      # architect skill output (input)
               └── changelog.md      # ← This skill's output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/requirements.md` or `architect.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/requirements.md` or `arch.md`
 
 ---
 
@@ -81,7 +81,7 @@ projectRoot/
 >
 > **Required Documents** (`docs/{serviceName}/` folder):
 > - requirements.md (required)
-> - architect.md (required)
+> - arch.md (required)
 > - changelog.md (optional - will be created in this session if not present)
 
 ### 0-1. Collect Document Input
@@ -100,7 +100,7 @@ projectRoot/
     },
     {
       "id": "has_design",
-      "prompt": "Do you have a design document? (docs/{serviceName}/architect.md)",
+      "prompt": "Do you have a design document? (docs/{serviceName}/arch.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"},
         {"id": "no", "label": "No - I don't have it"}
@@ -146,7 +146,7 @@ When proceeding without requirements/design documents:
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:
-- Input: `docs/alert/requirements.md` or `docs/alert/architect.md`
+- Input: `docs/alert/requirements.md` or `docs/alert/arch.md`
 - Extract: `serviceName = "alert"`
 - Output path: `docs/alert/changelog.md`
 
@@ -171,7 +171,7 @@ Read provided documents and identify key information:
 | Document | Information to Extract |
 |----------|----------------------|
 | requirements.md | Expected behavior, normal scenario |
-| architect.md | Flow (call order), Code Mapping |
+| arch.md | Flow (call order), Code Mapping |
 | changelog.md | Recent changes (may be bug cause) |
 
 ### 1-2. Cross-reference Error Location with Design Flow
@@ -241,23 +241,23 @@ Verify fixed code using Grep + Read:
 
 ---
 
-## Phase 3: Call changelogging Skill (Required)
+## Phase 3: Call trace Skill (Required)
 
-> ⚠️ **Must call changelogging skill after analysis/fix completion.**
+> ⚠️ **Must call trace skill after analysis/fix completion.**
 
-### 3-1. Call changelogging Skill
+### 3-1. Call trace Skill
 
-After analysis/fix completion, **must** call changelogging skill to record results.
+After analysis/fix completion, **must** call trace skill to record results.
 
 **How to call:**
-> "Calling changelogging skill to record this session's results."
+> "Calling trace skill to record this session's results."
 
 Or guide user:
 > "Analysis complete. Would you like to record this in the changelog?"
 
 ### 3-2. Recording by Result Type
 
-| Result Type | Content to Record in changelogging |
+| Result Type | Content to Record in trace |
 |-------------|-----------------------------------|
 | **Code fix completed** | Symptom, cause, fix content, design impact |
 | **External cause identified** | Symptom, external cause, recommended action |
@@ -266,7 +266,7 @@ Or guide user:
 ### 3-3. If Not Called
 
 User can manually call:
-> "changelogging" or "write changelog"
+> "trace" or "write changelog"
 
 When called in the same session, it will use the previous conversation's context (cause, fix content, etc.) as is.
 
@@ -297,12 +297,12 @@ When called in the same session, it will use the previous conversation's context
 **Recurrence Probability**: High / Medium / Low
 ```
 
-### Verify changelogging Call
+### Verify trace Call
 
 > ⚠️ **Have you recorded this in the changelog?**
 >
 > To record this session's results in the changelog:
-> - Call "changelogging" skill
+> - Call "trace" skill
 > - Or request "write changelog"
 >
 > **External causes and investigation failures are also worth recording.**
@@ -312,19 +312,19 @@ When called in the same session, it will use the previous conversation's context
 # Integration Flow
 
 ```
-[require-refine] → docs/{serviceName}/requirements.md
+[spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/architect.md
+[architect] → docs/{serviceName}/arch.md
         ↓
-[implement] → Implementation
+[build] → Implementation
         ↓
 (Bug occurs)
         ↓
-[bugfix] (Debug mode) → Analysis/fix
+[debug] (Debug mode) → Analysis/fix
         ↓
-[changelogging] → docs/{serviceName}/changelog.md
+[trace] → docs/{serviceName}/changelog.md
         ↓ (when design impact exists)
-[architect-sync] → architect.md synchronization
+[sync] → arch.md synchronization
 ```
 
 ---

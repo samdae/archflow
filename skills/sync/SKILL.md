@@ -1,18 +1,18 @@
 ---
-id: architect-sync
-name: Architect Sync
+id: sync
+name: Sync
 description: |
-  Synchronize changelog/enhancement results to architect document.
-  Filters design-impacting changes and updates architect.md.
+  Synchronize changelog/enhancement results to arch document.
+  Filters design-impacting changes and updates arch.md.
 
-  Triggers: architect-sync, sync design, update architect, 설계 동기화
+  Triggers: sync, synchronize, 동기화, 설계 동기화
 user-invocable: true
 version: 2.0.0
 triggers:
-  - "architect-sync"
-  - "architecture sync"
+  - "sync"
+  - "synchronize"
   - "design sync"
-requires: ["bugfix", "architect-enhance"]
+requires: ["debug", "enhance"]
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -26,9 +26,9 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-# Architect Sync Workflow
+# Sync Workflow
 
-Synchronize design-impacting items from changelog or enhancement design results to existing architect.md.
+Synchronize design-impacting items from changelog or enhancement design results to existing arch.md.
 
 ## 💡 Recommended Model
 
@@ -50,15 +50,15 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md
-              ├── architect.md      # ← Sync target
+              ├── arch.md      # ← Sync target
               └── changelog.md      # ← Input (design-impacting items)
 ```
 
 ## ⚠️ Execution Timing
 
 Run in following situations:
-1. **After bugfix completion** - When "Design Impact: Yes" items added to changelog
-2. **After architect-enhance completion** - When integrating enhancement design to existing architect
+1. **After debug completion** - When "Design Impact: Yes" items added to changelog
+2. **After enhance completion** - When integrating enhancement design to existing architect
 
 ---
 
@@ -70,7 +70,7 @@ Run in following situations:
 > Document merging task, so high-performance model unnecessary.
 >
 > **Input**: changelog.md (design-impacting items) or enhancement design result
-> **Output**: Updated architect.md
+> **Output**: Updated arch.md
 
 ### 0-1. Verify Sync Type
 
@@ -82,8 +82,8 @@ Run in following situations:
       "id": "sync_type",
       "prompt": "What content will you synchronize?",
       "options": [
-        {"id": "bugfix", "label": "Bug fix - Design-impacting items from changelog"},
-        {"id": "enhance", "label": "Feature enhancement - architect-enhance results"}
+        {"id": "debug", "label": "Bug fix - Design-impacting items from changelog"},
+        {"id": "enhance", "label": "Feature enhancement - enhance results"}
       ]
     }
   ]
@@ -92,7 +92,7 @@ Run in following situations:
 
 ### 0-2. Collect File Input
 
-**When bugfix selected:**
+**When debug selected:**
 ```json
 {
   "title": "File Input",
@@ -106,7 +106,7 @@ Run in following situations:
     },
     {
       "id": "has_architect",
-      "prompt": "Please provide architect file path (docs/{serviceName}/architect.md)",
+      "prompt": "Please provide architect file path (docs/{serviceName}/arch.md)",
       "options": [
         {"id": "yes", "label": "Yes - I will provide via @filepath"}
       ]
@@ -116,7 +116,7 @@ Run in following situations:
 ```
 
 **When enhance selected:**
-> "Please provide enhancement design result and existing architect.md path."
+> "Please provide enhancement design result and existing arch.md path."
 
 ### 0-3. Infer serviceName
 
@@ -158,7 +158,7 @@ Identify changes/additions from enhancement design results:
 |--------|-----------------|----------------|
 | {changelog date or enhance} | {section name} | {change description} |
 
-### architect.md Modification Plan
+### arch.md Modification Plan
 | Section | Current State | After Change |
 |---------|--------------|-------------|
 | {section name} | {existing content summary} | {changed content summary} |
@@ -172,7 +172,7 @@ Identify changes/additions from enhancement design results:
   "questions": [
     {
       "id": "git_strategy",
-      "prompt": "Do you want to Git commit the current state before modifying architect.md?",
+      "prompt": "Do you want to Git commit the current state before modifying arch.md?",
       "options": [
         {"id": "commit", "label": "Yes - Commit then proceed (recommended)"},
         {"id": "skip", "label": "No - Proceed immediately"}
@@ -184,8 +184,8 @@ Identify changes/additions from enhancement design results:
 
 - When `commit` selected:
   ```bash
-  git add docs/{serviceName}/architect.md
-  git commit -m "backup: architect.md before sync"
+  git add docs/{serviceName}/arch.md
+  git commit -m "backup: arch.md before sync"
   ```
 - When `skip` selected: Proceed directly to Phase 2
 
@@ -225,7 +225,7 @@ Compare existing architect content with new changes:
 
 ---
 
-## Phase 3: Update architect.md
+## Phase 3: Update arch.md
 
 ### 3-1. Update by Section
 
@@ -239,7 +239,7 @@ Compare existing architect content with new changes:
 
 ### 3-2. Add Sync History
 
-Add/update sync history section at bottom of architect.md:
+Add/update sync history section at bottom of arch.md:
 
 ```markdown
 ---
@@ -248,13 +248,13 @@ Add/update sync history section at bottom of architect.md:
 
 | Date | Type | Source | Changes |
 |------|------|--------|---------|
-| {date} | bugfix | changelog {date} | {change summary} |
+| {date} | debug | changelog {date} | {change summary} |
 | {date} | enhance | requirements v2 | {change summary} |
 ```
 
 ### 3-3. Save
 
-Save updated architect.md (overwrite existing file)
+Save updated arch.md (overwrite existing file)
 
 ---
 
@@ -266,7 +266,7 @@ Save updated architect.md (overwrite existing file)
 ### Sync Summary
 | Item | Content |
 |------|---------|
-| Type | bugfix / enhance |
+| Type | debug / enhance |
 | Source | {changelog date or requirements} |
 | Modified Sections | {section list} |
 
@@ -276,11 +276,11 @@ Save updated architect.md (overwrite existing file)
 | {section} | Add/Modify/Delete | {content} |
 
 ### Files
-- Updated: `docs/{serviceName}/architect.md`
+- Updated: `docs/{serviceName}/arch.md`
 
 ### Next Steps
-- **If implementation needed**: Run `implement` skill
-- **If additional modifications needed**: Edit architect.md directly
+- **If implementation needed**: Run `build` skill
+- **If additional modifications needed**: Edit arch.md directly
 ```
 
 ---
@@ -288,17 +288,17 @@ Save updated architect.md (overwrite existing file)
 # Integration Flow
 
 ```
-[bugfix] → changelog (design-impacting items)
+[debug] → changelog (design-impacting items)
                 ↓
-         [architect-sync] → Update architect
+         [sync] → Update architect
                 ↓
-           [implement] (if needed)
+           [build] (if needed)
 
-[architect-enhance] → Enhancement design
+[enhance] → Enhancement design
                 ↓
-         [architect-sync] → Update architect
+         [sync] → Update architect
                 ↓
-           [implement]
+           [build]
 ```
 
 ---

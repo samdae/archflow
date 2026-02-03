@@ -23,7 +23,7 @@ Invoke the **reinforce** skill to supplement incomplete documents.
 
 1. **Load Existing Documents**
    - Read `docs/{serviceName}/requirements.md`
-   - Read `docs/{serviceName}/architect.md`
+   - Read `docs/{serviceName}/arch.md`
 
 2. **Identify Gaps**
    - Find unconfirmed items (❓ markers)
@@ -51,13 +51,13 @@ Invoke the **reinforce** skill to supplement incomplete documents.
 
 ## Next Step
 
-When documents are complete, can use `/architect-sync`, `/architect-enhance`, or `/implement`.
+When documents are complete, can use `/sync`, `/enhance`, or `/build`.
 
 ## Usage Examples
 
 ```
 /reinforce
-→ Loading requirements.md, architect.md...
+→ Loading requirements.md, arch.md...
 → Found 5 unconfirmed items (❓)
 → Q1: "What is the expected response time for API?"
 → "Under 200ms"

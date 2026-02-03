@@ -1,10 +1,10 @@
 ---
-name: architect
+name: arch
 description: |
   Multi-agent debate to derive optimal design through two perspectives.
   Domain Architect + Best Practice Advisor collaborate in round-based debate.
 
-  Triggers: architect, design, create architecture, start design
+  Triggers: arch, architecture, blueprint
 user-invocable: true
 allowed-tools:
   - Read
@@ -17,9 +17,9 @@ allowed-tools:
   - Skill
 ---
 
-# /architect
+# /arch
 
-Invoke the **architect** skill for multi-agent debate design.
+Invoke the **arch** skill for multi-agent debate design.
 
 ## What it does
 
@@ -36,12 +36,12 @@ Invoke the **architect** skill for multi-agent debate design.
    - Get user approval or feedback
 
 4. **Generate Output**
-   - Creates `docs/{serviceName}/architect.md`
+   - Creates `docs/{serviceName}/arch.md`
 
 ## Output Structure
 
 ```
-docs/{serviceName}/architect.md
+docs/{serviceName}/arch.md
 ├── Overview
 ├── Architecture Decisions
 ├── Code Mapping
@@ -58,20 +58,20 @@ docs/{serviceName}/architect.md
 
 ## Prerequisites
 
-- `docs/{serviceName}/requirements.md` from `/require-refine`
+- `docs/{serviceName}/requirements.md` from `/spec`
 
 ## Next Step
 
-After completion, run `/implement` to start implementation.
+After completion, run `/build` to start implementation.
 
 ## Usage Examples
 
 ```
-/architect
+/arch
 → Loads requirements.md
 → Domain Architect proposes...
 → Best Practice Advisor challenges...
 → Round 2...
 → User checkpoint: "Approve design?"
-→ docs/auth-service/architect.md generated
+→ docs/auth-service/arch.md generated
 ```
