@@ -62,7 +62,7 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md   # spec skill output (input)
-              ├── arch.md      # architect skill output (input)
+              ├── arch.md      # arch skill output (input)
               └── changelog.md      # ← This skill's output
 ```
 
@@ -314,7 +314,7 @@ When called in the same session, it will use the previous conversation's context
 ```
 [spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/arch.md
+[arch] → docs/{serviceName}/arch.md
         ↓
 [build] → Implementation
         ↓

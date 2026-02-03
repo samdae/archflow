@@ -340,7 +340,7 @@ Analyze core files using Read:
 
 ### 5-1. Generate in FEATURE_DESIGN_DOC_TEMPLATE format
 
-Generate in same format as architect skill output template, with:
+Generate in same format as arch skill output template, with:
 
 | Section | Status |
 |------|------|

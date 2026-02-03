@@ -793,7 +793,7 @@ After saving document, inform user:
 ```
 [spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/arch.md
+[arch] → docs/{serviceName}/arch.md
         ↓
 [build] → Implementation
         ↓

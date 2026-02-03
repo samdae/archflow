@@ -54,7 +54,7 @@ projectRoot/
   └── docs/
         └── {serviceName}/
               ├── requirements.md   # ← This skill's output
-              ├── architect.md      # architect skill output
+              ├── arch.md           # arch skill output
               └── changelog.md      # bugfix skill output
 ```
 
@@ -377,7 +377,7 @@ After saving document, inform user:
 ```
 [spec] → docs/{serviceName}/requirements.md
         ↓
-[architect] → docs/{serviceName}/architect.md
+[arch] → docs/{serviceName}/arch.md
         ↓
 [implement] → Implementation
         ↓

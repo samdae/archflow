@@ -253,7 +253,7 @@ Task(
 )
 ```
 
-### 2-C: Collaboration (Same as architect skill)
+### 2-C: Collaboration (Same as arch skill)
 
 Round 1-2 collaboration → User checkpoint → Decision
 
@@ -314,7 +314,7 @@ Mark integrated content as enhancement:
 
 ## Phase 4: Quality Gate Validation
 
-Perform same quality validation as Phase 5.5 in architect skill:
+Perform same quality validation as Phase 5.5 in arch skill:
 
 ### Required Validation Items
 
