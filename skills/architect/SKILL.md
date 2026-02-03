@@ -545,14 +545,17 @@ serviceName inferred from input file path:
 
 ## 1.5. Tech Stack
 
-| Item | Value |
-|------|-------|
-| Language | {language and version} |
-| Framework | {framework} |
-| DB | {DB type and version} |
-| ORM | {ORM package or "Raw SQL"} |
-| 3rd-party | {Redis, Kafka, etc.} |
-| Infra | {K8s, Docker, etc.} |
+```yaml
+tech_stack:
+  language: "{language and version}"        # e.g., Python 3.11, TypeScript 5.x
+  framework: "{framework}"                  # e.g., FastAPI, NestJS
+  database: "{DB type and version}"         # e.g., PostgreSQL 15
+  orm: "{ORM package or Raw SQL}"           # e.g., SQLAlchemy, Prisma
+  third_party:                              # External services
+    - "{service 1}"                         # e.g., Redis
+    - "{service 2}"                         # e.g., Kafka
+  infra: "{infra}"                          # e.g., K8s, Docker, AWS
+```
 
 ---
 
@@ -566,30 +569,56 @@ serviceName inferred from input file path:
 
 ### Data
 
-#### Database changes
+#### Database Schema
 
-**New table: `{table name}`**
+```yaml
+database_schema:
+  new_tables:
+    - name: "{table_name}"
+      description: "{table description}"
+      columns:
+        - name: "id"
+          type: "INTEGER"
+          constraints: ["PK", "AUTO_INCREMENT"]
+          description: "Primary key"
+        - name: "{column_name}"
+          type: "{type}"
+          constraints: ["{constraint1}", "{constraint2}"]
+          description: "{description}"
+        - name: "created_at"
+          type: "TIMESTAMP"
+          constraints: ["NOT NULL", "DEFAULT NOW()"]
+          description: "Creation timestamp"
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | INTEGER | PK, AUTO_INCREMENT | Primary key |
-| {column name} | {type} | {constraints} | {description} |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Creation timestamp |
+  modified_tables:
+    - name: "{table_name}"
+      changes:
+        - column: "{column_name}"
+          type: "{type}"
+          action: "ADD"          # ADD | DROP | MODIFY
+          description: "{description}"
 
-**Existing table modification: `{table name}`**
+  indexes:
+    - table: "{table_name}"
+      columns: ["{column1}", "{column2}"]
+      type: "BTREE"              # BTREE | HASH | GIN | etc.
+      unique: false
+```
 
-| Column | Type | Change | Description |
-|--------|------|--------|-------------|
-| id | INTEGER | Maintain | PK |
-| {column name} | {type} | **New** / **Delete** / Maintain | {description} |
+#### Migration Summary
 
-#### Migration Summary (when manual SQL selected)
-
-| Change Type | Table | Content |
-|------------|-------|---------|
-| CREATE TABLE | {table} | {description} |
-| ALTER TABLE | {table} | {change content} |
-| CREATE INDEX | {table} | {index description} |
+```yaml
+migrations:
+  - type: "CREATE_TABLE"
+    table: "{table}"
+    description: "{description}"
+  - type: "ALTER_TABLE"
+    table: "{table}"
+    description: "{change content}"
+  - type: "CREATE_INDEX"
+    table: "{table}"
+    description: "{index description}"
+```
 
 ---
 
@@ -650,24 +679,41 @@ sequenceDiagram
 
 ## 6. API Specification
 
-### {API name}
-
-**Endpoint**: `{METHOD} /api/v1/{path}`
-
-**Request**:
-\`\`\`json
-{
-  "field": "value"
-}
-\`\`\`
-
-**Response**:
-\`\`\`json
-{
-  "success": true,
-  "data": {}
-}
-\`\`\`
+```yaml
+api_endpoints:
+  - name: "{API name}"
+    method: "{GET|POST|PUT|DELETE}"
+    path: "/api/v1/{path}"
+    description: "{API description}"
+    auth_required: true
+    request:
+      headers:
+        - name: "Authorization"
+          type: "string"
+          required: true
+      params:                    # Query params (GET) or Path params
+        - name: "{param}"
+          type: "{type}"
+          required: true
+      body:                      # Request body (POST/PUT)
+        content_type: "application/json"
+        schema:
+          field1: "{type}"
+          field2: "{type}"
+    response:
+      success:
+        status: 200
+        schema:
+          success: "boolean"
+          data: "{type or object}"
+      errors:
+        - status: 400
+          code: "INVALID_INPUT"
+          message: "{error message}"
+        - status: 404
+          code: "NOT_FOUND"
+          message: "{error message}"
+```
 
 ---
 
