@@ -4,6 +4,40 @@
 
 Archflow is a Claude Code plugin that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
 
+## System Workflow
+
+```
+                        ┌─────────────────────────────────────┐
+                        │         Legacy Documentation        │
+                        │    /reverse → /reinforce ──┐        │
+                        └─────────────────────────────│───────┘
+                                                      │
+                                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Main Flow (New Feature)                           │
+│                                                                             │
+│      /spec  ───▶  /arch  ───▶  /check  ───▶  /build                        │
+│                     ▲            ▲              │                           │
+└─────────────────────│────────────│──────────────│───────────────────────────┘
+                      │            │              │
+                      │            │              │ bug found
+                      │            │              ▼
+┌─────────────────────│────────────│─────────────────────────────────────────┐
+│                     │            │           Bug Fix                        │
+│                     │            │                                          │
+│               /sync ◀── /trace ◀── /debug                                  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                   │
+                      ┌────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────┐
+│          Enhancement            │
+│           /enhance ─────────────┼───▶ (to /check)
+└─────────────────────────────────┘
+```
+
 ## Features
 
 - **Document-Driven Development**: Maintain clear requirements, designs, and changelogs throughout the development lifecycle
