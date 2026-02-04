@@ -95,6 +95,7 @@ After installation, use slash commands:
 | `/ui` | Generate UI specification from API endpoints |
 | `/check` | Verify design completeness |
 | `/build` | Automated implementation from design |
+| `/test` | Generate and/or run tests (scoped) |
 | `/debug` | Systematic bug fixing (Debug mode) |
 | `/trace` | Record changes to trace.md |
 | `/sync` | Sync changes to arch.md |
@@ -146,6 +147,7 @@ New Proposal → /reinforce (spec.md) → /arch → /check → /build
 | `ui` | Generate UI specification from API endpoints | - | Opus |
 | `check` | Verify design completeness before implementation | BE/FE | Sonnet |
 | `build` | Automated implementation from design docs | BE/FE | Sonnet |
+| `test` | Generate and/or run tests with scoped targeting | BE/FE | Sonnet |
 | `debug` | Systematic debugging with document context | - | Opus |
 | `trace` | Generate structured changelogs | - | Sonnet |
 | `sync` | Sync documentation after code changes | - | Sonnet |
