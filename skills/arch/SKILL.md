@@ -32,6 +32,9 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
+> **Code Mapping `#` Rule (Global):**
+> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
+
 # Arch Workflow
 
 Two perspective sub-agents collaborate to derive optimal design.

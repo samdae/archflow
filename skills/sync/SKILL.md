@@ -26,6 +26,9 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
+> **Code Mapping `#` Rule (Global):**
+> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
+
 # Sync Workflow
 
 Synchronize design-impacting items from changelog or enhancement design results to existing arch.md.
