@@ -123,9 +123,13 @@ migrations:
 
 ## 3. Code Mapping
 
-| Feature | File | Class | Method | Action |
-|---------|------|-------|--------|--------|
-| {feature} | {full file path} | {class name} | {method name} | {call location and code to add} |
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| 1 | {feature} | {full file path} | {class name} | {method name} | {call location and code to add} | [ ] |
+
+> **Impl column**: `[ ]` = not implemented, `[x]` = implemented
+> - arch generates all rows with `[ ]`
+> - build updates to `[x]` after implementation
 
 ---
 

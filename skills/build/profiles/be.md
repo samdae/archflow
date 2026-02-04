@@ -223,10 +223,11 @@ When invoking sub-agent for each step:
 - ORM: {ORM package name or "Raw SQL"}
 
 ### Code Mapping (files to handle in this step)
-| Feature | File | Class | Method | Action |
-|---------|------|-------|--------|--------|
-| {feature} | {file path} | {class name} | {method name} | {call location and code to add} |
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| {#} | {feature} | {file path} | {class name} | {method name} | {call location and code to add} | [ ] |
 
+⚠️ Only implement rows where `Impl = [ ]`
 ⚠️ If method name and call location specified, must implement at that location
 
 ### Design Spec
@@ -261,10 +262,18 @@ When invoking sub-agent for each step:
 - Auto-fix lint errors (max 3 attempts)
 - Return list of created/modified files upon completion
 
+#### 4. Update Implementation Status (IMPORTANT)
+- After successfully implementing each Code Mapping row:
+  1. Read the design document (arch-be.md)
+  2. Find the row by `#` number in Code Mapping table
+  3. Update `[ ]` → `[x]` using StrReplace
+  - Example: `| 3 | Refresh | ... | [ ] |` → `| 3 | Refresh | ... | [x] |`
+
 ### Return Format
 Report upon completion:
 - created_files: [created file paths]
 - modified_files: [modified file paths]
+- impl_updated: [list of # numbers updated to [x]]
 - status: success | failed
 - error: (error content if failed)
 ```

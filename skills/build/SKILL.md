@@ -305,11 +305,12 @@ Task(
     - ORM: {ORM package name or "Raw SQL"}
 
     ### Code Mapping (files to handle in this step)
-    **Pass detailed format from design document Section 3 as is:**
-    | Feature | File | Class | Method | Action |
-    |---------|------|-------|--------|--------|
-    | {feature} | {file path} | {class name} | {method name} | {call location and code to add} |
+    **Pass rows with `Impl = [ ]` from design document Section 3:**
+    | # | Feature | File | Class | Method | Action | Impl |
+    |---|---------|------|-------|--------|--------|------|
+    | {#} | {feature} | {file path} | {class name} | {method name} | {call location and code to add} | [ ] |
 
+    ⚠️ Only implement rows where `Impl = [ ]` (skip already implemented rows)
     ⚠️ If method name and call location specified, must implement at that location
 
     ### Design Spec
@@ -345,6 +346,14 @@ Task(
     #### 3. General Rules
     - Auto-fix lint errors (max 3 attempts)
     - Return list of created/modified files upon completion
+
+    #### 4. Update Implementation Status (IMPORTANT)
+    - After successfully implementing each Code Mapping row:
+      1. Read the design document (arch-be.md or arch-fe.md)
+      2. Find the row by `#` number in Code Mapping table
+      3. Update `[ ]` → `[x]` using StrReplace
+      - Example: `| 3 | Refresh | ... | [ ] |` → `| 3 | Refresh | ... | [x] |`
+    - This ensures progress is tracked even if build is interrupted
 
     ### Return Format
     Report upon completion in following format:

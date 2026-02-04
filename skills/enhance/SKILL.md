@@ -284,8 +284,25 @@ Round 1-2 collaboration → User checkpoint → Decision
 - Add/modify DB Schema
 
 **Code Mapping Section:**
-- Add new file/class/method
-- Mark modifications to existing items
+- Get the last `#` number from existing rows
+- Add new rows with `#` = last + 1, 2, 3...
+- All new rows must have `Impl = [ ]` (not yet implemented)
+- Existing rows: keep `Impl` status unchanged
+
+Example:
+```markdown
+## Existing (before enhance)
+| # | Feature | File | Class | Method | Action | Impl |
+| 1 | Login | ... | ... | ... | ... | [x] |
+| 2 | Logout | ... | ... | ... | ... | [x] |
+
+## After enhance (new feature added)
+| # | Feature | File | Class | Method | Action | Impl |
+| 1 | Login | ... | ... | ... | ... | [x] |
+| 2 | Logout | ... | ... | ... | ... | [x] |
+| 3 | OAuth | ... | ... | ... | ... | [ ] |  ← NEW
+| 4 | OAuth | ... | ... | ... | ... | [ ] |  ← NEW
+```
 
 **API Spec Section:**
 - Add new endpoints

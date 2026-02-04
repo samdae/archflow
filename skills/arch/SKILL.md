@@ -502,10 +502,15 @@ When migration method is "manual SQL", record the following for SQL generation i
 
 **Example:**
 
-| Feature | File | Class | Method | Action |
-|---------|------|-------|--------|--------|
-| Quality Create | `.../quality_issue/service.py` | `QualityIssueService` | `create_issue()` | After DB save call `_publish_create_alert()` |
-| Quality Resolve | `.../quality_issue/service.py` | `QualityIssueService` | `resolve_issue()` | After status change call `_publish_resolve_alert()` |
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| 1 | Quality Create | `.../quality_issue/service.py` | `QualityIssueService` | `create_issue()` | After DB save call `_publish_create_alert()` | [ ] |
+| 2 | Quality Resolve | `.../quality_issue/service.py` | `QualityIssueService` | `resolve_issue()` | After status change call `_publish_resolve_alert()` | [ ] |
+
+> **Impl column rules:**
+> - `[ ]` = not implemented (initial state from arch)
+> - `[x]` = implemented (updated by build after completion)
+> - `#` column = row number for reference
 
 ### Section 8 Details (Debate Conclusion)
 
@@ -664,9 +669,9 @@ migrations:
 
 ## 3. Code Mapping
 
-| Feature | File | Class | Method | Action |
-|---------|------|-------|--------|--------|
-| {feature} | {full file path} | {class name} | {method name} | {call location and code to add} |
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| 1 | {feature} | {full file path} | {class name} | {method name} | {call location and code to add} | [ ] |
 
 ---
 

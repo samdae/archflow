@@ -90,6 +90,14 @@ Frontend Project Structure (Vue/Nuxt):
 | Event handlers | `onClick`, `onChange`, etc. |
 | Conditional rendering | Loading, error, empty states |
 
+### Code Mapping Output Format
+
+**All rows have `Impl = [x]` since code exists:**
+
+| # | Feature | File | Component/Hook | Props/Params | Action | Impl |
+|---|---------|------|----------------|--------------|--------|------|
+| 1 | {inferred} | {path} | {component} | {key props} | {description} | [x] |
+
 ### State Management Extraction
 
 | Library | Detection Pattern |

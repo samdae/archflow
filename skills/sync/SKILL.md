@@ -231,11 +231,17 @@ Compare existing arch content with new changes:
 
 | Section | Update Method |
 |---------|--------------|
-| Code Mapping | Add/modify/delete rows |
+| Code Mapping | Add/modify/delete rows (see Impl rules below) |
 | API Spec | Add/modify endpoints |
 | DB Schema | Modify table/column definitions |
 | Sequence Diagram | Modify diagram |
 | Risks & Tradeoffs | Add new tradeoffs |
+
+**Code Mapping `Impl` column rules:**
+- Existing rows modified: Keep `Impl` status (can change if needed)
+- New rows added: Set `Impl = [x]` (sync reflects debug changes = already implemented)
+- Continue `#` numbering from last existing row
+- Deleted rows: Remove entire row including `Impl`
 
 ### 3-2. Add Sync History
 

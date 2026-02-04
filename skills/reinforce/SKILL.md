@@ -269,7 +269,13 @@ Analyze and classify user-provided information:
 | Summary | Confirm Goal/Non-goals |
 | Scope | Clarify scope |
 | Risks & Tradeoffs | Empty → Fill with content |
+| Code Mapping | See rules below |
 | Other | Fix errors |
+
+**Code Mapping `Impl` column rules:**
+- Existing rows: Keep `Impl` status unchanged (do not modify `[x]` or `[ ]`)
+- New rows (if adding): Set `Impl = [ ]` and continue `#` numbering
+- Row content modification: Keep `Impl` as-is
 
 ### 4-3. Update Status Markers
 

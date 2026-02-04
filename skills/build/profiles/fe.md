@@ -250,10 +250,11 @@ When invoking sub-agent for each step:
 - API Client: {api client}
 
 ### Code Mapping (files to handle in this step)
-| Feature | File | Component/Hook | Props/Params | Action |
-|---------|------|----------------|--------------|--------|
-| {feature} | {file path} | {component or hook name} | {key props} | {what to implement} |
+| # | Feature | File | Component/Hook | Props/Params | Action | Impl |
+|---|---------|------|----------------|--------------|--------|------|
+| {#} | {feature} | {file path} | {component or hook name} | {key props} | {what to implement} | [ ] |
 
+⚠️ Only implement rows where `Impl = [ ]`
 ⚠️ Follow existing component patterns in the project
 
 ### Design Spec
@@ -298,10 +299,18 @@ When invoking sub-agent for each step:
 - Ensure no TypeScript errors
 - Return list of created/modified files upon completion
 
+#### 5. Update Implementation Status (IMPORTANT)
+- After successfully implementing each Code Mapping row:
+  1. Read the design document (arch-fe.md)
+  2. Find the row by `#` number in Code Mapping table
+  3. Update `[ ]` → `[x]` using StrReplace
+  - Example: `| 3 | Dashboard | ... | [ ] |` → `| 3 | Dashboard | ... | [x] |`
+
 ### Return Format
 Report upon completion:
 - created_files: [created file paths]
 - modified_files: [modified file paths]
+- impl_updated: [list of # numbers updated to [x]]
 - status: success | failed
 - error: (error content if failed)
 ```

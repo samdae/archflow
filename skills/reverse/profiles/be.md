@@ -97,6 +97,12 @@ Backend Project Structure:
 | Method name | Parse function/method definitions |
 | Dependencies | Analyze imports and injections |
 
+**Output format (all rows have `Impl = [x]` since code exists):**
+
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| 1 | {inferred} | {path} | {class} | {method} | {description} | [x] |
+
 ---
 
 ## Inference Items

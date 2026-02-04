@@ -390,10 +390,25 @@ Generate in same format as arch skill output template, with:
 | Scope | Inference |
 | Architecture Impact | **Extraction** (Components, DB Schema) |
 | Sequence Diagram | Generate if can be inferred |
-| **Code Mapping** | **Extraction** (Core) |
+| **Code Mapping** | **Extraction** (Core) - with `#` and `Impl = [x]` |
 | **API Spec** | **Extraction** (Core) |
 | Implementation Plan | Already implemented → Skip or describe current structure |
 | Risks & Tradeoffs | User input or "❓ Requires verification" |
+
+### 5-1.5. Code Mapping Generation Rules
+
+When generating Code Mapping from existing code:
+- Include `#` column (sequential row numbers)
+- Include `Impl` column = `[x]` for ALL rows (code already exists = implemented)
+- Example:
+
+```markdown
+| # | Feature | File | Class | Method | Action | Impl |
+|---|---------|------|-------|--------|--------|------|
+| 1 | User Auth | auth/service.py | AuthService | login() | Handle login | [x] |
+| 2 | User Auth | auth/service.py | AuthService | logout() | Handle logout | [x] |
+| 3 | User CRUD | user/repo.py | UserRepo | create() | Create user | [x] |
+```
 
 ### 5-2. Reverse Extraction Indicator
 
