@@ -512,9 +512,11 @@ After 2 rounds, **must** provide interim report to user.
 
 ## Phase 5.5: Quality Gate Validation
 
-Before writing design document, **validate completeness of required fields**:
+Before writing design document, **validate completeness of required fields based on architecture type**:
 
-### Required Validation Items
+### Required Validation Items (Branch by arch_type)
+
+**Backend (arch_type = BE):**
 
 | Item | Validation Criteria | If Incomplete |
 |------|-------------------|---------------|
@@ -522,6 +524,16 @@ Before writing design document, **validate completeness of required fields**:
 | Code Mapping | All features mapped to file/class/method | Enter question loop |
 | API Spec | All endpoints have Request/Response defined | Enter question loop |
 | Error Policy | Main error scenarios and responses defined | Enter question loop |
+
+**Frontend (arch_type = FE):**
+
+| Item | Validation Criteria | If Incomplete |
+|------|-------------------|---------------|
+| Component Structure | Page and reusable component hierarchy defined | Enter question loop |
+| Code Mapping | All features mapped to file/component/hook | Enter question loop |
+| State Management | Global/Server/Local state defined | Enter question loop |
+| Route Definition | Routes and auth guards defined | Enter question loop |
+| API Integration | Backend endpoints connected to hooks/services | Enter question loop |
 
 ### Question Loop on Incomplete Items
 
@@ -550,11 +562,22 @@ Before writing design document, **validate completeness of required fields**:
 
 If **applicable items below are empty, return to debate phase**:
 
+**Backend:**
+
 | Condition | Minimum Requirement |
 |-----------|-------------------|
 | **If API exists** | Request/Response spec + at least 2 error responses |
 | **If Auth exists** | Role/Permission table with at least 1 entry |
 | **If Data (DB) exists** | Core entity with at least 5 fields defined |
+
+**Frontend:**
+
+| Condition | Minimum Requirement |
+|-----------|-------------------|
+| **If Pages exist** | At least 1 page component with route defined |
+| **If Auth exists** | Auth guard and protected route defined |
+| **If API calls exist** | At least 1 hook/service with endpoint connection |
+| **If State exists** | At least 1 global state store defined |
 
 ⚠️ If any item fails → Guide "Need supplemental information" and re-enter Phase 5.5
 
