@@ -228,10 +228,43 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 
 **Processing by response:**
 - `be` → **Read `templates/be.md`** from this skill folder, use as output template
-- `fe` → **Read `templates/fe.md`** from this skill folder, use as output template
+- `fe` → **Check for ui.md first**, then **Read `templates/fe.md`**
 
 > ⚠️ **MUST read the template file before proceeding to Phase 1.**
 > The template defines the document structure for this architecture type.
+
+### 0-1.6. Frontend Prerequisites Check (FE only)
+
+**When Frontend selected**, verify ui.md exists:
+
+```json
+{
+  "title": "UI Specification Check",
+  "questions": [
+    {
+      "id": "has_ui_spec",
+      "prompt": "Do you have a UI specification? (docs/{serviceName}/ui.md)",
+      "options": [
+        {"id": "yes", "label": "Yes - I will provide via @filepath"},
+        {"id": "no", "label": "No - I need to run /ui first"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `yes` → Request ui.md path → Proceed to Phase 1
+- `no` → Show guidance:
+  > ⚠️ **UI specification required for Frontend architecture.**
+  >
+  > Run `/ui` first to generate UI specification from:
+  > - `docs/{serviceName}/spec.md`
+  > - `docs/{serviceName}/arch-be.md`
+  >
+  > The ui.md defines screens, components, and interactions needed for arch-fe.
+
+> **Frontend arch input**: spec.md + ui.md (NOT arch-be.md directly)
 
 ### 0-2. Infer serviceName
 

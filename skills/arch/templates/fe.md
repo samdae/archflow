@@ -7,6 +7,14 @@
 
 `docs/{serviceName}/arch-fe.md`
 
+## Required Input Documents
+
+- `docs/{serviceName}/spec.md` - Requirements specification
+- `docs/{serviceName}/ui.md` - UI specification (from /ui skill)
+
+> **Note**: ui.md contains screen list, component hierarchy, states, and interactions.
+> Use this as the primary reference for Component Structure section.
+
 ---
 
 ## Template
@@ -17,8 +25,8 @@
 > Created: {date}
 > Service: {serviceName}
 > Type: Frontend
-> Requirements document: docs/{serviceName}/spec.md
-> Backend API reference: docs/{serviceName}/arch-be.md (if exists)
+> Requirements: docs/{serviceName}/spec.md
+> UI Specification: docs/{serviceName}/ui.md
 
 ## 0. Summary
 
@@ -67,13 +75,16 @@ tech_stack:
 
 ### Component Structure
 
+> **Reference**: Use `ui.md` Screen Specifications and Shared Components as the basis.
+> Convert UI specification's component hierarchy into technical file structure.
+
 ```yaml
 component_structure:
-  pages:                                    # Route-level components
+  pages:                                    # From ui.md Screen List
     - path: "/example"
       component: "ExamplePage"
       file: "src/pages/ExamplePage.tsx"
-      description: "{page description}"
+      description: "{from ui.md screen purpose}"
 
   features:                                 # Feature-specific components
     - name: "{feature_name}"

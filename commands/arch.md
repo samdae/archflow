@@ -31,10 +31,11 @@ This skill supports separate templates for Backend and Frontend:
 
 1. **Load Requirements**
    - Read `docs/{serviceName}/spec.md`
+   - (Frontend only) Read `docs/{serviceName}/ui.md`
 
 2. **Select Architecture Type**
    - **Backend**: API server, business logic, database
-   - **Frontend**: Web app, SPA, components
+   - **Frontend**: Web app, SPA, components (requires ui.md)
 
 3. **Multi-Agent Debate**
    - **Domain Architect**: Project context, existing patterns, domain knowledge
@@ -71,20 +72,45 @@ This skill supports separate templates for Backend and Frontend:
 
 ## Prerequisites
 
+**Backend:**
 - `docs/{serviceName}/spec.md` from `/spec`
+
+**Frontend:**
+- `docs/{serviceName}/spec.md` from `/spec`
+- `docs/{serviceName}/ui.md` from `/ui`
 
 ## Next Step
 
-After completion, run `/build` to start implementation.
+After completion, run `/check` then `/build` to start implementation.
 
 ## Usage Examples
 
+**Backend:**
 ```
 /arch
-→ Select: Backend or Frontend
-→ Loads spec.md + template
+→ Select: Backend
+→ Loads spec.md + be.md template
 → Domain Architect proposes...
 → Best Practice Advisor challenges...
 → User checkpoint: "Approve design?"
 → docs/auth-service/arch-be.md generated
+```
+
+**Frontend:**
+```
+/arch
+→ Select: Frontend
+→ Check: ui.md exists?
+→ Loads spec.md + ui.md + fe.md template
+→ Domain Architect proposes...
+→ Best Practice Advisor challenges...
+→ User checkpoint: "Approve design?"
+→ docs/auth-service/arch-fe.md generated
+```
+
+## Flow Position
+
+```
+Backend: /spec → /arch (BE) → /check → /build
+Frontend: /spec → /arch (BE) → /ui → /arch (FE) → /check → /build
 ```

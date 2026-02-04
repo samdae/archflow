@@ -7,35 +7,41 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 ## System Workflow
 
 ```
-                        ┌─────────────────────────────────────┐
-                        │         Legacy Documentation        │
-                        │    /reverse → /reinforce ───┐       │
-                        └─────────────────────────────│───────┘
-                                                      │
-                                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                               New Feature                                   │
+│                            Backend Development                              │
 │                                                                             │
-│      /spec  ───▶  /arch  ───▶  /check  ───▶  /build                       │
-│                     ▲            ▲              │                           │
-└─────────────────────│────────────│──────────────│───────────────────────────┘
-                      │            │              │
-                      │            │              │ bug found
-                      │            │              ▼
-┌─────────────────────│────────────│─────────────────────────────────────────┐
-│                     │            │           Bug Fix                       │
-│                     │            │                                         │
-│               /sync ◀── /trace ◀── /debug                                 │
-│                                                                            │
-└────────────────────────────────────────────────────────────────────────────┘
-                                   │
-                      ┌────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────┐
-│          Enhancement            │
-│           /enhance ─────────────┼───▶ (to /check)
-└─────────────────────────────────┘
+│      /spec  ───▶  /arch (BE)  ───▶  /check  ───▶  /build                   │
+│                       │                                                     │
+└───────────────────────│─────────────────────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Frontend Development                              │
+│                                                                             │
+│              /ui  ───▶  /arch (FE)  ───▶  /check  ───▶  /build             │
+│                                              ▲                              │
+└──────────────────────────────────────────────│──────────────────────────────┘
+                                               │
+┌──────────────────────────────────────────────│──────────────────────────────┐
+│                              Bug Fix         │                              │
+│                                              │                              │
+│      /debug  ───▶  /trace  ───▶  /sync  ────┼───▶  (to /arch)              │
+│                                              │                              │
+└──────────────────────────────────────────────│──────────────────────────────┘
+                                               │
+┌──────────────────────────────────────────────│──────────────────────────────┐
+│                            Enhancement       │                              │
+│                                              │                              │
+│                              /enhance  ──────┘                              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Legacy Documentation                                │
+│                                                                             │
+│              /reverse  ───▶  /reinforce  ───▶  /sync                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Features
@@ -83,7 +89,8 @@ After installation, use slash commands:
 |---------|-------------|
 | `/archflow` | Show all available skills |
 | `/spec` | Transform materials into spec.md |
-| `/arch` | Multi-agent debate → arch.md |
+| `/arch` | Multi-agent debate → arch-be.md or arch-fe.md |
+| `/ui` | Generate UI specification from API endpoints |
 | `/check` | Verify design completeness |
 | `/build` | Automated implementation from design |
 | `/debug` | Systematic bug fixing (Debug mode) |
@@ -97,10 +104,16 @@ After installation, use slash commands:
 
 ## Workflow
 
-### New Feature Development
+### Backend Development
 
 ```
-/spec → /arch → /check (recommended) → /build
+/spec → /arch (BE) → /check → /build
+```
+
+### Frontend Development
+
+```
+/spec → /arch (BE) → /ui → /arch (FE) → /check → /build
 ```
 
 ### Bug Fixing
@@ -118,7 +131,7 @@ After installation, use slash commands:
 ### Feature Enhancement
 
 ```
-/enhance → /build
+/enhance → /check → /build
 ```
 
 ## Skills Included
@@ -127,6 +140,7 @@ After installation, use slash commands:
 |-------|-------------|-------|-------------------|
 | `spec` | Refine raw requirements into structured docs | - | Opus |
 | `arch` | Multi-Agent Debate for feature design | BE/FE | Opus |
+| `ui` | Generate UI specification from API endpoints | - | Opus |
 | `check` | Verify design completeness before implementation | BE/FE | Sonnet |
 | `build` | Automated implementation from design docs | BE/FE | Sonnet |
 | `debug` | Systematic debugging with document context | - | Opus |
@@ -157,13 +171,14 @@ projectRoot/
         └── {serviceName}/
               ├── spec.md           # from /spec
               ├── arch-be.md        # from /arch (Backend)
+              ├── ui.md             # from /ui (UI specification)
               ├── arch-fe.md        # from /arch (Frontend)
               ├── trace.md          # from /trace
               ├── overview.md       # from /overview
               └── runbook.md        # from /runbook
 ```
 
-> Note: `arch` skill supports BE/FE separation. Use `arch-be.md` for backend design and `arch-fe.md` for frontend design.
+> **Note**: Frontend development requires `/ui` before `/arch (FE)`. The ui.md defines screens, components, and interactions based on backend API endpoints.
 
 ## Language Support
 
