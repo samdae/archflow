@@ -2,19 +2,20 @@
 id: reinforce
 name: Reinforce
 description: |
-  Reinforce existing documents with new information.
-  Use after reverse skill to fill gaps or when new information becomes available.
+  Reinforce existing spec.md with new requirements or fill gaps.
+  Primary use: Add new requirements to spec.md, then run arch to update design.
+  Secondary use: Fill gaps marked with ❓ in documents from reverse skill.
 
-  Triggers: reinforce, fill gaps, complete documents, 문서 보강
+  Triggers: reinforce, fill gaps, add requirements, 요구사항 추가, 문서 보강
 user-invocable: true
-version: 2.0.0
+version: 3.0.0
 triggers:
   - "reinforce"
-  - "document reinforcement"
-  - "add information"
+  - "add requirements"
+  - "new feature"
   - "supplement document"
   - "fill gaps"
-requires: ["reverse"]
+requires: []
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -29,8 +30,13 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
-> **Code Mapping `#` Rule (Global):**
-> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
+> **Requirement ID `FR-{number}` Rule (Global):**
+> Always use `max(existing number) + 1` for new requirements. NEVER reuse deleted numbers.
+
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): reinforce - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
 
 # Reinforce Workflow
 
@@ -62,9 +68,23 @@ projectRoot/
 
 ## ⚠️ When to Use
 
+- **Add new requirements**: Add new feature requirements to spec.md → then run arch
 - **After reverse**: Fill gaps marked with ❓ in incomplete documents
 - **New information acquired**: Reflect information learned later
 - **Error correction**: Fix incorrectly inferred content
+
+## 🔄 Enhancement Workflow (NEW)
+
+**enhance 스킬이 삭제됨. 새 요구사항 추가는 이 플로우를 사용:**
+
+```
+New Proposal → reinforce(spec.md) → arch → check → build
+```
+
+1. User provides new feature requirements
+2. reinforce adds to spec.md Requirement Summary (new FR-xxx)
+3. Run arch to generate/update design document
+4. Continue with check → build
 
 ---
 
@@ -171,6 +191,7 @@ Extract items marked with:
       "id": "reinforce_type",
       "prompt": "Select the type of content to reinforce",
       "options": [
+        {"id": "add_requirement", "label": "Add new requirements - New feature to spec.md (then run arch)"},
         {"id": "fill_blank", "label": "Fill gaps - Items marked with ❓"},
         {"id": "correct", "label": "Fix errors - Correct incorrectly inferred content"},
         {"id": "add_new", "label": "Add new info - Information learned later"},
@@ -182,6 +203,38 @@ Extract items marked with:
 ```
 
 ### 2-2. Process by Type
+
+**add_requirement (Add new requirements) - PRIMARY USE:**
+
+1. Ask user for new requirement details:
+   > "Describe the new feature/requirement you want to add."
+
+2. Read current spec.md Requirement Summary:
+   ```markdown
+   | Req ID | Category | Requirement | Priority | Status |
+   |--------|----------|-------------|----------|--------|
+   | FR-001 | Auth | ... | High | Designed |
+   | FR-002 | Auth | ... | Medium | Implemented |
+   ```
+
+3. Assign new Req ID:
+   - Find max existing number (e.g., FR-002 → 2)
+   - New ID = max + 1 (e.g., FR-003)
+   - NEVER reuse deleted numbers
+
+4. Add new row to Requirement Summary:
+   ```markdown
+   | FR-003 | {category} | {new requirement} | {priority} | Draft |
+   ```
+
+5. Update related sections (Feature Specification, Non-Functional Requirements, etc.)
+
+6. Inform user:
+   > ✅ **Requirement Added**
+   > - New: FR-003 - {requirement}
+   > - Status: Draft
+   >
+   > **Next Step**: Run `/arch` to update design document.
 
 **fill_blank (Fill gaps):**
 

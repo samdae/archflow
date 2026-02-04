@@ -150,10 +150,11 @@ migrations:
 
 ## 3. Code Mapping
 
-| # | Feature | File | Class | Method | Action | Impl |
-|---|---------|------|-------|--------|--------|------|
-| 1 | {feature} | {full file path} | {class name} | {method name} | {call location and code to add} | [ ] |
+| # | Spec Ref | Feature | File | Class | Method | Action | Impl |
+|---|----------|---------|------|-------|--------|--------|------|
+| 1 | FR-001 | {feature} | {full file path} | {class name} | {method name} | {call location and code to add} | [ ] |
 
+> **Spec Ref**: Links to Requirement ID in spec.md (1 Req ID → multiple Code Mapping rows possible)
 > **Impl column**: `[ ]` = not implemented, `[x]` = implemented
 > - arch generates all rows with `[ ]`
 > - build updates to `[x]` after implementation

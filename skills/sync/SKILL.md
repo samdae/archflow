@@ -29,6 +29,11 @@ allowed-tools:
 > **Code Mapping `#` Rule (Global):**
 > Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
 
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): sync - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
+
 # Sync Workflow
 
 Synchronize design-impacting items from changelog or enhancement design results to existing arch.md.

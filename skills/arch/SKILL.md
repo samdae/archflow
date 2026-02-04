@@ -35,6 +35,11 @@ allowed-tools:
 > **Code Mapping `#` Rule (Global):**
 > Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
 
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): arch - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
+
 # Arch Workflow
 
 Two perspective sub-agents collaborate to derive optimal design.
@@ -392,7 +397,28 @@ Confirm with user:
 - Requirements document path (e.g., `@docs/alert/spec.md`)
 - Feature description (if additional explanation needed)
 
-**If file is already provided** → Proceed directly to Phase 2
+**If file is already provided** → Proceed directly to Phase 1.5
+
+### Phase 1.5: Parse Requirement Summary
+
+**Read spec.md and extract Requirement Summary grid:**
+
+1. Find `## 0. Requirement Summary` section
+2. Parse the table to extract:
+   - Req ID (e.g., FR-001, FR-002)
+   - Category
+   - Requirement description
+   - Priority
+
+3. Store for Code Mapping generation:
+   - Each Req ID will be referenced in Code Mapping `Spec Ref` column
+   - 1 Req ID can map to multiple Code Mapping rows (1:N relationship)
+
+**If Requirement Summary not found:**
+- Warn user: "spec.md is missing Requirement Summary grid"
+- Suggest: "Run /reinforce to add Requirement Summary, or continue without traceability"
+
+→ Proceed to Phase 2
 
 ## Phase 2: Parallel Initial Design
 
@@ -990,6 +1016,26 @@ api_endpoints:
 
 ---
 
+## Phase 6.5: Update spec.md Status
+
+**After design document is saved, update spec.md Requirement Summary:**
+
+1. Read `docs/{serviceName}/spec.md`
+2. Find `## 0. Requirement Summary` table
+3. For each Req ID used in Code Mapping:
+   - Update Status from `Draft` to `Designed`
+4. Save spec.md
+
+**Example:**
+```markdown
+| Req ID | Category | Requirement | Priority | Status |
+|--------|----------|-------------|----------|--------|
+| FR-001 | Auth | 이메일/비밀번호 로그인 | High | Designed |  ← Updated
+| FR-002 | Auth | 소셜 로그인 | Medium | Designed |  ← Updated
+```
+
+---
+
 # Completion Guidance
 
 After saving document, inform user:
@@ -997,6 +1043,7 @@ After saving document, inform user:
 > ✅ **Design Document Complete**
 >
 > Saved to: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
+> Updated: `docs/{serviceName}/spec.md` (Status → Designed)
 >
 > **Next Step**: Run `build` skill to begin implementation.
 > → Recommended to switch to **Sonnet model** in new session (cost savings)

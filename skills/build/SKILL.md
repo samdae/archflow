@@ -593,6 +593,26 @@ CREATE INDEX ...;
 > Document paths: `docs/{serviceName}/spec.md`, `arch-be.md` or `arch-fe.md`
 ```
 
+### 4-3. Update spec.md Status
+
+**After all implementation is complete, update spec.md Requirement Summary:**
+
+1. Read `docs/{serviceName}/spec.md`
+2. Find `## 0. Requirement Summary` table
+3. For each implemented Req ID (from Code Mapping with `Impl = [x]`):
+   - Update Status from `Designed` to `Implemented`
+4. Save spec.md
+
+**Example:**
+```markdown
+| Req ID | Category | Requirement | Priority | Status |
+|--------|----------|-------------|----------|--------|
+| FR-001 | Auth | 이메일/비밀번호 로그인 | High | Implemented |  ← Updated
+| FR-002 | Auth | 소셜 로그인 | Medium | Implemented |  ← Updated
+```
+
+> This completes the SSOT cycle: spec (Draft → Designed → Implemented)
+
 ### Commit Handling
 
 | Strategy | Handling |

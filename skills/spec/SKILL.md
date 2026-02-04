@@ -29,6 +29,14 @@ allowed-tools:
 > Always respond in the user's language unless explicitly requested otherwise.
 > If uncertain about the user's language, ask for clarification.
 
+> **Requirement ID `FR-{number}` Rule (Global):**
+> Always use `max(existing number) + 1` for new requirements. NEVER reuse deleted numbers.
+
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): spec - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
+
 # Spec Workflow
 
 Transform unstructured materials into refined requirements documentation.
@@ -272,7 +280,17 @@ After saving document, inform user:
 > Source Material: {input file path}
 > Domain: {domain}
 
-## 0. Development Target
+## 0. Requirement Summary
+
+| Req ID | Category | Requirement | Priority | Status |
+|--------|----------|-------------|----------|--------|
+| FR-001 | {category} | {requirement description} | High/Medium/Low | Draft |
+| FR-002 | {category} | {requirement description} | High/Medium/Low | Draft |
+
+> **Req ID Rule**: `FR-{number}` format. New = max + 1. Never reuse deleted numbers.
+> **Status**: `Draft` → `Designed` (after arch) → `Implemented` (after build)
+
+## 0.5. Development Target
 
 - [ ] Backend
 - [ ] Frontend

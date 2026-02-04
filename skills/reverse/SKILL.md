@@ -33,6 +33,11 @@ allowed-tools:
 > **Code Mapping `#` Rule (Global):**
 > Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
 
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): reverse - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
+
 # Reverse Workflow
 
 Analyze codebase to reverse-engineer spec.md and arch.md documents.
@@ -317,6 +322,16 @@ Analyze core files using Read:
 
 > ⚠️ This document was reverse-engineered from code. Enhance with `reinforce` skill.
 
+## 0. Requirement Summary
+
+| Req ID | Category | Requirement | Priority | Status |
+|--------|----------|-------------|----------|--------|
+| FR-001 | {category} | {inferred from code} | Medium | Implemented |
+| FR-002 | {category} | {inferred from code} | Medium | Implemented |
+
+> **Status = `Implemented`**: Reverse-engineered from existing code (already built)
+> **Req ID Rule**: `FR-{number}` format. New = max + 1. Never reuse deleted numbers.
+
 ## 1. Overview
 
 ### 1.1 Service Name
@@ -402,16 +417,20 @@ Generate in same format as arch skill output template, with:
 
 When generating Code Mapping from existing code:
 - Include `#` column (sequential row numbers)
+- Include `Spec Ref` column linking to spec.md Requirement IDs
 - Include `Impl` column = `[x]` for ALL rows (code already exists = implemented)
 - Example:
 
 ```markdown
-| # | Feature | File | Class | Method | Action | Impl |
-|---|---------|------|-------|--------|--------|------|
-| 1 | User Auth | auth/service.py | AuthService | login() | Handle login | [x] |
-| 2 | User Auth | auth/service.py | AuthService | logout() | Handle logout | [x] |
-| 3 | User CRUD | user/repo.py | UserRepo | create() | Create user | [x] |
+| # | Spec Ref | Feature | File | Class | Method | Action | Impl |
+|---|----------|---------|------|-------|--------|--------|------|
+| 1 | FR-001 | User Auth | auth/service.py | AuthService | login() | Handle login | [x] |
+| 2 | FR-001 | User Auth | auth/service.py | AuthService | logout() | Handle logout | [x] |
+| 3 | FR-002 | User CRUD | user/repo.py | UserRepo | create() | Create user | [x] |
 ```
+
+> **Spec Ref must match Req IDs in spec.md Requirement Summary**
+> This creates traceability: spec.md (FR-xxx) ↔ arch.md (Spec Ref)
 
 ### 5-2. Reverse Extraction Indicator
 

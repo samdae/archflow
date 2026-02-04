@@ -19,30 +19,32 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 │                           Frontend Development                              │
 │                                                                             │
 │              /ui  ───▶  /arch (FE)  ───▶  /check  ───▶  /build             │
-│                                              ▲                              │
-└──────────────────────────────────────────────│──────────────────────────────┘
-                                               │
-┌──────────────────────────────────────────────│──────────────────────────────┐
-│                              Bug Fix         │                              │
-│                                              │                              │
-│      /debug  ───▶  /trace  ───▶  /sync  ────┼───▶  (to /arch)              │
-│                                              │                              │
-└──────────────────────────────────────────────│──────────────────────────────┘
-                                               │
-┌──────────────────────────────────────────────│──────────────────────────────┐
-│                            Enhancement       │                              │
-│                                              │                              │
-│                              /enhance  ──────┘                              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              Bug Fix                                        │
+│                                                                             │
+│      /debug  ───▶  /trace  ───▶  /sync  ───▶  /arch                        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Enhancement (NEW)                                   │
+│                                                                             │
+│   New Proposal  ───▶  /reinforce (spec)  ───▶  /arch  ───▶  /check ───▶ /build │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                         Legacy Documentation                                │
 │                                                                             │
-│              /reverse  ───▶  /reinforce  ───▶  /sync                       │
+│   /reverse  ───▶  (spec + arch)  ───▶  /reinforce  ───▶  /arch            │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+> **SSOT Principle**: All changes start from spec.md. arch.md is a derived document.
 
 ## Features
 
@@ -96,8 +98,7 @@ After installation, use slash commands:
 | `/debug` | Systematic bug fixing (Debug mode) |
 | `/trace` | Record changes to trace.md |
 | `/sync` | Sync changes to arch.md |
-| `/enhance` | Design enhancement for existing features |
-| `/reinforce` | Fill gaps in incomplete documents |
+| `/reinforce` | Add requirements to spec.md or fill gaps |
 | `/reverse` | Reverse-engineer docs from existing code |
 | `/overview` | Generate 1-page project overview |
 | `/runbook` | Generate deployment documentation |
@@ -125,14 +126,16 @@ After installation, use slash commands:
 ### Legacy Code Documentation
 
 ```
-/reverse → /reinforce → /sync
+/reverse → /reinforce → /arch → /check → /build
 ```
 
-### Feature Enhancement
+### Feature Enhancement (NEW)
 
 ```
-/enhance → /check → /build
+New Proposal → /reinforce (spec.md) → /arch → /check → /build
 ```
+
+> **Note**: `/enhance` has been removed. All changes start from spec.md via `/reinforce`.
 
 ## Skills Included
 
@@ -146,8 +149,7 @@ After installation, use slash commands:
 | `debug` | Systematic debugging with document context | - | Opus |
 | `trace` | Generate structured changelogs | - | Sonnet |
 | `sync` | Sync documentation after code changes | - | Sonnet |
-| `enhance` | Design enhancements for existing features | - | Opus |
-| `reinforce` | Enhance existing documentation | - | Sonnet |
+| `reinforce` | Add requirements or fill documentation gaps | - | Sonnet |
 | `reverse` | Generate documentation from code | BE/FE | Opus |
 | `overview` | Generate 1-page project overview | - | Sonnet |
 | `runbook` | Generate deployment documentation | - | Sonnet |

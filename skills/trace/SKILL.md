@@ -31,6 +31,11 @@ allowed-tools:
 > **Code Mapping `#` Rule (Global):**
 > Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
 
+> **Document Version Control (Global):**
+> After document changes, git commit is recommended.
+> - Commit message: `docs({serviceName}): trace - {change summary}`
+> - **Failover**: If git unavailable or not a repo → skip and continue
+
 # Trace Workflow
 
 Records bug fixes, analysis results, and changes in trace.md.

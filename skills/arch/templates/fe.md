@@ -275,10 +275,11 @@ api_integration:
 
 ## 6. Code Mapping
 
-| # | Feature | File | Component/Hook | Props/Params | Action | Impl |
-|---|---------|------|----------------|--------------|--------|------|
-| 1 | {feature} | {file path} | {component or hook name} | {key props} | {what to implement} | [ ] |
+| # | Spec Ref | Feature | File | Component/Hook | Props/Params | Action | Impl |
+|---|----------|---------|------|----------------|--------------|--------|------|
+| 1 | FR-001 | {feature} | {file path} | {component or hook name} | {key props} | {what to implement} | [ ] |
 
+> **Spec Ref**: Links to Requirement ID in spec.md (1 Req ID → multiple Code Mapping rows possible)
 > **Impl column**: `[ ]` = not implemented, `[x]` = implemented
 > - arch generates all rows with `[ ]`
 > - build updates to `[x]` after implementation
