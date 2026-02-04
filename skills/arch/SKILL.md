@@ -266,6 +266,117 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 
 > **Frontend arch input**: spec.md + ui.md (NOT arch-be.md directly)
 
+### 0-1.7. Package Environment Setup
+
+**Question 1: Project Type**
+
+```json
+{
+  "title": "Project Environment",
+  "questions": [
+    {
+      "id": "project_type",
+      "prompt": "Is this a new project or existing project?",
+      "options": [
+        {"id": "new", "label": "New project - Start from scratch"},
+        {"id": "existing", "label": "Existing project - Has dependencies already"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `new` → Go to 0-1.7a (Package Manager Selection)
+- `existing` → Go to 0-1.7b (Auto-detect Dependencies)
+
+### 0-1.7a. New Project - Package Manager Selection
+
+**For Python projects:**
+```json
+{
+  "title": "Python Package Manager",
+  "questions": [
+    {
+      "id": "python_pkg_manager",
+      "prompt": "Which package manager do you want to use?",
+      "options": [
+        {"id": "uv", "label": "uv - Fast, modern package manager"},
+        {"id": "pip", "label": "pip + venv - Standard Python"},
+        {"id": "poetry", "label": "Poetry - Dependency management + packaging"}
+      ]
+    }
+  ]
+}
+```
+
+**For Node.js projects:**
+```json
+{
+  "title": "Node Package Manager",
+  "questions": [
+    {
+      "id": "node_pkg_manager",
+      "prompt": "Which package manager do you want to use?",
+      "options": [
+        {"id": "npm", "label": "npm - Default Node.js"},
+        {"id": "yarn", "label": "Yarn - Fast, reliable"},
+        {"id": "pnpm", "label": "pnpm - Efficient disk space"}
+      ]
+    }
+  ]
+}
+```
+
+→ After selection, proceed to 0-1.7c (Library Review)
+
+### 0-1.7b. Existing Project - Auto-detect Dependencies
+
+**Auto-detect and read dependency files:**
+
+| Language | Files to Check |
+|----------|----------------|
+| Python | `requirements.txt`, `pyproject.toml`, `Pipfile` |
+| Node.js | `package.json` |
+
+**Extract and present:**
+- List of installed packages with versions
+- Detect package manager from lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, poetry.lock, uv.lock)
+
+→ Proceed to 0-1.7c (Library Review)
+
+### 0-1.7c. Library Review
+
+**Based on spec.md requirements, extract needed libraries:**
+
+1. Analyze functional requirements
+2. Generate recommended library list for each feature
+3. Present to user:
+
+```json
+{
+  "title": "Library Review: {feature_name}",
+  "questions": [
+    {
+      "id": "lib_{library_name}",
+      "prompt": "{library_name} ({version}) - {purpose}",
+      "options": [
+        {"id": "use", "label": "Use as recommended"},
+        {"id": "skip", "label": "Don't use"},
+        {"id": "alt", "label": "Use alternative (specify)"},
+        {"id": "recommend", "label": "Get LLM recommendation"}
+      ]
+    }
+  ]
+}
+```
+
+**For existing projects:**
+- Show already installed libraries with ✅ marker
+- Highlight missing libraries that need to be added
+
+→ Record final decisions in Dependencies section of output document
+
 ### 0-2. Infer serviceName
 
 Extract serviceName from provided file path:

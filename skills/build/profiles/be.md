@@ -10,6 +10,41 @@
 
 ---
 
+## Package Installation (Phase 0.5)
+
+**Backend-specific package managers:**
+
+| Manager | Virtual Env | Install Command | Lock File |
+|---------|-------------|-----------------|-----------|
+| pip | `python -m venv .venv` | `pip install -r requirements.txt` | - |
+| uv | `uv venv` | `uv pip install -r requirements.txt` | `uv.lock` |
+| poetry | auto-managed | `poetry install` | `poetry.lock` |
+
+**For new projects (project_type: new):**
+1. Create virtual environment if needed
+2. Install packages from Dependencies section
+
+**For existing projects (project_type: existing):**
+1. Check if virtual environment exists
+2. Install only new packages (not already in requirements.txt/pyproject.toml)
+
+**Example commands:**
+```bash
+# pip with venv
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install fastapi sqlalchemy alembic
+
+# uv
+uv venv
+uv pip install fastapi sqlalchemy alembic
+
+# poetry
+poetry add fastapi sqlalchemy alembic
+```
+
+---
+
 ## Project Settings Questions
 
 ```json

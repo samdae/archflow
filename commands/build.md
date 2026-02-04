@@ -35,20 +35,26 @@ This skill auto-detects profile from input file:
    - Auto-load appropriate profile (BE or FE)
    - Extract Code Mapping / Component Structure
 
-2. **Create Dependency Graph**
+2. **Install Packages (First Step)**
+   - Read Dependencies section from design document
+   - Detect package manager (pip/uv/poetry or npm/yarn/pnpm)
+   - Execute install command for approved packages
+   - Report installation status before proceeding
+
+3. **Create Dependency Graph**
    - **Backend**: Model → Repository → Service → Controller
    - **Frontend**: Types → API → Store → Components → Pages
 
-3. **Step-by-Step Execution**
+4. **Step-by-Step Execution**
    - Sub-agent based parallel/sequential execution
    - Create files according to Code Mapping
    - Implement APIs, DB schemas (BE) or components, state (FE)
 
-4. **Validation**
+5. **Validation**
    - Cross-reference implementation with Code Mapping
    - Ensure all planned files are created
 
-5. **Generate Report**
+6. **Generate Report**
    - Completion status
    - Files created/modified
    - Migration SQL (BE) or Build commands (FE)

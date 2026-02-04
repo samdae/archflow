@@ -10,6 +10,45 @@
 
 ---
 
+## Package Installation (Phase 0.5)
+
+**Frontend-specific package managers:**
+
+| Manager | Install Command | Lock File | Dev Dependencies |
+|---------|-----------------|-----------|------------------|
+| npm | `npm install` | `package-lock.json` | `npm install -D` |
+| yarn | `yarn install` | `yarn.lock` | `yarn add -D` |
+| pnpm | `pnpm install` | `pnpm-lock.yaml` | `pnpm add -D` |
+
+**For new projects (project_type: new):**
+1. Initialize project if needed (`npm init`, `yarn init`, etc.)
+2. Install packages from Dependencies section
+
+**For existing projects (project_type: existing):**
+1. Check package.json for already installed packages
+2. Install only new packages
+
+**Example commands:**
+```bash
+# npm
+npm install react react-dom zustand axios
+npm install -D typescript @types/react vite
+
+# yarn
+yarn add react react-dom zustand axios
+yarn add -D typescript @types/react vite
+
+# pnpm
+pnpm add react react-dom zustand axios
+pnpm add -D typescript @types/react vite
+```
+
+**Note**: Distinguish between runtime dependencies and devDependencies:
+- Runtime: react, axios, zustand, etc.
+- Dev: typescript, vite, eslint, prettier, etc.
+
+---
+
 ## Project Settings Questions
 
 ```json

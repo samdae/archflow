@@ -213,6 +213,68 @@ Check design document's **Section 4 (Implementation Plan) > 📂 Required Refere
 
 ---
 
+## Phase 0.5: Package Installation (First Step)
+
+**Before any code implementation, install required dependencies.**
+
+### 0.5-1. Read Dependencies Section
+
+From the design document (arch-be.md or arch-fe.md), read the `Dependencies` section:
+
+```yaml
+package_manager: "{pip|uv|poetry|npm|yarn|pnpm}"
+project_type: "{new|existing}"
+
+dependencies:
+  - name: "{package}"
+    version: "{version}"
+    purpose: "{purpose}"
+    status: "approved"      # Only install approved packages
+```
+
+### 0.5-2. Generate Install Command
+
+Based on `package_manager` and `status: approved` packages:
+
+| Package Manager | Install Command |
+|-----------------|-----------------|
+| pip | `pip install {package}=={version}` |
+| uv | `uv pip install {package}=={version}` |
+| poetry | `poetry add {package}@{version}` |
+| npm | `npm install {package}@{version}` |
+| yarn | `yarn add {package}@{version}` |
+| pnpm | `pnpm add {package}@{version}` |
+
+### 0.5-3. Execute Installation
+
+```bash
+# Example for pip
+pip install fastapi==0.109.0 sqlalchemy==2.0.25 alembic==1.13.1
+
+# Example for npm
+npm install react@18.2.0 zustand@4.5.0 axios@1.6.5
+```
+
+### 0.5-4. Verify Installation
+
+1. Run install command using Shell tool
+2. Check exit code (0 = success)
+3. If failed:
+   - Show error message
+   - Ask user to resolve manually or suggest alternative
+
+**Report to user before proceeding:**
+```
+✅ Package Installation Complete
+- Installed: {count} packages
+- Package manager: {manager}
+- Ready to proceed with implementation
+```
+
+→ After successful installation, proceed to Phase 1
+
+---
+
 ## Phase 1: Analyze Design Document (Main Agent)
 
 Extract following information from design document:

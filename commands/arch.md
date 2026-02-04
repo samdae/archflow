@@ -37,18 +37,24 @@ This skill supports separate templates for Backend and Frontend:
    - **Backend**: API server, business logic, database
    - **Frontend**: Web app, SPA, components (requires ui.md)
 
-3. **Multi-Agent Debate**
+3. **Package Environment Setup**
+   - New project: Select package manager (pip/uv/poetry or npm/yarn/pnpm)
+   - Existing project: Auto-detect from requirements.txt/package.json
+   - Review and approve required libraries
+
+4. **Multi-Agent Debate**
    - **Domain Architect**: Project context, existing patterns, domain knowledge
    - **Best Practice Advisor**: Industry standards, clean architecture, ideal patterns
    - Round-based debate (typically 2-3 rounds)
 
-4. **User Checkpoint**
+5. **User Checkpoint**
    - Present design decisions
    - Get user approval or feedback
 
-5. **Generate Output**
+6. **Generate Output**
    - Creates `docs/{serviceName}/arch-be.md` (Backend)
    - Creates `docs/{serviceName}/arch-fe.md` (Frontend)
+   - Includes Dependencies section for build phase
 
 ## Output Structure
 

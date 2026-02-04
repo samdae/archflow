@@ -58,6 +58,33 @@ tech_stack:
 
 ---
 
+## 1.6. Dependencies
+
+```yaml
+package_manager: "{pip|uv|poetry}"          # Selected in Phase 0-1.7
+project_type: "{new|existing}"              # New or existing project
+
+dependencies:
+  # Core framework
+  - name: "{package name}"
+    version: "{version or latest}"
+    purpose: "{what it's used for}"
+    status: "{approved|rejected|alternative}"
+  
+  # Database / ORM
+  - name: "{package name}"
+    version: "{version}"
+    purpose: "{purpose}"
+    status: "{status}"
+  
+  # Add more as needed...
+```
+
+> **Note**: This section is populated from Phase 0-1.7c Library Review.
+> `status: approved` packages will be installed in build phase.
+
+---
+
 ## 2. Architecture Impact
 
 ### Components

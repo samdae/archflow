@@ -95,7 +95,41 @@ projectRoot/
 
 **Processing by response:**
 - Either `no` → Guide to run required skill first
-- Both `yes` → Request file paths → Proceed to Phase 1
+- Both `yes` → Request file paths → Proceed to 0-1.5
+
+### 0-1.5. Responsive Option
+
+```json
+{
+  "title": "Target Platform",
+  "questions": [
+    {
+      "id": "responsive",
+      "prompt": "What platforms are you targeting?",
+      "options": [
+        {"id": "mobile", "label": "Mobile only - Mobile viewport wireframes"},
+        {"id": "desktop", "label": "Desktop only - Desktop viewport wireframes"},
+        {"id": "responsive", "label": "Both (Responsive) - Mobile First approach"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `mobile` → Generate wireframes for mobile viewport (375px width)
+- `desktop` → Generate wireframes for desktop viewport (1280px+ width)
+- `responsive` → Generate Mobile First wireframes with breakpoint hints
+
+**Breakpoint hints for responsive:**
+```yaml
+breakpoints:
+  mobile: "< 640px"     # Default view
+  tablet: "640-1024px"  # Adjust layout
+  desktop: "> 1024px"   # Full layout
+```
+
+→ Record selection in ui.md header, apply to all wireframes
 
 ### 0-2. Infer serviceName
 
@@ -244,8 +278,20 @@ patterns:
 
 > Created: {date}
 > Service: {serviceName}
+> Platform: {mobile|desktop|responsive}
 > Requirements: docs/{serviceName}/spec.md
 > Backend API: docs/{serviceName}/arch-be.md
+
+## 0. Responsive Strategy
+
+```yaml
+platform: "{mobile|desktop|responsive}"
+breakpoints:                              # Only for responsive
+  mobile: "< 640px"
+  tablet: "640-1024px"
+  desktop: "> 1024px"
+approach: "Mobile First"                  # Default for responsive
+```
 
 ---
 

@@ -24,29 +24,35 @@ Invoke the **ui** skill to generate UI specification from requirements and backe
    - Read `docs/{serviceName}/spec.md` (requirements)
    - Read `docs/{serviceName}/arch-be.md` (backend API)
 
-2. **Derive Screen List**
+2. **Select Target Platform**
+   - **Mobile only**: Mobile viewport wireframes
+   - **Desktop only**: Desktop viewport wireframes
+   - **Responsive (Both)**: Mobile First approach with breakpoint hints
+
+3. **Derive Screen List**
    - Analyze API endpoints to determine needed screens
    - `GET /resources` → List screen
    - `GET /resources/:id` → Detail screen
    - `POST /resources` → Create form
    - `POST /auth/login` → Login screen
 
-3. **Generate UI Specifications**
-   - ASCII wireframe for each screen
+4. **Generate UI Specifications**
+   - ASCII wireframe for each screen (based on platform selection)
    - Component hierarchy (YAML)
    - States (loading, empty, error, loaded)
    - User interactions mapping
 
-4. **Identify Shared Components**
+5. **Identify Shared Components**
    - Extract reusable components
    - Define props and usage
 
-5. **Output**
+6. **Output**
    - Creates `docs/{serviceName}/ui.md`
 
 ## Output Structure
 
 **ui.md contains:**
+- Responsive Strategy (platform, breakpoints)
 - Screen List (route, endpoints, auth)
 - Screen Specifications (wireframe, components, states, interactions)
 - Shared Components (props, usage)
