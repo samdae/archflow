@@ -255,6 +255,27 @@ After analysis/fix completion, **must** call trace skill to record results.
 Or guide user:
 > "Analysis complete. Would you like to record this in the changelog?"
 
+### 3-1.5. Prepare Code Mapping Changes for trace
+
+When calling trace skill, extract Code Mapping changes from arch.md:
+
+1. **Read arch.md** Code Mapping table (get current `#` numbers)
+2. **Identify changes made during debug**:
+   - Modified rows → record with original `#`, `Change = MODIFY`
+   - New rows → assign `# = last_number + 1`, `Change = ADD`
+   - Deleted rows → record with original `#`, `Change = DELETE`
+3. **Pass to trace** in structured format:
+
+```markdown
+### Code Mapping Changes
+| # | Feature | File | Class | Method | Action | Change | Synced |
+|---|---------|------|-------|--------|--------|--------|--------|
+| 3 | Auth | auth/svc.py | AuthSvc | validate() | Add null check | MODIFY | [ ] |
+| 6 | Auth | auth/svc.py | AuthSvc | refresh() | Token refresh | ADD | [ ] |
+```
+
+> This structured format enables sync skill to directly apply changes to arch.md
+
 ### 3-2. Recording by Result Type
 
 | Result Type | Content to Record in trace |

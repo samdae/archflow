@@ -130,14 +130,24 @@ Extract serviceName from input file path:
 
 ### 1-1. Debug Sync (trace → arch)
 
-Filter only **"Design Impact: Yes"** items from changelog:
+Filter **`Synced = [ ]`** rows from trace's Code Mapping Changes grid:
 
 ```
-Analyze changelog:
-  for each item:
-    if Design Impact == "Yes":
-      → Add to sync targets
-      → Identify affected sections (Code Mapping, API Spec, DB Schema, etc.)
+Analyze trace.md:
+  for each changelog entry:
+    for each row in "Code Mapping Changes" table:
+      if Synced == "[ ]":
+        → Add to sync targets
+        → Record Change type (ADD / MODIFY / DELETE)
+        → Record # number for arch lookup
+```
+
+**Sync target example:**
+```markdown
+| # | Feature | File | Class | Method | Action | Change | Synced |
+|---|---------|------|-------|--------|--------|--------|--------|
+| 3 | Auth | auth/svc.py | AuthSvc | validate() | Add null check | MODIFY | [ ] | ← target
+| 6 | Auth | auth/svc.py | AuthSvc | refresh() | Token refresh | ADD | [ ] | ← target
 ```
 
 ### 1-2. Enhancement Sync (enhancement result → arch)
@@ -153,15 +163,17 @@ Identify changes/additions from enhancement design results:
 ```markdown
 ## Sync Target Analysis
 
-### Change Items
-| Source | Affected Section | Change Content |
-|--------|-----------------|----------------|
-| {changelog date or enhance} | {section name} | {change description} |
+### Code Mapping Changes to Apply
+| # | Change | Current in arch | New Value |
+|---|--------|-----------------|-----------|
+| 3 | MODIFY | validate() - Check user | validate() - Add null check |
+| 6 | ADD | (not exists) | refresh() - Token refresh |
 
-### arch.md Modification Plan
-| Section | Current State | After Change |
-|---------|--------------|-------------|
-| {section name} | {existing content summary} | {changed content summary} |
+### Summary
+- Total rows to sync: {count}
+- ADD: {count} rows
+- MODIFY: {count} rows
+- DELETE: {count} rows
 ```
 
 ### 1-4. Git Commit Strategy
@@ -227,21 +239,52 @@ Compare existing arch content with new changes:
 
 ## Phase 3: Update arch.md
 
-### 3-1. Update by Section
+### 3-1. Update Code Mapping by Change Type
+
+**Process each row from trace's Code Mapping Changes grid:**
+
+| Change Type | Action in arch.md |
+|-------------|-------------------|
+| `ADD` | Insert new row with same `#`, set `Impl = [x]` |
+| `MODIFY` | Find row by `#` in arch, update content, keep `Impl` status |
+| `DELETE` | Find row by `#` in arch, remove entire row |
+
+**Example:**
+
+```
+trace.md (source):
+| # | Feature | ... | Change | Synced |
+| 3 | Auth | ... | MODIFY | [ ] |
+| 6 | Auth | ... | ADD | [ ] |
+
+arch.md (before):
+| # | Feature | ... | Impl |
+| 1 | Login | ... | [x] |
+| 2 | Logout | ... | [x] |
+| 3 | Auth | ... | [x] |  ← will be modified
+| 4 | Profile | ... | [x] |
+| 5 | Settings | ... | [x] |
+
+arch.md (after):
+| # | Feature | ... | Impl |
+| 1 | Login | ... | [x] |
+| 2 | Logout | ... | [x] |
+| 3 | Auth (MODIFIED) | ... | [x] |  ← modified
+| 4 | Profile | ... | [x] |
+| 5 | Settings | ... | [x] |
+| 6 | Auth (NEW) | ... | [x] |  ← added
+```
+
+**After DELETE, renumber `#` if needed (optional - can leave gaps)**
+
+### 3-1.5. Update Other Sections (if applicable)
 
 | Section | Update Method |
 |---------|--------------|
-| Code Mapping | Add/modify/delete rows (see Impl rules below) |
 | API Spec | Add/modify endpoints |
 | DB Schema | Modify table/column definitions |
 | Sequence Diagram | Modify diagram |
 | Risks & Tradeoffs | Add new tradeoffs |
-
-**Code Mapping `Impl` column rules:**
-- Existing rows modified: Keep `Impl` status (can change if needed)
-- New rows added: Set `Impl = [x]` (sync reflects debug changes = already implemented)
-- Continue `#` numbering from last existing row
-- Deleted rows: Remove entire row including `Impl`
 
 ### 3-2. Add Sync History
 
@@ -258,9 +301,29 @@ Add/update sync history section at bottom of arch.md:
 | {date} | enhance | requirements v2 | {change summary} |
 ```
 
-### 3-3. Save
+### 3-3. Save arch.md
 
 Save updated arch.md (overwrite existing file)
+
+### 3-4. Update trace Synced Status
+
+After arch.md update, update trace.md:
+
+1. Find all synced rows in Code Mapping Changes grid
+2. Change `Synced` from `[ ]` to `[x]`
+
+**Example:**
+```markdown
+# Before
+| # | Feature | ... | Change | Synced |
+| 3 | Auth | ... | MODIFY | [ ] |
+| 6 | Auth | ... | ADD | [ ] |
+
+# After
+| # | Feature | ... | Change | Synced |
+| 3 | Auth | ... | MODIFY | [x] |  ← updated
+| 6 | Auth | ... | ADD | [x] |  ← updated
+```
 
 ---
 
@@ -274,15 +337,16 @@ Save updated arch.md (overwrite existing file)
 |------|---------|
 | Type | debug / enhance |
 | Source | {changelog date or requirements} |
-| Modified Sections | {section list} |
+| Code Mapping Changes | ADD: {n}, MODIFY: {n}, DELETE: {n} |
 
 ### Change History
-| Section | Change Type | Change Content |
-|---------|------------|----------------|
-| {section} | Add/Modify/Delete | {content} |
+| # | Change Type | Before | After |
+|---|------------|--------|-------|
+| {#} | ADD/MODIFY/DELETE | {before} | {after} |
 
 ### Files
-- Updated: `docs/{serviceName}/arch.md`
+- Updated: `docs/{serviceName}/arch-be.md` or `arch-fe.md`
+- Updated: `docs/{serviceName}/trace.md` (Synced status)
 
 ### Next Steps
 - **If implementation needed**: Run `build` skill
@@ -294,9 +358,15 @@ Save updated arch.md (overwrite existing file)
 # Integration Flow
 
 ```
-[debug] → changelog (design-impacting items)
+[debug] → Analysis/fix complete
                 ↓
-         [sync] → Update arch
+         [trace] → Write Code Mapping Changes (Synced=[ ])
+                ↓
+         [sync] → Filter Synced=[ ] rows
+                ↓
+                ├─→ Update arch.md (apply ADD/MODIFY/DELETE)
+                │
+                └─→ Update trace.md (Synced=[ ] → [x])
                 ↓
            [build] (if needed)
 
@@ -311,13 +381,19 @@ Save updated arch.md (overwrite existing file)
 
 # Important Notes
 
-1. **Bugfixes without design impact don't need sync**
-   - Ignore "Design Impact: No" items in changelog
+1. **Only sync `Synced = [ ]` rows**
+   - Already synced rows (`[x]`) are skipped
+   - Empty Code Mapping Changes = nothing to sync
 
-2. **Preserve existing content**
-   - Keep sections without conflicts as is
-   - Update only changed sections
+2. **`#` column is the key**
+   - `MODIFY` and `DELETE` use `#` to find target row in arch
+   - `ADD` inserts new row with the `#` from trace
+   - Keep `#` numbers consistent between trace and arch
 
-3. **Sync History management**
-   - Record all synchronizations
+3. **Always update trace after arch**
+   - Mark synced rows as `[x]` in trace.md
+   - This prevents duplicate syncing
+
+4. **Sync History management**
+   - Record all synchronizations in arch.md
    - Enable future change tracking

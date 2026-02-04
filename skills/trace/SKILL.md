@@ -144,27 +144,31 @@ Extract the following information from previous conversation:
 > 3. Action (How was it resolved? Or resolution plan)
 > 4. Impact scope (Which features/files are affected?)"
 
-### 2-3. Design Impact Verification
+### 2-3. Code Mapping Changes Verification
 
 ```json
 {
-  "title": "Design Impact",
+  "title": "Code Mapping Changes",
   "questions": [
     {
-      "id": "design_impact",
-      "prompt": "Does this change impact the design (arch.md)?",
+      "id": "has_mapping_changes",
+      "prompt": "Did this fix change the Code Mapping in arch.md?",
       "options": [
-        {"id": "yes", "label": "Yes - API/DB/structure changed"},
-        {"id": "no", "label": "No - Bug fix only"},
-        {"id": "unsure", "label": "Not sure"}
+        {"id": "yes", "label": "Yes - Added/Modified/Deleted methods or files"},
+        {"id": "no", "label": "No - Bug fix only (no structural changes)"}
       ]
     }
   ]
 }
 ```
 
-- `yes` → Write detailed design impact section + guide to sync
-- `no` → Mark as no design impact
+- `yes` → Extract Code Mapping changes from debug context and write to grid
+- `no` → Leave Code Mapping Changes section empty or with "No structural changes"
+
+**When extracting from debug context:**
+1. Get arch.md Code Mapping table (passed from debug skill)
+2. Identify which rows were added/modified/deleted
+3. Write to Code Mapping Changes grid with `Synced = [ ]`
 
 ---
 
@@ -182,23 +186,24 @@ Extract the following information from previous conversation:
 
 ## {date} - {result type}
 
+### Code Mapping Changes
+| # | Feature | File | Class | Method | Action | Change | Synced |
+|---|---------|------|-------|--------|--------|--------|--------|
+| {#} | {feature} | {file path} | {class name} | {method name} | {action description} | {ADD/MODIFY/DELETE} | [ ] |
+
+> **Change**: `ADD` = new row to arch, `MODIFY` = existing row modified, `DELETE` = row to remove from arch
+> **Synced**: `[ ]` = not yet synced to arch, `[x]` = synced
+
+⚠️ **Run `sync` skill to apply these changes to arch.md**
+
+---
+
 ### Basic Information
 | Item | Content |
 |------|---------|
 | Symptom | {user-reported symptom} |
 | Cause | {identified cause} |
 | Severity | Critical / High / Medium / Low |
-| **Design Impact** | **Yes / No** |
-
-### Design Impact Details (Only when Yes)
-| Affected Section | Changes |
-|-----------------|---------|
-| Code Mapping | {method added/changed/deleted - if applicable} |
-| API Spec | {endpoint changes - if applicable} |
-| DB Schema | {table/column changes - if applicable} |
-| Sequence Diagram | {flow changes - if applicable} |
-
-⚠️ **When design impact exists**: Need to synchronize arch.md with `sync` skill
 
 ### Change Reasoning
 - **Why did this problem occur**: {root cause analysis}
@@ -222,7 +227,7 @@ Extract the following information from previous conversation:
 
 ### Related Documents
 - Requirements: docs/{serviceName}/spec.md
-- Design: docs/{serviceName}/arch.md
+- Design: docs/{serviceName}/arch-be.md or arch-fe.md
 
 ---
 
@@ -233,14 +238,18 @@ Extract the following information from previous conversation:
 
 **Code fix completed:**
 - Record actual changed files/content in Action Details
+- Fill Code Mapping Changes grid with ADD/MODIFY/DELETE rows
+- All rows start with `Synced = [ ]`
 
 **External cause identified:**
+- Code Mapping Changes: Leave empty or "No structural changes"
 - Action Details: "No code changes - External cause"
 - Record detailed external cause in Change Reasoning
 - Add recommended actions (contact external team, configuration changes, etc.)
 
 **Investigation result:**
 - Severity: "Under investigation"
+- Code Mapping Changes: Leave empty
 - Action Details: "Investigation in progress" or "Cause identification failed"
 - Record next steps
 
@@ -264,13 +273,13 @@ docs/{serviceName}/trace.md
 |------|---------|
 | Service | {serviceName} |
 | Result Type | {Code fix/External cause/Investigation record} |
-| Design Impact | Yes / No |
+| Code Mapping Changes | {count} rows (ADD: {n}, MODIFY: {n}, DELETE: {n}) |
 
 ### Files
 - Updated: `docs/{serviceName}/trace.md`
 
 ### Next Steps
-- **When design impact exists**: Execute `sync` skill
+- **When Code Mapping Changes exist**: Execute `sync` skill to apply changes to arch.md
 - **When testing needed**: Proceed with testing according to verification method
 ```
 
@@ -281,11 +290,16 @@ docs/{serviceName}/trace.md
 ```
 [debug] → Analysis/fix complete
               │
-              ▼
-        [trace] → Write trace.md
+              ├─→ Extract Code Mapping changes
               │
-              ▼ (when design impact exists)
-        [sync] → Synchronize arch.md
+              ▼
+        [trace] → Write trace.md (with Code Mapping Changes grid)
+              │
+              ▼ (when Code Mapping Changes exist)
+        [sync] → Apply changes to arch.md
+              │   (filter Synced=[ ] rows)
+              │
+              └─→ Update trace.md (Synced=[ ] → [x])
 ```
 
 ---
@@ -293,14 +307,16 @@ docs/{serviceName}/trace.md
 # Important Notes
 
 1. **Recommended to call in same session**
-   - Automatic extraction possible when debug context exists
+   - Automatic extraction of Code Mapping changes when debug context exists
    - Manual input required if different session
 
-2. **Design Impact Judgment**
-   - API/DB/structure changes → Yes
-   - Simple bug fix (logic only) → No
-   - If ambiguous, treat as "Yes" (safe)
+2. **Code Mapping Changes Grid**
+   - `#` column must match arch.md row numbers
+   - New rows: `# = last_arch_number + 1`
+   - All rows start with `Synced = [ ]`
+   - `sync` skill updates to `[x]` after applying
 
 3. **External causes are also worth recording**
    - "Not our code's problem" is also important information
    - Reference for when same problem occurs later
+   - Code Mapping Changes can be left empty
