@@ -15,7 +15,7 @@ triggers:
   - "run tests"
   - "qa"
   - "verify"
-requires: ["build"]
+requires: []
 platform: all
 recommended_model: sonnet
 allowed-tools:
@@ -76,8 +76,19 @@ projectRoot/
 > 💡 **This skill recommends the Sonnet model.**
 > Test generation is pattern-based and doesn't require high reasoning.
 > Use Opus only for complex test logic or edge case generation.
->
-> **Prerequisite**: Implementation should exist (run `/build` first)
+
+### 0-0.5. Prerequisite (Flexible)
+
+| Scenario | Prerequisite | Notes |
+|----------|--------------|-------|
+| **Standard flow** | Run `/build` first | Test implementation code |
+| **Document-based** | `arch.md` only | Generate tests from design before implementation |
+| **Legacy code** | Existing code | Add tests to existing codebase, no `/build` needed |
+
+> ⚠️ **Framework Auto-Install (Important)**
+> - If mode is `run` and test framework is not detected, **will ask to install**
+> - FE: Offers to install Playwright automatically
+> - BE: Detects pytest/jest/vitest/go and guides installation
 
 ### 0-1. Collect Target and Mode
 
@@ -357,54 +368,11 @@ test_cases:
 
 ### 3-4. Write Test Files
 
-**BE Test Example (pytest):**
+Use templates from loaded profile (`profiles/be.md` or `profiles/fe.md`).
 
-```python
-import pytest
-from unittest.mock import Mock, patch
-from src.services.alert_service import AlertService
-
-class TestAlertService:
-    """Tests for AlertService - FR-001, FR-002"""
-    
-    @pytest.fixture
-    def service(self):
-        return AlertService()
-    
-    def test_create_alert_success(self, service):
-        """Happy path: Alert created successfully"""
-        result = service.create_alert(user_id=1, message="Test")
-        assert result.id is not None
-        assert result.message == "Test"
-    
-    def test_create_alert_invalid_user(self, service):
-        """Error case: Invalid user returns error"""
-        with pytest.raises(ValueError):
-            service.create_alert(user_id=-1, message="Test")
-```
-
-**FE Test Example (Playwright):**
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-test.describe('Alert List Page - FR-001', () => {
-  test('should display alerts list', async ({ page }) => {
-    await page.goto('/alerts');
-    await expect(page.getByRole('heading', { name: 'Alerts' })).toBeVisible();
-    await expect(page.getByTestId('alert-list')).toBeVisible();
-  });
-
-  test('should show empty state when no alerts', async ({ page }) => {
-    // Mock empty response
-    await page.route('**/api/alerts', route => 
-      route.fulfill({ json: [] })
-    );
-    await page.goto('/alerts');
-    await expect(page.getByText('No alerts found')).toBeVisible();
-  });
-});
-```
+> 📎 **See profiles for full templates:**
+> - BE: `profiles/be.md` - pytest/jest/vitest/go templates
+> - FE: `profiles/fe.md` - Playwright E2E templates
 
 ### 3-5. Report Generated Files
 
