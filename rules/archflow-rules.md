@@ -8,10 +8,10 @@ These rules apply globally to all Archflow skills. Individual skills must adhere
 
 | Type | Sequence |
 |------|----------|
-| **Feature (BE)** | `spec` → `arch-be` → `check-be` → `build-be` → `test-be` |
-| **Feature (FE)** | `spec` → `arch-be` → `check-be` → `ui` → `arch-fe` → `check-fe` → `build-fe` → `test-fe` |
+| **Feature (BE)** | `spec` → `arch-be` → `check-be` → `pre-build-be` → `build-be` → `test-be` |
+| **Feature (FE)** | `spec` → `arch-be` → `check-be` → `ui` → `arch-fe` → `check-fe` → `pre-build-fe` → `build-fe` → `test-fe` |
 | **Bugfix** | `debug` → `trace` → `sync` |
-| **Enhance** | `reinforce` → `arch` → `check` → `build` → `test` |
+| **Enhance** | `reinforce` → `arch` → `check` → `pre-build` → `build` → `test` |
 | **Legacy** | `reverse` → `reinforce` (optional) → `check` |
 
 > **FE workflow requires BE arch first** - Frontend design depends on backend API definitions.
@@ -21,6 +21,7 @@ These rules apply globally to all Archflow skills. Individual skills must adhere
 | Rule | Description |
 |------|-------------|
 | **Arch → Check** | After `arch-be.md` or `arch-fe.md` is created/modified, `check` skill **MUST** run. |
+| **Check → Pre-build** | After `check` passes, `pre-build` **MUST** run to verify environment/secrets before implementation. |
 | **Build → Test** | After `build` completes, `test` skill **MUST** run. Commit only after all tests pass. |
 | **Debug → Trace → Sync** | After `debug` completes, `trace` and `sync` **MUST** run. Commit only after all complete. |
 | **Docs → Commit** | Any changes to `/docs/` files should be committed. Skip if git is not initialized. |
@@ -29,7 +30,7 @@ These rules apply globally to all Archflow skills. Individual skills must adhere
 
 > At the end of each skill, guide the user to the next skill in the workflow.
 >
-> Example: After `build-be` completes → "Next: Run `/test` to verify implementation."
+> Example: After `check-be` passes → "Next: Run `/pre-build` to verify environment readiness."
 
 ---
 
