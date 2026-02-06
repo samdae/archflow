@@ -3,8 +3,9 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const { exec, execSync } = require('child_process');
 
-// ANSI 색상 코드
+// ANSI colors
 const colors = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
@@ -15,7 +16,7 @@ const colors = {
   cyan: '\x1b[36m'
 };
 
-// 로깅 헬퍼
+// Logging helpers
 function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
@@ -32,32 +33,82 @@ function logInfo(message) {
   log(`ℹ ${message}`, 'cyan');
 }
 
-// 플랫폼 감지
+// Supported tools configuration
+const TOOLS = {
+  cursor: {
+    name: 'Cursor',
+    skillsPath: '.cursor/skills',
+    rulesPath: '.cursor/rules',
+    agentsPath: '.cursor/agents',
+    rulesFormat: 'folder',
+    detectPaths: ['.cursor']
+  },
+  windsurf: {
+    name: 'Windsurf',
+    skillsPath: '.windsurf/skills',
+    rulesPath: '.windsurfrules',
+    agentsPath: null, // uses AGENTS.md
+    rulesFormat: 'single-file',
+    detectPaths: ['.windsurf', '.codeium']
+  },
+  antigravity: {
+    name: 'Antigravity',
+    skillsPath: 'skills',
+    rulesPath: 'rules',
+    agentsPath: 'agents',
+    rulesFormat: 'folder',
+    detectPaths: ['skills', '.gemini/antigravity']
+  },
+  'claude-code': {
+    name: 'Claude Code',
+    installMethod: 'cli',
+    cliCommands: [
+      'claude add marketplace samdae/archflow',
+      'claude install archflow'
+    ],
+    detectPaths: ['CLAUDE.md', '.claude']
+  },
+  'gpt-codex': {
+    name: 'GPT-Codex',
+    skillsPath: '.codex/skills',
+    rulesPath: '.codex/rules',
+    agentsPath: null, // uses AGENTS.md
+    rulesFormat: 'folder',
+    detectPaths: ['.codex']
+  },
+  'gemini-cli': {
+    name: 'Gemini CLI',
+    skillsPath: '.gemini/skills',
+    rulesPath: '.gemini/settings.json',
+    agentsPath: null, // uses GEMINI.md
+    rulesFormat: 'json',
+    detectPaths: ['.gemini', 'GEMINI.md']
+  }
+};
+
+// Detect platform
 function detectPlatform() {
   const cwd = process.cwd();
-  
-  // .cursor 폴더 확인
-  if (fs.existsSync(path.join(cwd, '.cursor'))) {
-    return 'cursor';
+
+  for (const [key, config] of Object.entries(TOOLS)) {
+    for (const detectPath of config.detectPaths) {
+      if (fs.existsSync(path.join(cwd, detectPath))) {
+        return key;
+      }
+    }
   }
-  
-  // CLAUDE.md 또는 .claude 폴더 확인
-  if (fs.existsSync(path.join(cwd, 'CLAUDE.md')) || 
-      fs.existsSync(path.join(cwd, '.claude'))) {
-    return 'claude-code';
-  }
-  
+
   return null;
 }
 
-// 디렉토리 생성 (재귀적)
+// Ensure directory exists
 function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
 }
 
-// 파일 복사
+// Copy file
 function copyFile(src, dest) {
   try {
     const destDir = path.dirname(dest);
@@ -70,47 +121,47 @@ function copyFile(src, dest) {
   }
 }
 
-// 디렉토리 내 파일 복사
+// Copy directory recursively
 function copyDirectory(srcDir, destDir, options = {}) {
-  const { exclude = ['.gitkeep'] } = options;
-  
+  const { exclude = ['.gitkeep', '.git'] } = options;
+
   if (!fs.existsSync(srcDir)) {
     logError(`Source directory does not exist: ${srcDir}`);
     return false;
   }
-  
+
   ensureDir(destDir);
-  
-  const files = fs.readdirSync(srcDir);
+
+  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
   let successCount = 0;
-  
-  for (const file of files) {
-    if (exclude.includes(file)) {
-      continue;
-    }
-    
-    const srcPath = path.join(srcDir, file);
-    const destPath = path.join(destDir, file);
-    
-    if (fs.statSync(srcPath).isDirectory()) {
-      copyDirectory(srcPath, destPath, options);
+
+  for (const entry of entries) {
+    if (exclude.includes(entry.name)) continue;
+
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      if (copyDirectory(srcPath, destPath, options)) {
+        successCount++;
+      }
     } else {
       if (copyFile(srcPath, destPath)) {
         successCount++;
       }
     }
   }
-  
+
   return successCount > 0;
 }
 
-// 사용자 입력 받기
+// Read user input
 function askQuestion(query) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
   });
-  
+
   return new Promise((resolve) => {
     rl.question(query, (answer) => {
       rl.close();
@@ -119,231 +170,311 @@ function askQuestion(query) {
   });
 }
 
-// 플랫폼 선택
-async function choosePlatform() {
-  log('\n📦 Archflow Initialization', 'bright');
-  log('==========================\n', 'bright');
-  
-  const detected = detectPlatform();
-  
-  if (detected) {
-    logInfo(`Detected platform: ${detected === 'cursor' ? 'Cursor' : 'Claude Code'}`);
-    const confirm = await askQuestion(`Continue with ${detected}? (Y/n): `);
-    
-    if (confirm.toLowerCase() === 'n' || confirm.toLowerCase() === 'no') {
-      // 사용자가 거부하면 다시 선택
-      return await promptPlatformChoice();
-    }
-    
-    return detected;
+// Merge rules into single file (for Windsurf)
+function mergeRulesToFile(rulesDir, destFile) {
+  if (!fs.existsSync(rulesDir)) {
+    logError(`Rules directory does not exist: ${rulesDir}`);
+    return false;
   }
-  
-  return await promptPlatformChoice();
-}
 
-// 플랫폼 선택 프롬프트
-async function promptPlatformChoice() {
-  log('\nSelect your platform:', 'yellow');
-  log('1) Cursor');
-  log('2) Claude Code\n');
-  
-  const choice = await askQuestion('Enter your choice (1 or 2): ');
-  
-  if (choice === '1') {
-    return 'cursor';
-  } else if (choice === '2') {
-    return 'claude-code';
-  } else {
-    logError('Invalid choice. Please enter 1 or 2.');
-    return await promptPlatformChoice();
+  let content = '# Archflow Rules\n\n';
+  const files = fs.readdirSync(rulesDir).filter(f => f.endsWith('.md'));
+
+  for (const file of files) {
+    const filePath = path.join(rulesDir, file);
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    content += `\n---\n\n${fileContent}\n`;
   }
-}
 
-// 타겟 경로 결정
-function getTargetPaths(platform) {
-  const cwd = process.cwd();
-  
-  if (platform === 'cursor') {
-    return {
-      skills: path.join(cwd, '.cursor', 'skills'),
-      agents: path.join(cwd, '.cursor', 'agents'),
-      config: path.join(cwd, '.cursor', 'archflow.config.yaml')
-    };
-  } else {
-    // Claude Code
-    return {
-      skills: path.join(cwd, '.claude', 'skills'),
-      agents: path.join(cwd, '.claude', 'agents'),
-      config: path.join(cwd, '.claude', 'archflow.config.yaml')
-    };
-  }
-}
-
-// Config 파일 생성/업데이트
-function createConfigFile(configPath, platform) {
   try {
-    const configContent = `# Archflow Configuration
-# This file configures the document-driven development workflow
-
-# Platform settings
-platform:
-  # Target platform: "cursor" or "claude-code"
-  target: "${platform}"
-  
-  # Skills installation path (relative to project root)
-  skills_path: "${platform === 'cursor' ? '.cursor/skills' : '.claude/skills'}"
-  
-  # Agents installation path (relative to project root)
-  agents_path: "${platform === 'cursor' ? '.cursor/agents' : '.claude/agents'}"
-
-# Workflow settings
-workflow:
-  # Enable Multi-Agent Debate for design phase
-  enable_debate: true
-  
-  # Default agents for debate (can be overridden per skill)
-  debate_agents:
-    - "domain-architect"
-    - "best-practice-advisor"
-  
-  # Auto-sync architect documents after changes
-  auto_sync_architect: true
-  
-  # Auto-generate changelog after bugfix
-  auto_changelog: true
-
-# Documentation settings
-documentation:
-  # Root directory for architect documents
-  architect_root: "docs"
-  
-  # Root directory for requirement documents
-  requirements_root: "docs/requirements"
-  
-  # Root directory for changelog
-  changelog_root: "docs/changelog"
-  
-  # Template for document structure
-  template_style: "standard"  # "standard" or "minimal"
-
-# Language settings
-language:
-  # Primary language for documents and prompts
-  primary: "ko"  # "ko" or "en"
-  
-  # Enable multi-language support
-  multi_language: false
-
-# Skill configuration
-skills:
-  # Skills to enable (empty array = all skills enabled)
-  enabled: []
-  
-  # Skills to disable
-  disabled: []
-
-# Advanced settings
-advanced:
-  # Validation strictness: "strict", "normal", or "lenient"
-  validation_mode: "normal"
-  
-  # Auto-fix linter errors after implementation
-  auto_fix_lints: true
-  
-  # Generate tests during implementation
-  generate_tests: true
-  
-  # Commit strategy: "manual", "auto", or "prompt"
-  commit_strategy: "manual"
-`;
-    
-    fs.writeFileSync(configPath, configContent, 'utf8');
+    fs.writeFileSync(destFile, content, 'utf8');
     return true;
   } catch (error) {
-    logError(`Failed to create config file: ${error.message}`);
+    logError(`Failed to write rules file: ${error.message}`);
     return false;
   }
 }
 
-// 메인 실행
-async function main() {
+// Convert rules to JSON format (for Gemini CLI)
+function convertRulesToJson(rulesDir, destFile) {
+  if (!fs.existsSync(rulesDir)) {
+    logError(`Rules directory does not exist: ${rulesDir}`);
+    return false;
+  }
+
+  // Read existing settings.json if exists
+  let settings = {};
+  if (fs.existsSync(destFile)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(destFile, 'utf8'));
+    } catch (e) {
+      settings = {};
+    }
+  }
+
+  // Add archflow rules reference
+  settings.archflow = {
+    enabled: true,
+    rulesPath: 'rules/archflow-rules.md',
+    version: require('../package.json').version || '1.0.0'
+  };
+
   try {
-    // 1. 플랫폼 선택
-    const platform = await choosePlatform();
-    log(`\n✓ Selected platform: ${platform === 'cursor' ? 'Cursor' : 'Claude Code'}`, 'green');
-    
-    // 2. 타겟 경로 결정
-    const targets = getTargetPaths(platform);
-    
-    // 3. archflow 패키지 경로 찾기
-    const scriptDir = __dirname;
-    const archflowRoot = path.dirname(scriptDir);
-    
-    // 4. 파일 복사
+    ensureDir(path.dirname(destFile));
+    fs.writeFileSync(destFile, JSON.stringify(settings, null, 2), 'utf8');
+    return true;
+  } catch (error) {
+    logError(`Failed to write settings.json: ${error.message}`);
+    return false;
+  }
+}
+
+// Create AGENTS.md or GEMINI.md context file
+function createContextFile(cwd, filename, content) {
+  const filePath = path.join(cwd, filename);
+
+  // Don't overwrite if exists
+  if (fs.existsSync(filePath)) {
+    logInfo(`${filename} already exists, skipping`);
+    return true;
+  }
+
+  try {
+    fs.writeFileSync(filePath, content, 'utf8');
+    return true;
+  } catch (error) {
+    logError(`Failed to create ${filename}: ${error.message}`);
+    return false;
+  }
+}
+
+// Execute CLI commands (for Claude Code)
+async function executeCliCommands(commands) {
+  for (const cmd of commands) {
+    log(`\n⚡ Executing: ${cmd}`, 'blue');
+    try {
+      execSync(cmd, { stdio: 'inherit' });
+      logSuccess(`Command completed: ${cmd}`);
+    } catch (error) {
+      logError(`Command failed: ${cmd}`);
+      logInfo('You may need to run this command manually after installation.');
+      return false;
+    }
+  }
+  return true;
+}
+
+// Check if CLI tool is available
+function isCliAvailable(command) {
+  try {
+    execSync(`${command} --version`, { stdio: 'ignore' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Choose platform
+async function choosePlatform() {
+  log('\n📦 Archflow Installation', 'bright');
+  log('========================\n', 'bright');
+
+  const detected = detectPlatform();
+
+  if (detected) {
+    const toolName = TOOLS[detected].name;
+    logInfo(`Detected platform: ${toolName}`);
+    const confirm = await askQuestion(`Continue with ${toolName}? (Y/n): `);
+
+    if (confirm.toLowerCase() !== 'n' && confirm.toLowerCase() !== 'no') {
+      return detected;
+    }
+  }
+
+  return await promptPlatformChoice();
+}
+
+// Platform selection prompt
+async function promptPlatformChoice() {
+  log('\nSelect your AI coding tool:', 'yellow');
+  log('1) Cursor');
+  log('2) Windsurf');
+  log('3) Antigravity');
+  log('4) Claude Code');
+  log('5) GPT-Codex (OpenAI)');
+  log('6) Gemini CLI (Google)\n');
+
+  const choice = await askQuestion('Enter your choice (1-6): ');
+
+  const mapping = {
+    '1': 'cursor',
+    '2': 'windsurf',
+    '3': 'antigravity',
+    '4': 'claude-code',
+    '5': 'gpt-codex',
+    '6': 'gemini-cli'
+  };
+
+  if (mapping[choice]) {
+    return mapping[choice];
+  }
+
+  logError('Invalid choice. Please enter 1-6.');
+  return await promptPlatformChoice();
+}
+
+// Main installation function
+async function installForTool(toolKey) {
+  const cwd = process.cwd();
+  const tool = TOOLS[toolKey];
+  const archflowRoot = path.dirname(__dirname);
+
+  log(`\n🔧 Installing for ${tool.name}...`, 'bright');
+
+  // Handle CLI-based installation (Claude Code)
+  if (tool.installMethod === 'cli') {
+    const cliTool = tool.cliCommands[0].split(' ')[0]; // e.g., 'claude'
+
+    if (!isCliAvailable(cliTool)) {
+      logError(`${cliTool} CLI is not installed or not in PATH.`);
+      log('\nPlease install it first, then run these commands manually:', 'yellow');
+      tool.cliCommands.forEach(cmd => log(`  ${cmd}`));
+      return false;
+    }
+
+    return await executeCliCommands(tool.cliCommands);
+  }
+
+  // Copy skills
+  if (tool.skillsPath) {
     log('\n📋 Installing skills...', 'blue');
     const skillsSrc = path.join(archflowRoot, 'skills');
-    if (copyDirectory(skillsSrc, targets.skills)) {
-      logSuccess(`Skills installed to ${targets.skills}`);
+    const skillsDest = path.join(cwd, tool.skillsPath);
+
+    if (copyDirectory(skillsSrc, skillsDest)) {
+      logSuccess(`Skills installed to ${tool.skillsPath}`);
     } else {
       throw new Error('Failed to install skills');
     }
-    
+  }
+
+  // Copy/convert rules
+  if (tool.rulesPath) {
+    log('\n📏 Installing rules...', 'blue');
+    const rulesSrc = path.join(archflowRoot, 'rules');
+    const rulesDest = path.join(cwd, tool.rulesPath);
+
+    if (tool.rulesFormat === 'folder') {
+      if (copyDirectory(rulesSrc, rulesDest)) {
+        logSuccess(`Rules installed to ${tool.rulesPath}`);
+      }
+    } else if (tool.rulesFormat === 'single-file') {
+      if (mergeRulesToFile(rulesSrc, rulesDest)) {
+        logSuccess(`Rules merged to ${tool.rulesPath}`);
+      }
+    } else if (tool.rulesFormat === 'json') {
+      // Copy rules folder and create settings.json reference
+      const rulesFolder = path.join(cwd, '.gemini', 'rules');
+      copyDirectory(rulesSrc, rulesFolder);
+      if (convertRulesToJson(rulesSrc, rulesDest)) {
+        logSuccess(`Rules configured in ${tool.rulesPath}`);
+      }
+    }
+  }
+
+  // Copy agents
+  if (tool.agentsPath) {
     log('\n👥 Installing agents...', 'blue');
     const agentsSrc = path.join(archflowRoot, 'agents');
-    if (copyDirectory(agentsSrc, targets.agents)) {
-      logSuccess(`Agents installed to ${targets.agents}`);
-    } else {
-      throw new Error('Failed to install agents');
+    const agentsDest = path.join(cwd, tool.agentsPath);
+
+    if (copyDirectory(agentsSrc, agentsDest)) {
+      logSuccess(`Agents installed to ${tool.agentsPath}`);
     }
-    
-    // 5. Config 파일 생성
-    log('\n⚙️  Creating configuration file...', 'blue');
-    if (createConfigFile(targets.config, platform)) {
-      logSuccess(`Configuration file created at ${targets.config}`);
+  }
+
+  // Create context files for tools that use them
+  if (!tool.agentsPath && toolKey !== 'claude-code') {
+    log('\n📝 Creating context file...', 'blue');
+
+    const contextContent = `# Archflow Agent Context
+
+> This project uses Archflow for document-driven development.
+> See the skills folder for available workflows.
+
+## Available Skills
+
+- /spec - Transform requirements into spec.md
+- /arch - Design with Multi-Agent Debate  
+- /ui - Generate UI specification
+- /check - Verify design completeness
+- /build - Implement from design docs
+- /test - Run tests
+- /debug - Debug with document context
+- /trace - Record changes
+- /sync - Sync documentation
+
+## Documentation
+
+docs/{serviceName}/spec.md - Requirements
+docs/{serviceName}/arch-be.md - Backend design
+docs/{serviceName}/arch-fe.md - Frontend design
+docs/{serviceName}/trace.md - Change log
+
+## Rules
+
+See rules/archflow-rules.md for workflow and coding standards.
+`;
+
+    if (toolKey === 'gemini-cli') {
+      createContextFile(cwd, 'GEMINI.md', contextContent);
+      logSuccess('Created GEMINI.md');
     } else {
-      throw new Error('Failed to create configuration file');
+      createContextFile(cwd, 'AGENTS.md', contextContent);
+      logSuccess('Created AGENTS.md');
     }
-    
-    // 6. templates 폴더도 복사
-    log('\n📝 Installing templates...', 'blue');
-    const templatesSrc = path.join(archflowRoot, 'templates');
-    const templatesTarget = path.join(path.dirname(targets.config), 'templates');
-    if (copyDirectory(templatesSrc, templatesTarget)) {
-      logSuccess(`Templates installed to ${templatesTarget}`);
-    } else {
-      logInfo('Templates installation skipped (optional)');
+  }
+
+  return true;
+}
+
+// Main function
+async function main() {
+  try {
+    const toolKey = await choosePlatform();
+    const tool = TOOLS[toolKey];
+
+    log(`\n✓ Selected: ${tool.name}`, 'green');
+
+    const success = await installForTool(toolKey);
+
+    if (success) {
+      log('\n' + '='.repeat(50), 'green');
+      log('✨ Archflow installed successfully!', 'green');
+      log('='.repeat(50) + '\n', 'green');
+
+      log('Available skills:', 'cyan');
+      log('  /spec     - Requirements refinement');
+      log('  /arch     - Design with Multi-Agent Debate');
+      log('  /build    - Implementation from design');
+      log('  /test     - Test generation and execution');
+      log('  /debug    - Debug with document context\n');
+
+      log('📖 Documentation: https://github.com/samdae/archflow\n', 'cyan');
     }
-    
-    // 7. 완료 메시지
-    log('\n' + '='.repeat(50), 'green');
-    log('✨ Archflow initialized successfully!', 'green');
-    log('='.repeat(50) + '\n', 'green');
-    
-    log('Next steps:', 'cyan');
-    log('1. Review the configuration file:', 'cyan');
-    log(`   ${targets.config}\n`);
-    log('2. Start using Archflow skills in your AI assistant:', 'cyan');
-    log('   - require-refine: Refine requirements');
-    log('   - architect: Design with multi-agent debate');
-    log('   - implement: Implement from design documents');
-    log('   - bugfix: Debug with document context');
-    log('   - changelogging: Generate changelogs\n');
-    
-    log('📖 Documentation:', 'cyan');
-    log('   https://github.com/samdae/archflow\n');
-    
-    process.exit(0);
+
+    process.exit(success ? 0 : 1);
   } catch (error) {
     log('\n' + '='.repeat(50), 'red');
-    logError(`Initialization failed: ${error.message}`);
+    logError(`Installation failed: ${error.message}`);
     log('='.repeat(50) + '\n', 'red');
-    
-    log('Please try again or report the issue at:', 'yellow');
+
+    log('Please report the issue at:', 'yellow');
     log('https://github.com/samdae/archflow/issues\n', 'yellow');
-    
+
     process.exit(1);
   }
 }
 
-// 실행
+// Run
 main();

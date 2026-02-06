@@ -1,7 +1,7 @@
 {
   "name": "archflow",
   "version": "1.0.0",
-  "description": "Document-driven development skills with Multi-Agent Debate for Claude Code & Cursor",
+  "description": "Document-driven development skills with Multi-Agent Debate for Cursor, Windsurf, Antigravity, Claude Code, GPT-Codex, and Gemini CLI",
   "main": "scripts/init.js",
   "bin": {
     "archflow": "scripts/init.js"
@@ -9,12 +9,14 @@
   "files": [
     "skills/",
     "agents/",
+    "rules/",
     "templates/",
     "platform/",
-    "archflow.config.yaml",
+    "docs/launchpad.md",
     "scripts/"
   ],
   "scripts": {
+    "postinstall": "node scripts/init.js",
     "test": "echo 'Manual testing required'"
   },
   "keywords": [

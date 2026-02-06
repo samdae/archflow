@@ -55,32 +55,42 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 
 ## Installation
 
-### Claude Code (Recommended)
+### Quick Install (Recommended)
+
+Use the **Launchpad** document with your AI coding tool:
+
+1. Open `docs/launchpad.md` in your AI tool (Cursor, Windsurf, Claude Code, etc.)
+2. Tell the AI: "Follow this launchpad to install archflow"
+3. The AI will guide you through the installation
+
+### NPM Install
 
 ```bash
-# Step 1: Add archflow marketplace
-/plugin marketplace add samdae/archflow
-
-# Step 2: Install archflow plugin
-/plugin install archflow
+npm install archflow
 ```
 
-Choose your installation scope:
-- **user scope**: Install for you globally
-- **project scope**: Install for all collaborators on this repository
-- **local scope**: Install for you, in this repo only
+The postinstall script will automatically:
+- Detect your AI tool (or ask you to choose)
+- Copy skills, rules, and agents to the correct paths
+- Create necessary configuration files
 
-### Cursor (Manual)
+### Supported Tools
 
-Copy the `skills/` and `agents/` folders to your project:
+| Tool | Installation Method |
+|------|-------------------|
+| **Cursor** | Copy to `.cursor/skills/`, `.cursor/rules/` |
+| **Windsurf** | Copy to `.windsurf/skills/`, create `.windsurfrules` |
+| **Antigravity** | Copy to `skills/`, `rules/`, `agents/` |
+| **Claude Code** | Run `claude add marketplace` + `claude install` |
+| **GPT-Codex** | Copy to `.codex/skills/`, `.codex/rules/` |
+| **Gemini CLI** | Copy to `.gemini/skills/`, update `settings.json` |
+
+### Manual Installation
 
 ```bash
-# Clone the repo
 git clone https://github.com/samdae/archflow.git
-
-# Copy to your project
-cp -r archflow/skills/* your-project/.cursor/skills/
-cp -r archflow/agents/* your-project/.cursor/agents/
+cd archflow
+node scripts/init.js
 ```
 
 ## Quick Start
