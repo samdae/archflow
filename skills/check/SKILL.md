@@ -24,9 +24,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Architect Review Workflow
 
@@ -56,6 +55,14 @@ projectRoot/
 
 ---
 
+## Phase -1: Service Discovery
+
+1. **Scan `docs/`** for service directories.
+2. **Select Service** (Auto or User selection).
+3. **Resolve Paths**:
+   - `arch-be.md` = `docs/{serviceName}/arch-be.md`
+   - `arch-fe.md` = `docs/{serviceName}/arch-fe.md`
+
 ## Phase 0: Skill Entry
 
 ### 0-1. Model Recommendation
@@ -65,6 +72,13 @@ projectRoot/
 
 ### 0-2. Collect Design Document
 
+**If Service Discovery successful:**
+- Loop through available arch files (`arch-be.md`, `arch-fe.md`).
+- If only one exists, auto-select.
+- If both exist, ask: "Check verification target: 1) Backend 2) Frontend".
+- **Skip manual path input.**
+
+**If Service Discovery failed:**
 **Use AskQuestion:**
 
 ```json

@@ -27,9 +27,8 @@ allowed-tools:
   - Task
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Build Workflow
 
@@ -68,6 +67,21 @@ projectRoot/
 
 - **arch** skill output design document required
 - Design document must have Implementation Plan, Code Mapping, Tech Stack sections
+
+## Phase -1: Service Discovery
+
+### -1.1. Scan Docs Directory
+
+1. **List subdirectories** in `docs/` folder.
+2. **Determine Service Name**:
+   - **If 1 directory found**: Auto-select.
+   - **If multiple found**: Ask user to select.
+   - **If none found**: Manual input.
+
+3. **Auto-resolve Paths**:
+   - `arch-be.md` = `docs/{serviceName}/arch-be.md`
+   - `arch-fe.md` = `docs/{serviceName}/arch-fe.md`
+   - `profile` = `profiles/be.md` or `fe.md` (based on file existence)
 
 ## Phase 0: Skill Entry
 
@@ -115,9 +129,36 @@ Extract serviceName and detect BE/FE from provided file path:
 > ⚠️ **MUST read the profile file before proceeding.**
 > The profile defines project settings questions, dependency graph, and completion report template.
 
-### 0-3. Verify Project Settings
+### 0-2.5. Pre-Analyze Design Document (Smart Detect)
 
-> Use questions from the loaded profile (profiles/be.md or profiles/fe.md)
+**Read the provided `arch-be.md` or `arch-fe.md` and parse the `Tech Stack` section.**
+
+Try to extract:
+- `db_type`: from `database` field (e.g. "PostgreSQL")
+- `orm_usage`: from `orm` field (e.g. "SQLAlchemy" or "Raw SQL")
+- `target_framework`: from `framework` field
+
+**Goal**: To skip redundant questions in 0-3.
+
+### 0-3. Verify Project Settings (Only if needed)
+
+**If Service Discovery failed or docs missing:**
+Use AskQuestion to collect design document path.
+
+**If Service Discovery succeeded:**
+- Check if `arch-be.md` or `arch-fe.md` exists.
+- If both exist, ask user which one to build.
+- **Skip manual path input.**
+
+**Dynamic Question Generation:**
+Based on the data extracted in 0-2.5, **remove** questions that are already answered.
+
+- If `db_type` is detected → Remove `db_type` question
+- If `orm_usage` is detected → Remove `orm_usage` question
+
+**Remaining Questions (asking only what is missing):**
+> Use questions from the loaded profile, excluding detected items.
+
 
 ```json
 {
@@ -168,15 +209,6 @@ Extract serviceName and detect BE/FE from provided file path:
         {"id": "none", "label": "No commit (default)"},
         {"id": "per_phase", "label": "Commit per step"},
         {"id": "final", "label": "Commit once after completion"}
-      ]
-    },
-    {
-      "id": "test_strategy",
-      "prompt": "Test code writing?",
-      "options": [
-        {"id": "per_feature", "label": "Write test file per feature"},
-        {"id": "per_design", "label": "Only when specified in design document"},
-        {"id": "none", "label": "No test writing"}
       ]
     },
     {
@@ -275,7 +307,9 @@ npm install react@18.2.0 zustand@4.5.0 axios@1.6.5
 
 ---
 
-## Phase 1: Analyze Design Document (Main Agent)
+## Phase 1: Deep Analysis of Design Document (Main Agent)
+
+> **Note**: Basic parsing was done in 0-2.5. Now perform deep analysis for implementation.
 
 Extract following information from design document:
 
@@ -389,7 +423,6 @@ Task(
     - Error Handling: {identified error handling approach}
 
     ### Project Settings
-    - Test: {test_strategy}
     - Commit: {commit_strategy}
 
     ### Implementation Rules (Must Follow)
@@ -589,7 +622,9 @@ CREATE INDEX ...;
 ### Next Steps Guide
 > ✅ **Implementation Complete**
 >
-> If bugs occur, run `debug` skill in **Debug mode**.
+> 1. **Verify**: Run `/test` to generate/run tests for the implemented code.
+> 2. **Debug**: If bugs occur, run `/debug`.
+>
 > Document paths: `docs/{serviceName}/spec.md`, `arch-be.md` or `arch-fe.md`
 ```
 

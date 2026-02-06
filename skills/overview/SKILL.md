@@ -24,9 +24,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Overview Workflow
 
@@ -68,10 +67,24 @@ projectRoot/
 
 ---
 
+## Phase -1: Service Discovery
+
+1. **Scan `docs/`** for service directories.
+2. **Select Service** (Auto or User selection).
+3. **Resolve Paths**:
+   - `spec.md` = `docs/{serviceName}/spec.md`
+   - `arch-be.md` = `docs/{serviceName}/arch-be.md`
+   - `arch-fe.md` = `docs/{serviceName}/arch-fe.md`
+
 ## Phase 0: Skill Entry
 
 ### 0-1. Collect Service Name
 
+**If Service Discovery successful:**
+- **Skip this step.**
+- Proceed to 0-2 with auto-selected service name.
+
+**If Service Discovery failed:**
 **Use AskQuestion:**
 
 ```json

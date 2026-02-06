@@ -28,9 +28,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Test Workflow
 
@@ -90,7 +89,31 @@ projectRoot/
 > - FE: Offers to install Playwright automatically
 > - BE: Detects pytest/jest/vitest/go and guides installation
 
-### 0-1. Collect Target and Mode
+### 0-1. Context-Aware Entry (Smart Shortcut)
+
+**Check recent conversation history for `build` execution.**
+
+**If `build` context found (e.g., built BE):**
+```json
+{
+  "title": "Smart Test Context",
+  "questions": [
+    {
+      "id": "smart_test",
+      "prompt": "Detected recent BE build. Run tests with recommended settings?\n(Target: BE, Mode: Both, Scope: Change-based)",
+      "options": [
+        {"id": "yes", "label": "Yes - Run immediately"},
+        {"id": "no", "label": "No - Configure manually"}
+      ]
+    }
+  ]
+}
+```
+**Process:**
+- `yes` → Skip to **Phase 1** (Environment Check & Execution)
+- `no` / Context not found → Proceed to **0-2. Manual Configuration**
+
+### 0-2. Manual Configuration (Collect Target and Mode)
 
 **Use AskQuestion to collect inputs:**
 

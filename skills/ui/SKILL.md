@@ -23,9 +23,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # UI Workflow
 
@@ -56,6 +55,14 @@ projectRoot/
 
 ---
 
+## Phase -1: Service Discovery
+
+1. **Scan `docs/`** for service directories.
+2. **Select Service** (Auto or User selection).
+3. **Resolve Paths**:
+   - `spec.md` = `docs/{serviceName}/spec.md`
+   - `arch-be.md` = `docs/{serviceName}/arch-be.md`
+
 ## Phase 0: Skill Entry
 
 ### 0-0. Model Guidance
@@ -69,6 +76,12 @@ projectRoot/
 
 ### 0-1. Collect Document Input
 
+**If Service Discovery successful:**
+- Verify `spec.md` and `arch-be.md` exist.
+- If both exist, **auto-load and skip this step**.
+- If missing, guide user to run required skills (`/spec` or `/arch`).
+
+**If Service Discovery failed:**
 ```json
 {
   "title": "UI Specification",
