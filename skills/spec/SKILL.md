@@ -25,17 +25,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
-
-> **Requirement ID `FR-{number}` Rule (Global):**
-> Always use `max(existing number) + 1` for new requirements. NEVER reuse deleted numbers.
-
-> **Document Version Control (Global):**
-> After document changes, git commit is recommended.
-> - Commit message: `docs({serviceName}): spec - {change summary}`
-> - **Failover**: If git unavailable or not a repo → skip and continue
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Spec Workflow
 
@@ -66,47 +57,6 @@ projectRoot/
               └── trace.md      # debug skill output
 ```
 
-## ⚠️ Global Rule: Logical Inconsistency Handling
-
-When user feedback conflicts with Section 1 (purpose) or existing analysis:
-
-### Step 1: Detect and Report
-
-```markdown
-⚠️ **Logical Inconsistency Detected**
-
-**Existing Content**: {what was already confirmed}
-**User Feedback**: {new conflicting input}
-**Conflict Point**: {specific contradiction}
-```
-
-### Step 2: Present Resolution Options
-
-**Use AskQuestion to request decision:**
-
-```json
-{
-  "title": "Resolve Logical Inconsistency",
-  "questions": [
-    {
-      "id": "resolution",
-      "prompt": "Existing content conflicts with new feedback. How should we proceed?",
-      "options": [
-        {"id": "keep_original", "label": "Keep original - Ignore new feedback"},
-        {"id": "accept_new", "label": "Accept new - Revise original content"},
-        {"id": "merge", "label": "Merge - Incorporate both (explain how)"},
-        {"id": "clarify", "label": "Need clarification - Please explain more"}
-      ]
-    }
-  ]
-}
-```
-
-**Processing by choice:**
-- `keep_original` → Log warning, maintain original content
-- `accept_new` → Update content, document reason for change
-- `merge` → Request user explanation of merge approach
-- `clarify` → Request detailed explanation, then re-analyze
 
 ## Supported Input Types
 

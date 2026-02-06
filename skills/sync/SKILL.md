@@ -22,17 +22,8 @@ allowed-tools:
   - LS
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
-
-> **Code Mapping `#` Rule (Global):**
-> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
-
-> **Document Version Control (Global):**
-> After document changes, git commit is recommended.
-> - Commit message: `docs({serviceName}): sync - {change summary}`
-> - **Failover**: If git unavailable or not a repo → skip and continue
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Sync Workflow
 
@@ -57,7 +48,7 @@ Synchronize design-impacting items from changelog or enhancement design results 
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md
+              ├── spec.md      # ← Reference (Requirement Drift Check) & Optional Target
               ├── arch.md      # ← Sync target
               └── trace.md      # ← Input (design-impacting items)
 ```
@@ -65,7 +56,7 @@ projectRoot/
 ## ⚠️ Execution Timing
 
 Run in following situations:
-1. **After debug completion** - When "Design Impact: Yes" items added to changelog
+1. **After debug completion** - When "Design Impact: Yes" items added to changelog (Smart Sync triggered)
 2. **After /enhance completion** - When integrating enhancement design to existing arch
 
 ---
@@ -77,8 +68,9 @@ Run in following situations:
 > 💡 **This skill recommends the Sonnet model.**
 > Document merging task, so high-performance model unnecessary.
 >
-> **Input**: trace.md (design-impacting items) or enhancement design result
-> **Output**: Updated arch.md
+> **Input**: trace.md (design-impacting items) or enhancement result
+> **Reference**: spec.md (to check for requirement drift)
+> **Output**: Updated arch.md (and optionally spec.md)
 
 ### 0-1. Verify Sync Type
 
@@ -138,16 +130,22 @@ Extract serviceName from input file path:
 
 ### 1-1. Debug Sync (trace → arch)
 
-Filter **`Synced = [ ]`** rows from trace's Code Mapping Changes grid:
+Filter **`Synced = [ ]`** rows from trace's Code Mapping Changes grid.
+
+**Smart Sync Logic (3-way Sync):**
 
 ```
-Analyze trace.md:
+Analyze trace.md and arch.md:
   for each changelog entry:
     for each row in "Code Mapping Changes" table:
       if Synced == "[ ]":
-        → Add to sync targets
-        → Record Change type (ADD / MODIFY / DELETE)
-        → Record # number for arch lookup
+        1. Identify arch row using `#`
+        2. Extract `Spec Ref` (FR-xxx) from arch row
+        3. If `Spec Ref` exists:
+             Read related requirement from spec.md (FR-xxx)
+             Compare requirement vs implementation change
+             Flag if "Requirement Drift" detected
+        4. Add to sync targets
 ```
 
 **Sync target example:**
@@ -166,7 +164,22 @@ Identify changes/additions from enhancement design results:
 - New components
 - DB schema changes
 
-### 1-3. Report Changes
+### 1-3. Report Changes & Drift
+
+```markdown
+## Sync Target Analysis
+
+### Code Mapping Changes to Apply
+| # | Spec Ref | Change | Current in arch | New Value | Drift Risk |
+|---|---|---|---|---|---|
+| 3 | FR-001 | MODIFY | validate() - Check user | validate() - Add null check | Low |
+| 6 | FR-002 | MODIFY | limit=10 | limit=100 | **HIGH (Req says 10)** |
+
+> **Drift Risk**:
+> - **High**: Contradicts explicit requirement in spec.md
+> - **Medium**: changes specific values defined in spec
+> - **Low**: Implementation detail only
+```
 
 ```markdown
 ## Sync Target Analysis
@@ -242,6 +255,36 @@ Compare existing arch content with new changes:
   ]
 }
 ```
+
+---
+
+## Phase 2.5: Spec Update (Smart Sync)
+
+If **Review Drift** is detected or user wants to update requirements:
+
+### 2.5-1. Confirm Spec Update
+
+```json
+{
+  "title": "Requirement Drift Detected",
+  "questions": [
+    {
+      "id": "spec_update",
+      "prompt": "Some changes seem to affect Requirements (FR-xxx).\n\nExample: {Drift Item}\n\nDo you want to update spec.md as well?",
+      "options": [
+        {"id": "yes", "label": "Yes - Update spec.md to match reality"},
+        {"id": "no", "label": "No - Keep spec.md as is (Implementation divergence)"}
+      ]
+    }
+  ]
+}
+```
+
+### 2.5-2. Update spec.md (if Yes)
+
+1. Find target Requirement ID (FR-xxx) in `spec.md`
+2. Update description to match implementation reality
+3. Add note: `(Updated via sync on {date})`
 
 ---
 
@@ -359,7 +402,9 @@ After arch.md update, update trace.md:
 ### Next Steps
 - **If implementation needed**: Run `build` skill
 - **If additional modifications needed**: Edit arch.md directly
+- **If spec updated**: Review `docs/{serviceName}/spec.md`
 ```
+
 
 ---
 
@@ -383,7 +428,11 @@ After arch.md update, update trace.md:
          [sync] → Update arch
                 ↓
            [build]
+                │
+                ▼ (Smart Sync)
+ [spec] ← (Update if Drift) ─┘
 ```
+
 
 ---
 

@@ -26,17 +26,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
-
-> **Code Mapping `#` Rule (Global):**
-> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
-
-> **Document Version Control (Global):**
-> After document changes, git commit is recommended.
-> - Commit message: `docs({serviceName}): reverse - {change summary}`
-> - **Failover**: If git unavailable or not a repo → skip and continue
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Reverse Workflow
 
