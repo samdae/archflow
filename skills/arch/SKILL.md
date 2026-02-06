@@ -28,17 +28,8 @@ allowed-tools:
   - AskQuestion
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
-
-> **Code Mapping `#` Rule (Global):**
-> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
-
-> **Document Version Control (Global):**
-> After document changes, git commit is recommended.
-> - Commit message: `docs({serviceName}): arch - {change summary}`
-> - **Failover**: If git unavailable or not a repo → skip and continue
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Arch Workflow
 
@@ -130,47 +121,6 @@ projectRoot/
 
 **serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/spec.md`
 
-## ⚠️ Global Rule: Logical Inconsistency Handling
-
-When user feedback conflicts with Phase 0 Goal or existing design decisions:
-
-### Step 1: Detect and Report
-
-```markdown
-⚠️ **Logical Inconsistency Detected**
-
-**Existing Design**: {previously confirmed design content}
-**User Feedback**: {new conflicting input}
-**Conflict Point**: {which principle/decision is conflicting}
-```
-
-### Step 2: Present Decision Options
-
-**Use AskQuestion to request resolution:**
-
-```json
-{
-  "title": "Resolve Design Inconsistency",
-  "questions": [
-    {
-      "id": "resolution",
-      "prompt": "Existing design conflicts with new feedback. How should we proceed?",
-      "options": [
-        {"id": "keep_original", "label": "Keep original - Ignore new feedback"},
-        {"id": "accept_new", "label": "Accept new - Revise design"},
-        {"id": "merge", "label": "Merge - Incorporate both (explain how)"},
-        {"id": "re_debate", "label": "Re-debate - Restart discussion with new constraints"}
-      ]
-    }
-  ]
-}
-```
-
-**Processing by choice:**
-- `keep_original` → Log warning, maintain existing design
-- `accept_new` → Revise design, document reason in Risks & Tradeoffs
-- `merge` → Request user explanation of merge approach
-- `re_debate` → Return to Phase 3 and restart debate with new constraints
 
 ## Role Definitions
 
@@ -178,6 +128,22 @@ When user feedback conflicts with Phase 0 Goal or existing design decisions:
 |-------|------|---------|
 | domain-architect | Project context-based design | Requirements MD + project structure |
 | best-practice-advisor | Best practice suggestions | Feature request only (no context) |
+
+## Phase -1: Service Discovery
+
+### -1.1. Scan Docs Directory
+
+1. **List subdirectories** in `docs/` folder.
+2. **Determine Service Name**:
+   - **If 1 directory found** (e.g., `docs/auth`): Auto-select "auth" (Ask for confirmation: "Designing for 'auth' service?")
+   - **If multiple found**: Ask user to select: "Which service? 1) auth 2) payment"
+   - **If none found**: Ask user to input service name manually.
+
+3. **Auto-resolve Paths**:
+   - `spec.md` = `docs/{serviceName}/spec.md`
+   - `arch-be.md` = `docs/{serviceName}/arch-be.md`
+   - `arch-fe.md` = `docs/{serviceName}/arch-fe.md`
+   - `ui.md` = `docs/{serviceName}/ui.md`
 
 ## Phase 0: Skill Entry
 
@@ -190,6 +156,8 @@ When user feedback conflicts with Phase 0 Goal or existing design decisions:
 > **Output**: `docs/{serviceName}/arch-be.md` or `docs/{serviceName}/arch-fe.md`
 
 ### 0-1. Collect Input Information
+
+**If serviceName was NOT resolved in Phase -1:**
 
 When skill is invoked without input, **use AskQuestion to guide information collection**:
 
@@ -212,6 +180,11 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 **Processing by response:**
 - `yes` → Request file path → Proceed to 0-1.5
 - `no` → Guide to **spec** skill
+
+**If serviceName WAS resolved in Phase -1:**
+- Verify `docs/{serviceName}/spec.md` exists.
+- If exists, **skip this step** and proceed to 0-1.5 using the auto-resolved path.
+- If not exists, error: "Requirements not found at docs/{serviceName}/spec.md. Run /spec or /reverse first."
 
 ### 0-1.5. Select Architecture Type (BE/FE)
 
@@ -271,20 +244,20 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 
 > **Frontend arch input**: spec.md + ui.md (NOT arch-be.md directly)
 
-### 0-1.7. Package Environment Setup
+### 0-1.7. Project Type
 
-**Question 1: Project Type**
+**Question 1: New or Existing Project**
 
 ```json
 {
-  "title": "Project Environment",
+  "title": "Project Type",
   "questions": [
     {
       "id": "project_type",
       "prompt": "Is this a new project or existing project?",
       "options": [
         {"id": "new", "label": "New project - Start from scratch"},
-        {"id": "existing", "label": "Existing project - Has dependencies already"}
+        {"id": "existing", "label": "Existing project - Has code already"}
       ]
     }
   ]
@@ -292,10 +265,208 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 ```
 
 **Processing by response:**
-- `new` → Go to 0-1.7a (Package Manager Selection)
-- `existing` → Go to 0-1.7b (Auto-detect Dependencies)
+- `new` → Go to **0-1.8 (Setup Strategy)**
+- `existing` → Go to **0-1.7a (Existing Project Path Detection)**
 
-### 0-1.7a. New Project - Package Manager Selection
+### 0-1.7a. Existing Project - Path Detection
+
+**Auto-detect project paths by scanning for dependency files:**
+
+| Language | Files to Check | Detected Path |
+|----------|----------------|---------------|
+| Python | `pyproject.toml`, `requirements.txt` | Parent directory of file |
+| Node.js | `package.json` | Parent directory of file |
+
+**Present detected paths:**
+
+```json
+{
+  "title": "Detected Project Paths",
+  "questions": [
+    {
+      "id": "path_confirm",
+      "prompt": "I found the following project paths:\n- BE: {detected_be_path}\n- FE: {detected_fe_path}\n\nAre these correct?",
+      "options": [
+        {"id": "accept", "label": "Yes - Use these paths"},
+        {"id": "modify", "label": "No - I will specify paths manually"}
+      ]
+    }
+  ]
+}
+```
+
+- `accept` → Save paths, proceed to **0-1.7b (Existing Project Dependencies)**
+- `modify` → Ask for manual path input, then proceed to **0-1.7b**
+
+### 0-1.7b. Existing Project - Auto-detect Dependencies
+
+**Read dependency files from detected paths:**
+
+| Language | Files to Check |
+|----------|----------------|
+| Python | `requirements.txt`, `pyproject.toml`, `Pipfile` |
+| Node.js | `package.json` |
+
+**Extract and present:**
+- List of installed packages with versions
+- Detect package manager from lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, poetry.lock, uv.lock)
+- Detect run commands from scripts (package.json scripts, pyproject.toml scripts)
+
+→ Proceed to **0-1.9 (Library Review)**
+
+---
+
+### 0-1.8. Setup Strategy (New Projects Only)
+
+**Question: LLM Recommendation or Manual Selection**
+
+```json
+{
+  "title": "Setup Strategy",
+  "questions": [
+    {
+      "id": "setup_strategy",
+      "prompt": "How would you like to configure the project?",
+      "options": [
+        {"id": "recommend", "label": "LLM Recommendation - AI proposes optimal setup based on requirements"},
+        {"id": "manual", "label": "Manual Selection - I will choose each option"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `recommend` → Go to **0-1.8a (LLM Full Recommendation)**
+- `manual` → Go to **0-1.8b (Manual Setup)**
+
+### 0-1.8a. LLM Full Recommendation
+
+**Analyze spec.md and propose complete project setup:**
+
+1. **Project Structure**: Monorepo / Monolith / Custom
+2. **BE/FE Paths**: Based on structure (e.g., `apps/{serviceName}-api`, `apps/{serviceName}-web`)
+3. **Language**: Python / TypeScript / Go / Java / etc.
+4. **Framework**: FastAPI / NestJS / Spring Boot / etc.
+5. **Database**: PostgreSQL / MySQL / MongoDB / etc.
+6. **ORM**: SQLAlchemy / Prisma / TypeORM / None (Raw SQL)
+7. **Package Manager**: uv / pip / npm / yarn / pnpm / etc.
+8. **Essential Libraries**: Based on requirements analysis
+9. **Run Commands**: Based on framework (e.g., `uv run uvicorn main:app`, `npm run dev`)
+
+**Present Full Proposal:**
+
+```json
+{
+  "title": "Proposed Project Setup",
+  "questions": [
+    {
+      "id": "full_proposal",
+      "prompt": "Based on requirements analysis, I recommend:\n\n**Project Structure**\n- Structure: {Monorepo/Monolith}\n- BE Path: {apps/serviceName-api}\n- FE Path: {apps/serviceName-web}\n\n**Tech Stack**\n- Language: {Language}\n- Framework: {Framework}\n- Database: {Database}\n- ORM: {ORM}\n- Package Manager: {PackageManager}\n\n**Run Commands**\n- BE: {run_command_be}\n- FE: {run_command_fe}\n\n**Libraries**\n- {lib1}, {lib2}, {lib3}...\n\nDo you accept this setup?",
+      "options": [
+        {"id": "accept", "label": "Accept - Proceed with this setup"},
+        {"id": "modify", "label": "Modify - Switch to manual selection"}
+      ]
+    }
+  ]
+}
+```
+
+- `accept` → Save all decisions, proceed to **0-2 (Infer serviceName)**
+- `modify` → Proceed to **0-1.8b (Manual Setup)**
+
+### 0-1.8b. Manual Setup - Project Structure
+
+**Question 1: Project Structure**
+
+```json
+{
+  "title": "Project Structure",
+  "questions": [
+    {
+      "id": "project_structure",
+      "prompt": "What project structure do you want?",
+      "options": [
+        {"id": "monorepo", "label": "Monorepo - BE+FE in same repo (apps/{serviceName}-api|web)"},
+        {"id": "monolith", "label": "Monolith - Single service (backend/, frontend/)"},
+        {"id": "custom", "label": "Custom - I will specify paths"}
+      ]
+    }
+  ]
+}
+```
+
+**Processing by response:**
+- `monorepo` → Set paths as `apps/{serviceName}-api`, `apps/{serviceName}-web`
+- `monolith` → Set paths as `backend/`, `frontend/`
+- `custom` → Ask for manual path input
+
+### 0-1.8c. Manual Setup - Language & Framework
+
+**Question: Language Selection**
+
+```json
+{
+  "title": "Language Selection",
+  "questions": [
+    {
+      "id": "language",
+      "prompt": "What programming language for backend?",
+      "options": [
+        {"id": "python", "label": "Python"},
+        {"id": "typescript", "label": "TypeScript (Node.js)"},
+        {"id": "go", "label": "Go"},
+        {"id": "java", "label": "Java"},
+        {"id": "other", "label": "Other (specify)"}
+      ]
+    }
+  ]
+}
+```
+
+**Then ask framework based on language:**
+
+| Language | Framework Options |
+|----------|-------------------|
+| Python | FastAPI, Django, Flask |
+| TypeScript | NestJS, Express, Fastify |
+| Go | Gin, Echo, Fiber |
+| Java | Spring Boot, Quarkus |
+
+### 0-1.8d. Manual Setup - Database & ORM
+
+**Question: Database Selection**
+
+```json
+{
+  "title": "Database Selection",
+  "questions": [
+    {
+      "id": "database",
+      "prompt": "What database will you use?",
+      "options": [
+        {"id": "postgresql", "label": "PostgreSQL"},
+        {"id": "mysql", "label": "MySQL / MariaDB"},
+        {"id": "mongodb", "label": "MongoDB"},
+        {"id": "sqlite", "label": "SQLite"},
+        {"id": "none", "label": "No database"},
+        {"id": "other", "label": "Other (specify)"}
+      ]
+    }
+  ]
+}
+```
+
+**Then ask ORM based on language:**
+
+| Language | ORM Options |
+|----------|-------------|
+| Python | SQLAlchemy, Tortoise ORM, Raw SQL |
+| TypeScript | Prisma, TypeORM, Drizzle, Raw SQL |
+| Go | GORM, sqlx, Raw SQL |
+| Java | JPA/Hibernate, MyBatis, Raw SQL |
+
+### 0-1.8e. Manual Setup - Package Manager
 
 **For Python projects:**
 ```json
@@ -333,24 +504,11 @@ When skill is invoked without input, **use AskQuestion to guide information coll
 }
 ```
 
-→ After selection, proceed to 0-1.7c (Library Review)
+→ After all manual selections, proceed to **0-1.9 (Library Review)**
 
-### 0-1.7b. Existing Project - Auto-detect Dependencies
+---
 
-**Auto-detect and read dependency files:**
-
-| Language | Files to Check |
-|----------|----------------|
-| Python | `requirements.txt`, `pyproject.toml`, `Pipfile` |
-| Node.js | `package.json` |
-
-**Extract and present:**
-- List of installed packages with versions
-- Detect package manager from lock files (package-lock.json, yarn.lock, pnpm-lock.yaml, poetry.lock, uv.lock)
-
-→ Proceed to 0-1.7c (Library Review)
-
-### 0-1.7c. Library Review
+### 0-1.9. Library Review
 
 **Based on spec.md requirements, extract needed libraries:**
 
@@ -637,12 +795,20 @@ Write **implementation-ready design document** based on debate results.
 
 | Item | Examples |
 |------|----------|
+| **Project Structure** | Monorepo / Monolith / Custom |
+| **BE Path** | `apps/auth-api` / `backend` / `./` |
+| **FE Path** | `apps/auth-web` / `frontend` / `./` |
+| **Run Command (BE)** | `uv run uvicorn main:app` / `npm run dev` |
+| **Run Command (FE)** | `npm run dev` / `yarn dev` |
 | Language | Python 3.11 / TypeScript 5.x / Go 1.21 / Java 17 |
 | Framework | FastAPI / NestJS / Spring Boot / Gin |
 | DB | PostgreSQL 15 / MySQL 8 / MongoDB 6 |
 | ORM | SQLAlchemy / Prisma / TypeORM / GORM / None (Raw SQL) |
+| Package Manager | uv / pip / poetry / npm / yarn / pnpm |
 | 3rd-party | Redis, Kafka, S3, Elasticsearch, etc. |
 | Infra | K8s / Docker / AWS / GCP / On-premise |
+
+> **Note**: BE Path, FE Path, and Run Commands are used by `build`, `test`, and `debug` skills to locate and execute the project.
 
 **Verify through project exploration or user input**
 

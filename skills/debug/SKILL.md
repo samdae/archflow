@@ -26,12 +26,8 @@ allowed-tools:
   - Shell
 ---
 
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
-> If uncertain about the user's language, ask for clarification.
-
-> **Code Mapping `#` Rule (Global):**
-> Always use `max(existing #) + 1` for new rows. NEVER reuse deleted numbers.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
 # Debug Workflow
 
@@ -52,11 +48,18 @@ Systematically fix bugs by combining runtime context from Debug mode with docume
 | **AskQuestion** | "Please select: 1) OptionA 2) OptionB 3) OptionC" format |
 | **Debug mode unavailable** | Request user to directly paste error log/stack trace |
 
-## ⚠️ Execution Environment
+## ⚠️ Debug Scope: E2E Issues
 
-**Run this skill in Debug mode.**
+> **Debug skill is for E2E issues, not unit test failures.**
+>
+> - **Unit test failures** → Use `test` skill (test runs after build, required before commit)
+> - **E2E issues** → Use `debug` skill (unit tests pass but functionality fails)
 
-Combining runtime information (error log, stack trace, variable state) provided by Debug mode with documentation is essential for effectiveness.
+**Common E2E Issues:**
+- BE↔FE communication mismatch (schema, request format)
+- API contract violations
+- Integration timing issues
+- Environment-specific bugs
 
 ## 📁 Document Structure
 
@@ -64,12 +67,26 @@ Combining runtime information (error log, stack trace, variable state) provided 
 projectRoot/
   └── docs/
         └── {serviceName}/
-              ├── spec.md   # spec skill output (input)
-              ├── arch.md      # arch skill output (input)
-              └── trace.md      # ← This skill's output
+              ├── spec.md      # spec skill output (input)
+              ├── arch-be.md   # arch skill output - BE (input)
+              ├── arch-fe.md   # arch skill output - FE (input)
+              └── trace.md     # ← This skill's output
 ```
 
-**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/spec.md` or `arch.md`
+**serviceName inference**: Automatically extracted from input file path `docs/{serviceName}/spec.md` or `arch-be.md`
+
+## 🔧 Execution Path Resolution
+
+**Read from arch documents (Tech Stack section):**
+
+| Field | Source | Example |
+|-------|--------|---------|
+| BE Path | `arch-be.md` → Tech Stack → BE Path | `apps/auth-api` |
+| FE Path | `arch-fe.md` → Tech Stack → FE Path | `apps/auth-web` |
+| Run Command (BE) | `arch-be.md` → Tech Stack → Run Command | `uv run uvicorn main:app` |
+| Run Command (FE) | `arch-fe.md` → Tech Stack → Run Command | `npm run dev` |
+
+> **Note**: These paths are set during `arch` skill execution and used by `build`, `test`, and `debug` skills.
 
 ---
 
@@ -236,11 +253,43 @@ Fix according to original design intent:
 - Match design flow
 - Maintain existing code style
 
-### 2-3. Verify Fix
+### 2-3. E2E Verification (Direct Execution)
 
-Verify fixed code using Grep + Read:
-- Fix applied?
-- Matches design intent?
+> **Use Shell tool to run E2E environment and verify fix.**
+
+**Step 1: Read Execution Config from arch documents**
+
+```
+BE Path: {from arch-be.md → Tech Stack → BE Path}
+FE Path: {from arch-fe.md → Tech Stack → FE Path}
+BE Run Command: {from arch-be.md → Tech Stack → Run Command}
+FE Run Command: {from arch-fe.md → Tech Stack → Run Command}
+```
+
+**Step 2: Start E2E Environment (Shell)**
+
+```bash
+# 1. Start BE server (background)
+cd {BE Path}
+{BE Run Command} &
+
+# 2. Wait for server ready (check port)
+# Example: curl http://localhost:8000/health
+
+# 3. Start FE or run E2E test
+cd {FE Path}
+{FE Run Command}  # or: npm run test:e2e
+```
+
+**Step 3: Verify Fix**
+
+| Result | Action |
+|--------|--------|
+| ✅ Success (no errors) | Proceed to Phase 3 |
+| ❌ Same error | Re-analyze → Return to 2-1 |
+| ❌ New error | Analyze new error → Return to 2-1 |
+
+> **Tight feedback loop**: See error → Fix → Re-run → Confirm fix immediately.
 
 ---
 
