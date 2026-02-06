@@ -15,45 +15,15 @@
 
 ---
 
-## Step 1: Determine Installation Path / 설치 경로 결정
+## Step 1: Confirm Installation Location
 
 **Ask the user:**
 
-```
-Where would you like to install Archflow?
-Archflow를 어디에 설치하시겠습니까?
+"Install Archflow in the current directory? / 현재 경로에 Archflow를 설치할까요?"
+Path: `{current_working_directory}`
 
-1) Current directory: {current_working_directory}
-2) Choose a different location (Select Folder)
-```
-
-**If user chooses option 2:**
-
-Run the command for the user's OS to open a **Folder Selection Dialog**:
-
-### Windows (PowerShell)
-```powershell
-powershell -Sta -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Select Install Location'; $f.ShowNewFolderButton = $true; [void]$f.ShowDialog(); if ($f.SelectedPath) { Write-Output $f.SelectedPath }"
-```
-
-### macOS (AppleScript)
-```bash
-osascript -e 'Tell application "System Events" to display dialog "Select a folder to install Archflow" select directory'
-# Or simpler:
-osascript -e 'POSIX path of (choose folder with prompt "Select Install Location")'
-```
-
-### Linux
-```bash
-# Try zenity if available
-zenity --file-selection --directory --title="Select Install Location"
-# If fail, ask user to paste path
-```
-
-**Action:**
-1. Run the command to get the path.
-2. Change directory (`cd`) to the selected path.
-3. Confirm with user: "Installation path set to: `{path}`. Proceed?"
+1. **Yes / 네** → Proceed to Step 2.
+2. **No / 아니오** → Ask user for the target path manually, or exit.
 
 ---
 

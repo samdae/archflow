@@ -63,10 +63,12 @@ Use the **Launchpad** document with your AI coding tool:
 2. Tell the AI: "Follow this launchpad to install archflow"
 3. The AI will guide you through the installation
 
-### NPM Install
+### NPM Install (from GitHub)
+
+Install directly from the repository:
 
 ```bash
-npm install archflow
+npm install samdae/archflow
 ```
 
 The postinstall script will automatically:
