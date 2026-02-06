@@ -2,19 +2,50 @@
 
 These rules apply globally to all Archflow skills. Individual skills must adhere to these standards unless explicitly overridden.
 
-## 1. Communication
+## 1. Skill Workflow
+
+### 1-1. Workflow Sequences
+
+| Type | Sequence |
+|------|----------|
+| **Feature (BE)** | `spec` → `arch-be` → `check-be` → `build-be` → `test-be` |
+| **Feature (FE)** | `spec` → `arch-be` → `check-be` → `ui` → `arch-fe` → `check-fe` → `build-fe` → `test-fe` |
+| **Bugfix** | `debug` → `trace` → `sync` |
+| **Enhance** | `reinforce` → `arch` → `check` → `build` → `test` |
+| **Legacy** | `reverse` → `reinforce` (optional) → `check` |
+
+> **FE workflow requires BE arch first** - Frontend design depends on backend API definitions.
+
+### 1-2. Enforcement Rules
+
+| Rule | Description |
+|------|-------------|
+| **Arch → Check** | After `arch-be.md` or `arch-fe.md` is created/modified, `check` skill **MUST** run. |
+| **Build → Test** | After `build` completes, `test` skill **MUST** run. Commit only after all tests pass. |
+| **Debug → Trace → Sync** | After `debug` completes, `trace` and `sync` **MUST** run. Commit only after all complete. |
+| **Docs → Commit** | Any changes to `/docs/` files should be committed. Skip if git is not initialized. |
+
+### 1-3. Next Step Guidance
+
+> At the end of each skill, guide the user to the next skill in the workflow.
+>
+> Example: After `build-be` completes → "Next: Run `/test` to verify implementation."
+
+---
+
+## 2. Communication
 > **Language**
 > - This skill is written in English for universal compatibility.
 > - **Always respond in the user's language** unless explicitly requested otherwise.
 > - If uncertain about the user's language, ask for clarification.
 
-## 2. Document Version Control
+## 3. Document Version Control
 > **Git Workflow**
 > - After document changes, **git commit is recommended**.
 > - **Commit message format**: `docs({serviceName}): {skillName} - {change summary}`
 > - **Failover**: If git is unavailable or the directory is not a repository → **skip and continue**.
 
-## 3. Identifier Management
+## 4. Identifier Management
 > **Code Mapping `#` Rule**
 > - Always use `max(existing #) + 1` for new rows.
 > - **NEVER reuse deleted numbers** (to maintain history traceability).
@@ -23,7 +54,7 @@ These rules apply globally to all Archflow skills. Individual skills must adhere
 > - Always use `max(existing number) + 1` for new requirements.
 > - **NEVER reuse deleted numbers**.
 
-## 4. Logical Inconsistency Handling
+## 5. Logical Inconsistency Handling
 > **Conflict Detection & Resolution**
 > - When user feedback conflicts with existing design, requirements, or purpose:
 >
