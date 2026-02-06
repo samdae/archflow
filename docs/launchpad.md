@@ -5,24 +5,55 @@
 
 ---
 
-## Step 1: Determine Installation Path
+## Step 0: Select Language
+
+**Ask the user:**
+"Which language do you prefer for this installation? (e.g., English, Korean, Japanese...)"
+
+**Action:**
+- If the user answers in a language other than English (e.g., "한글", "한국어"), **translate and guide them in that language** for all subsequent steps.
+
+---
+
+## Step 1: Determine Installation Path / 설치 경로 결정
 
 **Ask the user:**
 
 ```
 Where would you like to install Archflow?
+Archflow를 어디에 설치하시겠습니까?
 
 1) Current directory: {current_working_directory}
-2) Choose a different location
+2) Choose a different location (Select Folder)
 ```
 
 **If user chooses option 2:**
-- Open the file explorer for their OS:
-  - **Windows**: `explorer.exe`
-  - **macOS**: `open .`
-  - **Linux**: `xdg-open .` or `nautilus .`
-- Wait for user to provide the selected path
-- Change to that directory before proceeding
+
+Run the command for the user's OS to open a **Folder Selection Dialog**:
+
+### Windows (PowerShell)
+```powershell
+powershell -Sta -Command "Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Select Install Location'; $f.ShowNewFolderButton = $true; [void]$f.ShowDialog(); if ($f.SelectedPath) { Write-Output $f.SelectedPath }"
+```
+
+### macOS (AppleScript)
+```bash
+osascript -e 'Tell application "System Events" to display dialog "Select a folder to install Archflow" select directory'
+# Or simpler:
+osascript -e 'POSIX path of (choose folder with prompt "Select Install Location")'
+```
+
+### Linux
+```bash
+# Try zenity if available
+zenity --file-selection --directory --title="Select Install Location"
+# If fail, ask user to paste path
+```
+
+**Action:**
+1. Run the command to get the path.
+2. Change directory (`cd`) to the selected path.
+3. Confirm with user: "Installation path set to: `{path}`. Proceed?"
 
 ---
 
@@ -78,8 +109,10 @@ Notify user and provide installation instructions:
 ## Step 3: Install Archflow
 
 ```bash
-npm install archflow
+npm install samdae/archflow
 ```
+
+*Note: We install directly from GitHub to ensure you have the latest version.*
 
 This will automatically run the `postinstall` script (`scripts/init.js`).
 
