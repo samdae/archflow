@@ -96,7 +96,7 @@ After installation, use slash commands:
 | `/check` | Verify design completeness |
 | `/build` | Automated implementation from design |
 | `/test` | Generate and/or run tests (scoped) |
-| `/debug` | Systematic bug fixing (Debug mode) |
+| `/debug` | Systematic bug fixing with direct execution |
 | `/trace` | Record changes to trace.md |
 | `/sync` | Sync changes to arch.md |
 | `/reinforce` | Add requirements to spec.md or fill gaps |
@@ -109,13 +109,13 @@ After installation, use slash commands:
 ### Backend Development
 
 ```
-/spec → /arch (BE) → /check → /build
+/spec → /arch (BE) → /check → /build → /test
 ```
 
 ### Frontend Development
 
 ```
-/spec → /arch (BE) → /ui → /arch (FE) → /check → /build
+/spec → /arch (BE) → /ui → /arch (FE) → /check → /build → /test
 ```
 
 ### Bug Fixing
@@ -148,7 +148,7 @@ New Proposal → /reinforce (spec.md) → /arch → /check → /build
 | `check` | Verify design completeness before implementation | BE/FE | Sonnet |
 | `build` | Automated implementation from design docs | BE/FE | Sonnet |
 | `test` | Generate and/or run tests with scoped targeting | BE/FE | Sonnet |
-| `debug` | Systematic debugging with document context | - | Opus |
+| `debug` | Systematic debugging with direct code execution | - | Opus |
 | `trace` | Generate structured changelogs | - | Sonnet |
 | `sync` | Sync documentation after code changes | - | Sonnet |
 | `reinforce` | Add requirements or fill documentation gaps | - | Sonnet |
@@ -256,8 +256,8 @@ allowed-tools:
 All skills must include this after the front matter:
 
 ```markdown
-> **Language**: This skill is written in English for universal compatibility.
-> Always respond in the user's language unless explicitly requested otherwise.
+> ℹ️ **Global Rules Applied**:
+> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 ```
 
 ### Tool Fallback

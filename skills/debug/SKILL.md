@@ -2,7 +2,7 @@
 id: debug
 name: Debug
 description: |
-  Systematic bug fixing based on documents in Debug mode.
+  Systematic bug fixing with direct code execution.
   Cross-references error with design flow to find root cause.
 
   Triggers: debug, fix, bugfix, 디버그, 버그 수정
@@ -31,11 +31,11 @@ allowed-tools:
 
 # Debug Workflow
 
-Systematically fix bugs by combining runtime context from Debug mode with documentation.
+Systematically fix bugs by combining direct code execution with documentation analysis.
 
 ## 💡 Recommended Model
 
-**Try Sonnet first** (Debug mode provides error location + documentation provides expected behavior)
+**Try Sonnet first** (Direct execution captures errors + documentation provides expected behavior)
 
 → For complex bugs (multi-file, flow analysis needed), **Opus** is recommended
 → If it doesn't work, retry with Opus
@@ -46,7 +46,7 @@ Systematically fix bugs by combining runtime context from Debug mode with docume
 |------|------------------------------|
 | **Read/Grep** | Request file path from user → ask for copy-paste |
 | **AskQuestion** | "Please select: 1) OptionA 2) OptionB 3) OptionC" format |
-| **Debug mode unavailable** | Request user to directly paste error log/stack trace |
+| **Shell unavailable** | Request user to run commands and paste output |
 
 ## ⚠️ Debug Scope: E2E Issues
 
