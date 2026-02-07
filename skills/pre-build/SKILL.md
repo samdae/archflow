@@ -26,6 +26,21 @@ allowed-tools:
   - AskQuestion
 ---
 
+> 🚫 **NO APPLICATION CODE GENERATION**
+> This skill MUST NOT generate any **application source code**.
+> Forbidden: routers, services, models, components, hooks, pages, controllers, repositories — anything under `src/`.
+>
+> ✅ **Allowed outputs:**
+> - Updating the design document (arch-be.md / arch-fe.md) with `## Pre-build Preparation` section
+> - Asking the user questions to fill gaps
+> - Generating **dev infrastructure files** only:
+>   - `docker-compose.yml` (DB, Redis, etc.)
+>   - `.env.example` / `.env.local.example`
+>   - `scripts/generate_mock.py` (data generation scripts)
+>   - `Dockerfile` (if needed)
+>
+> Application code is the `/build` skill's responsibility.
+
 > ℹ️ **Global Rules Applied**:
 > This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
 
