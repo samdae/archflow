@@ -113,7 +113,12 @@ Copy these 4 directories from `.archflow-tmp/` to the project:
 
 **Action:** Use your file tools to copy all files recursively.
 
-Then create `opencode.json` in the project root:
+Then configure rules in `opencode.json` (project root):
+
+**Action:**
+1. Check if `opencode.json` already exists
+2. If **exists**: Read it, append `".opencode/rules/archflow-rules.md"` to the `instructions` array (create the array if absent)
+3. If **not exists**: Create new file:
 
 ```json
 {

@@ -95,7 +95,7 @@ cp -r .archflow-tmp/rules/ .opencode/rules/
 rm -rf .archflow-tmp
 ```
 
-Then create `opencode.json` in the project root:
+Then add to `opencode.json` in the project root (create if absent):
 
 ```json
 {
@@ -103,6 +103,8 @@ Then create `opencode.json` in the project root:
   "instructions": [".opencode/rules/archflow-rules.md"]
 }
 ```
+
+> If `opencode.json` already exists, append to the `instructions` array instead of overwriting.
 
 ### Supported Tools
 
