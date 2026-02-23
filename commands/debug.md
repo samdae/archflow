@@ -1,7 +1,7 @@
 ---
 name: debug
 description: |
-  Systematic bug fixing based on documents in Debug mode.
+  Systematic bug fixing based on documents.
   Cross-references error with design flow to find root cause.
 
   Triggers: debug, fix, bugfix
@@ -21,7 +21,6 @@ allowed-tools:
 
 Invoke the **debug** skill for systematic bug fixing.
 
-⚠️ **Run in Debug mode for best results**
 
 ## What it does
 
@@ -49,7 +48,7 @@ Invoke the **debug** skill for systematic bug fixing.
 
 ## Recommended Model
 
-**Sonnet first** (Debug mode provides error location)
+**Sonnet first** (error logs help locate issues)
 → **Opus** for complex bugs
 
 ## Prerequisites
@@ -65,7 +64,7 @@ After completion, `/trace` is automatically called.
 
 ```
 /debug
-→ "What's the error?" → [paste error or use Debug mode]
+→ "What's the error?" → [paste error message or stack trace]
 → Loads spec.md, arch.md
 → Tracing error through Code Mapping...
 → Root cause: Missing null check in UserService.validate()

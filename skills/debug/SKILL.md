@@ -66,9 +66,6 @@ Read from arch documents (Tech Stack section):
 
 ### 0-0. Model and Environment Guidance
 
-> This skill should be run in Debug mode for best results.
-> Combines error location from Debug mode + expected behavior from documentation.
->
 > **Required Documents** (`docs/{serviceName}/`):
 > - spec.md (required), arch.md (required), trace.md (optional - created if absent)
 
@@ -79,11 +76,11 @@ Read from arch documents (Tech Stack section):
 ```
 
 **Processing:**
-- Requirements or design `no` -> General Debug Mode (below)
+- Requirements or design `no` -> General Debug (below)
 - Changelog `no` -> Will create in Phase 3
 - All `yes` -> Request file paths -> Phase 1
 
-### General Debug Mode (When documents unavailable)
+### General Debug (When documents unavailable)
 
 > **WARNING**: Proceeding without documentation. Bug fixing uses only error log and code analysis.
 > Cannot verify expected behavior or trace design flow.
@@ -102,7 +99,7 @@ From file path: `docs/alert/spec.md` -> serviceName = "alert" -> Output: `docs/a
 ### 0-3. Verify Error Information
 
 Collect: error message, stack trace, variable state (if available).
-> "Please describe the error situation. If you see an error message or stack trace in Debug mode, please share it."
+> "Please describe the error situation. If you have an error message or stack trace, please share it."
 
 ---
 
@@ -248,13 +245,13 @@ External causes and investigation failures are also worth recording.
 
 ```
 [spec] -> spec.md -> [arch] -> arch.md -> [build] -> Implementation
-  -> (Bug occurs) -> [debug] (Debug mode) -> Analysis/fix
+  -> (Bug occurs) -> [debug] -> Analysis/fix
     -> [trace] -> trace.md -> (design impact) -> [sync] -> arch.md
 ```
 
 ## Important Notes
 
-1. **Debug Mode Required** - Effectiveness decreases without runtime information
+1. **Runtime Info Helps** - Providing error messages and stack traces improves effectiveness
 2. **Documentation Dependency** - Docs must be accurate; if doc-impl mismatch, sync first
 3. **Changelog Management** - All bug fixes should be recorded in trace
 4. **Complex Bugs** - Multi-file bugs -> use Opus; if unresolved, repeat analysis -> confirmation -> re-analysis

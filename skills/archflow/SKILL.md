@@ -1,23 +1,27 @@
 ---
-name: archflow
+id: archflow
+name: Archflow
 description: |
-  archflow plugin help - Show all available archflow skills.
-  Workaround for skills autocomplete issue.
+  Show all available archflow skills and recommended workflows.
+  Use "/archflow" to see the full skills list.
 
-  Use "/archflow" or just type "archflow help" to see available skills list.
-
-  Triggers: archflow, archflow help, archflow skills, show archflow commands
+  Triggers: archflow, archflow help, archflow skills, 아크플로우
 user-invocable: true
-allowed-tools:
-  - Read
-  - Skill
+version: 2.0.0
+triggers:
+  - "archflow"
+  - "archflow help"
+  - "archflow skills"
+requires: []
+recommended_model: sonnet
+allowed-tools: []
 ---
 
-# archflow Skills
+# Archflow Skills
 
-> Show all available archflow skills (Skills autocomplete workaround)
+> **Language**: Detect the user's language from their message or system locale. Translate all labels, descriptions, and section headers below into that language. Keep skill command names (e.g., `/spec`, `/arch`) and file paths as-is.
 
-Display the following help message:
+Display the following help message (translate to user's language):
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -66,45 +70,4 @@ Display the following help message:
    Legacy:       /reverse → /reinforce (optional) → /check
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️  Note: Skills may not have autocomplete in CLI.
-    Type the command directly (e.g., /spec)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
-
----
-
-## Skills Reference
-
-### Core Pipeline (7)
-
-| Skill | Description |
-|-------|-------------|
-| `/spec` | Transform unstructured materials into refined requirements |
-| `/arch` | Multi-agent debate for optimal design (BE/FE) |
-| `/ui` | Generate UI specification from API endpoints |
-| `/check` | Verify design completeness before implementation (BE/FE) |
-| `/pre-build` | Verify environment readiness (deps, secrets, infra) |
-| `/build` | Automated implementation from design document (BE/FE) |
-| `/test` | Generate and/or run tests with scoped targeting (BE/FE) |
-
-### Bugfix & Maintenance (3)
-
-| Skill | Description |
-|-------|-------------|
-| `/debug` | Systematic bug fixing |
-| `/trace` | Record changes and fixes to changelog |
-| `/sync` | Synchronize design-impacting changes to arch document |
-
-### Document Management (3)
-
-| Skill | Description |
-|-------|-------------|
-| `/reinforce` | Add requirements or fill documentation gaps |
-| `/reverse` | Reverse-engineer docs from existing code (BE/FE) |
-| `/overview` | Generate 1-page project overview for onboarding |
-
-### Deployment (1)
-
-| Skill | Description |
-|-------|-------------|
-| `/runbook` | Generate deployment documentation |
