@@ -47,7 +47,7 @@ Invoke the **sync** skill to synchronize design documents.
 ## When to Use
 
 - After `/debug` when "Design Impact: Yes"
-- After `/enhance` to integrate enhancement design
+- After `/reinforce` workflow to integrate new requirements
 
 ## Next Step
 

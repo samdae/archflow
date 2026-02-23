@@ -1,8 +1,8 @@
 # Archflow
 
-**Document-driven development skills with Multi-Agent Debate for Claude Code**
+**Document-driven development skills with Multi-Agent Debate for AI coding tools**
 
-Archflow is a Claude Code plugin that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
+Archflow is a skill-based plugin for AI coding tools (Cursor, Claude Code) that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
 
 ## System Workflow
 
@@ -10,36 +10,36 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            Backend Development                              │
 │                                                                             │
-│      /spec  ───▶  /arch (BE)  ───▶  /check  ───▶  /build                   │
-│                       │                                                     │
-└───────────────────────│─────────────────────────────────────────────────────┘
-                        │
-                        ▼
+│  /spec → /arch → /check → /pre-build → /build → /test                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           Frontend Development                              │
 │                                                                             │
-│              /ui  ───▶  /arch (FE)  ───▶  /check  ───▶  /build             │
+│  /spec → /arch(BE) → /check → /ui → /arch(FE) → /check → /pre-build       │
+│       → /build → /test                                                      │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              Bug Fix                                        │
 │                                                                             │
-│      /debug  ───▶  /trace  ───▶  /sync  ───▶  /arch                        │
+│  /debug → /trace → /sync                                                    │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         Enhancement (NEW)                                   │
+│                             Enhancement                                     │
 │                                                                             │
-│   New Proposal  ───▶  /reinforce (spec)  ───▶  /arch  ───▶  /check ───▶ /build │
+│  /reinforce → /arch → /check → /pre-build → /build → /test                 │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                         Legacy Documentation                                │
 │                                                                             │
-│   /reverse  ───▶  (spec + arch)  ───▶  /reinforce  ───▶  /arch            │
+│  /reverse → /reinforce (optional) → /check                                  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -50,46 +50,46 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 
 - **Document-Driven Development**: Maintain clear requirements, designs, and changelogs throughout the development lifecycle
 - **Multi-Agent Debate**: Two specialized agents (Domain Architect and Best Practice Advisor) collaborate to produce optimal designs
-- **Systematic Workflows**: Pre-built skills for common development tasks
+- **Systematic Workflows**: 14 pre-built skills for common development tasks
 - **Full Traceability**: Keep documentation synchronized with code changes
 
 ## Installation
 
-### Quick Install (Recommended)
+### AI-Assisted (Recommended)
 
-Use the **Launchpad** document with your AI coding tool:
+Open `docs/launchpad.md` in your AI tool and tell the AI:
+> "Follow this launchpad to install archflow"
 
-1. Open `docs/launchpad.md` in your AI tool (Cursor, Claude Code)
-2. Tell the AI: "Follow this launchpad to install archflow"
-3. The AI will guide you through the installation
-
-### NPM Install (from GitHub)
-
-Install directly from the repository:
-
-```bash
-npm install samdae/archflow
-```
-
-The postinstall script will automatically:
-- Detect your AI tool (or ask you to choose)
-- Copy skills, rules, and agents to the correct paths
-- Create necessary configuration files
-
-### Supported Tools
-
-| Tool | Installation Method |
-|------|-------------------|
-| **Cursor** | Copy to `.cursor/skills/`, `.cursor/rules/` |
-| **Claude Code** | Run `claude add marketplace` + `claude install` |
+The AI will clone the repository and copy the necessary files automatically.
 
 ### Manual Installation
 
+#### Cursor
+
 ```bash
-git clone https://github.com/samdae/archflow.git
-cd archflow
-node scripts/init.js
+git clone https://github.com/samdae/archflow.git .archflow-tmp
+cp -r .archflow-tmp/skills/ .cursor/skills/
+cp -r .archflow-tmp/rules/ .cursor/rules/
+cp -r .archflow-tmp/agents/ .cursor/agents/
+rm -rf .archflow-tmp
 ```
+
+#### Claude Code
+
+Inside Claude Code, run these commands:
+
+```
+/plugin marketplace add samdae/archflow
+/plugin install archflow@samdae
+/plugin enable archflow@samdae
+```
+
+### Supported Tools
+
+| Tool | Installation |
+|------|-------------|
+| **Cursor** | Clone + copy to `.cursor/skills/`, `.cursor/rules/`, `.cursor/agents/` |
+| **Claude Code** | `/plugin marketplace add samdae/archflow` → install → enable |
 
 ## Quick Start
 
@@ -102,6 +102,7 @@ After installation, use slash commands:
 | `/arch` | Multi-agent debate → arch-be.md or arch-fe.md |
 | `/ui` | Generate UI specification from API endpoints |
 | `/check` | Verify design completeness |
+| `/pre-build` | Verify environment readiness (deps, secrets, infra) |
 | `/build` | Automated implementation from design |
 | `/test` | Generate and/or run tests (scoped) |
 | `/debug` | Systematic bug fixing with direct execution |
@@ -117,34 +118,34 @@ After installation, use slash commands:
 ### Backend Development
 
 ```
-/spec → /arch (BE) → /check → /build → /test
+/spec → /arch → /check → /pre-build → /build → /test
 ```
 
 ### Frontend Development
 
 ```
-/spec → /arch (BE) → /ui → /arch (FE) → /check → /build → /test
+/spec → /arch(BE) → /check → /ui → /arch(FE) → /check → /pre-build → /build → /test
 ```
 
 ### Bug Fixing
 
 ```
-/debug → /trace → /sync (if design impact)
+/debug → /trace → /sync
+```
+
+### Feature Enhancement
+
+```
+/reinforce → /arch → /check → /pre-build → /build → /test
 ```
 
 ### Legacy Code Documentation
 
 ```
-/reverse → /reinforce → /arch → /check → /build
+/reverse → /reinforce (optional) → /check
 ```
 
-### Feature Enhancement (NEW)
-
-```
-New Proposal → /reinforce (spec.md) → /arch → /check → /build
-```
-
-> **Note**: `/enhance` has been removed. All changes start from spec.md via `/reinforce`.
+> **Note**: All changes start from spec.md via `/spec` or `/reinforce`.
 
 ## Skills Included
 
@@ -154,6 +155,7 @@ New Proposal → /reinforce (spec.md) → /arch → /check → /build
 | `arch` | Multi-Agent Debate for feature design | BE/FE | Opus |
 | `ui` | Generate UI specification from API endpoints | - | Opus |
 | `check` | Verify design completeness before implementation | BE/FE | Sonnet |
+| `pre-build` | Verify environment readiness (deps, secrets, infra) | BE/FE | Sonnet |
 | `build` | Automated implementation from design docs | BE/FE | Sonnet |
 | `test` | Generate and/or run tests with scoped targeting | BE/FE | Sonnet |
 | `debug` | Systematic debugging with direct code execution | - | Opus |
@@ -236,7 +238,6 @@ triggers:
   - "specification"
   - "requirements"
 requires: []
-platform: all
 recommended_model: opus
 allowed-tools:
   - Read
@@ -261,11 +262,10 @@ allowed-tools:
 
 ### Language Directive
 
-All skills must include this after the front matter:
+All skills include a global rules reference after the front matter:
 
 ```markdown
-> ℹ️ **Global Rules Applied**:
-> This skill adheres to the Archflow Global Rules defined in `rules/archflow-rules.md`.
+> **Global Rules**: Adheres to rules/archflow-rules.md
 ```
 
 ### Tool Fallback

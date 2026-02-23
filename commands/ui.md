@@ -87,5 +87,5 @@ After completion, run `/arch` and select **Frontend** to generate technical arch
 ## Flow Position
 
 ```
-/spec → /arch (BE) → /ui → /arch (FE) → /build (FE)
+/spec → /arch (BE) → /check → /ui → /arch (FE) → /check → /pre-build → /build → /test
 ```

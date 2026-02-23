@@ -87,7 +87,7 @@ This skill supports separate templates for Backend and Frontend:
 
 ## Next Step
 
-After completion, run `/check` then `/build` to start implementation.
+After completion, run `/check` to verify, then `/pre-build` → `/build` → `/test`.
 
 ## Usage Examples
 
@@ -117,6 +117,6 @@ After completion, run `/check` then `/build` to start implementation.
 ## Flow Position
 
 ```
-Backend: /spec → /arch (BE) → /check → /build
-Frontend: /spec → /arch (BE) → /ui → /arch (FE) → /check → /build
+Backend:  /spec → /arch (BE) → /check → /pre-build → /build → /test
+Frontend: /spec → /arch (BE) → /check → /ui → /arch (FE) → /check → /pre-build → /build → /test
 ```

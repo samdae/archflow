@@ -74,7 +74,7 @@ Documents marked with ❓ for unconfirmed items:
 
 ## Next Step
 
-Run `/reinforce` to fill gaps in generated documents.
+Run `/reinforce` to fill gaps, then `/check` to verify completeness.
 
 ## Usage Examples
 

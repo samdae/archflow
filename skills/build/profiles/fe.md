@@ -1,55 +1,29 @@
 # Frontend Build Profile
 
-> This profile is for frontend implementation.
-> Use when input is `arch-fe.md`.
-
-## Input Detection
-
-- Input file: `arch-fe.md`
-- Applies automatically when design document is frontend-focused
+> Input: `arch-fe.md`. Applies automatically for frontend design documents.
 
 ---
 
 ## Package Installation (Phase 0.5)
 
-**Frontend-specific package managers:**
+| Manager | Install | Dev Install | Lock File |
+|---------|---------|-------------|-----------|
+| npm | `npm install {pkg}` | `npm install -D {pkg}` | `package-lock.json` |
+| yarn | `yarn add {pkg}` | `yarn add -D {pkg}` | `yarn.lock` |
+| pnpm | `pnpm add {pkg}` | `pnpm add -D {pkg}` | `pnpm-lock.yaml` |
 
-| Manager | Install Command | Lock File | Dev Dependencies |
-|---------|-----------------|-----------|------------------|
-| npm | `npm install` | `package-lock.json` | `npm install -D` |
-| yarn | `yarn install` | `yarn.lock` | `yarn add -D` |
-| pnpm | `pnpm install` | `pnpm-lock.yaml` | `pnpm add -D` |
+**NOTE**: Distinguish runtime vs devDependencies:
+- Runtime: react, react-dom, axios, zustand, etc.
+- Dev: typescript, @types/react, vite, eslint, prettier, etc.
 
-**For new projects (project_type: new):**
-1. Initialize project if needed (`npm init`, `yarn init`, etc.)
-2. Install packages from Dependencies section
-
-**For existing projects (project_type: existing):**
-1. Check package.json for already installed packages
-2. Install only new packages
-
-**Example commands:**
-```bash
-# npm
-npm install react react-dom zustand axios
-npm install -D typescript @types/react vite
-
-# yarn
-yarn add react react-dom zustand axios
-yarn add -D typescript @types/react vite
-
-# pnpm
-pnpm add react react-dom zustand axios
-pnpm add -D typescript @types/react vite
-```
-
-**Note**: Distinguish between runtime dependencies and devDependencies:
-- Runtime: react, axios, zustand, etc.
-- Dev: typescript, vite, eslint, prettier, etc.
+**New projects**: Initialize first (`npm init`, etc.), then install.
+**Existing projects**: Check package.json, install only new packages.
 
 ---
 
 ## Project Settings Questions
+
+Ask only what wasn't auto-detected from Tech Stack:
 
 ```json
 {
@@ -57,9 +31,9 @@ pnpm add -D typescript @types/react vite
   "questions": [
     {
       "id": "framework",
-      "prompt": "What frontend framework are you using?",
+      "prompt": "Frontend framework?",
       "options": [
-        {"id": "react", "label": "React (Create React App, Vite)"},
+        {"id": "react", "label": "React (CRA, Vite)"},
         {"id": "nextjs", "label": "Next.js"},
         {"id": "vue", "label": "Vue 3"},
         {"id": "nuxt", "label": "Nuxt"},
@@ -70,20 +44,20 @@ pnpm add -D typescript @types/react vite
     },
     {
       "id": "state_management",
-      "prompt": "What state management do you use?",
+      "prompt": "State management?",
       "options": [
         {"id": "zustand", "label": "Zustand"},
         {"id": "redux", "label": "Redux / Redux Toolkit"},
         {"id": "pinia", "label": "Pinia (Vue)"},
         {"id": "jotai", "label": "Jotai"},
         {"id": "context", "label": "React Context only"},
-        {"id": "none", "label": "No global state management"},
+        {"id": "none", "label": "No global state"},
         {"id": "other", "label": "Other (specify)"}
       ]
     },
     {
       "id": "styling",
-      "prompt": "What styling approach do you use?",
+      "prompt": "Styling approach?",
       "options": [
         {"id": "tailwind", "label": "Tailwind CSS"},
         {"id": "styled", "label": "styled-components / Emotion"},
@@ -95,7 +69,7 @@ pnpm add -D typescript @types/react vite
     },
     {
       "id": "api_client",
-      "prompt": "How do you handle API calls?",
+      "prompt": "API calls?",
       "options": [
         {"id": "react_query", "label": "TanStack Query (React Query)"},
         {"id": "swr", "label": "SWR"},
@@ -107,12 +81,12 @@ pnpm add -D typescript @types/react vite
     },
     {
       "id": "form_handling",
-      "prompt": "How do you handle forms?",
+      "prompt": "Form handling?",
       "options": [
         {"id": "react_hook_form", "label": "React Hook Form"},
         {"id": "formik", "label": "Formik"},
         {"id": "vee_validate", "label": "VeeValidate (Vue)"},
-        {"id": "native", "label": "Native / Manual handling"},
+        {"id": "native", "label": "Native / Manual"},
         {"id": "other", "label": "Other (specify)"}
       ]
     },
@@ -130,13 +104,13 @@ pnpm add -D typescript @types/react vite
       "prompt": "Test code writing?",
       "options": [
         {"id": "per_component", "label": "Write test per component"},
-        {"id": "per_design", "label": "Only when specified in design document"},
+        {"id": "per_design", "label": "Only when in design doc"},
         {"id": "none", "label": "No test writing"}
       ]
     },
     {
       "id": "storybook",
-      "prompt": "Do you use Storybook for component documentation?",
+      "prompt": "Use Storybook?",
       "options": [
         {"id": "yes", "label": "Yes - Create stories for new components"},
         {"id": "no", "label": "No - Skip Storybook"}
@@ -146,48 +120,20 @@ pnpm add -D typescript @types/react vite
 }
 ```
 
-**Additional questions:**
-- When "other" selected → Request specific package name
+- "other" selected -> Request specific package name
 
 ---
 
 ## Dependency Graph
 
-Frontend implementation follows this dependency order:
-
 ```
-0. shared/common (first)
-   └── Utility functions, constants, types shared across modules
-
-1. Types/Interfaces (independent)
-   └── TypeScript type definitions
-   └── API response types
-   └── Component prop types
-
-2. API Layer (depends on Types)
-   └── API client setup
-   └── Custom hooks for data fetching
-   └── Error handling utilities
-
-3. Store/State (depends on Types)
-   └── Global state stores
-   └── Actions and selectors
-   └── State persistence (if any)
-
-4. Shared Components (depends on Types, may depend on Store)
-   └── Reusable UI components
-   └── Design system components
-   └── Form components
-
-5. Feature Components (depends on API, Store, Shared Components)
-   └── Feature-specific components
-   └── Container components
-   └── Business logic components
-
-6. Pages/Routes (depends on Feature Components)
-   └── Page-level components
-   └── Route configuration
-   └── Layout components
+0. shared/common (first) - utilities, constants, shared types
+1. Types/Interfaces (independent) - TS types, API response types, prop types
+2. API Layer (depends on Types) - API client, data fetching hooks, error utils
+3. Store/State (depends on Types) - global state, actions, selectors
+4. Shared Components (depends on Types, may depend on Store) - reusable UI, design system, forms
+5. Feature Components (depends on API, Store, Shared) - feature-specific, container, business logic
+6. Pages/Routes (depends on Feature Components) - page-level, route config, layouts
 ```
 
 ### Parallel Execution Rules
@@ -203,82 +149,13 @@ Frontend implementation follows this dependency order:
 
 ---
 
-## Completion Report Template
-
-```markdown
-## Implementation Completion Report
-
-### Execution Summary
-| Step | Status | Created Files | Modified Files |
-|------|--------|--------------|---------------|
-| 1. Types | ✅ | {count} | {count} |
-| 2. API Layer | ✅ | {count} | {count} |
-| 3. Store | ✅ | {count} | {count} |
-| 4. Shared Components | ✅ | {count} | {count} |
-| 5. Feature Components | ✅ | {count} | {count} |
-| 6. Pages/Routes | ✅ | {count} | {count} |
-
-### Created Files
-- `src/types/{name}.ts` - Type definitions
-- `src/api/{name}.ts` - API hooks
-- `src/components/{Name}/` - Component folder
-
-### Modified Files
-- `src/routes/index.tsx` - Added new routes
-- `src/store/index.ts` - Exported new store
-
-### Environment Variables
-(If API endpoints or feature flags added)
-```env
-VITE_API_BASE_URL=https://api.example.com
-VITE_FEATURE_FLAG=true
-```
-
-### Build Verification
-```bash
-# Type check
-npm run type-check  # or tsc --noEmit
-
-# Lint check
-npm run lint
-
-# Build test
-npm run build
-```
-
-### Remaining Manual Tasks
-- [ ] Environment variable setup (.env.local)
-- [ ] Run tests: `npm run test`
-- [ ] Visual verification in browser
-- [ ] Responsive design check
-- [ ] Accessibility check (keyboard navigation, screen reader)
-
-### Git Commit
-(Based on commit strategy)
-- Committed / Not committed
-
-### Next Steps Guide
-> ✅ **Implementation Complete**
->
-> If bugs occur, run `debug` skill in **Debug mode**.
-> Document paths: `docs/{serviceName}/spec.md`, `arch-fe.md`
->
-> **Recommended checks:**
-> - Run Storybook: `npm run storybook`
-> - Run E2E tests: `npm run test:e2e`
-```
-
----
-
 ## Sub-agent Prompt Template
-
-When invoking sub-agent for each step:
 
 ```
 ## Implementation Task
 
 ### Step Information
-- Step name: {extracted from Implementation Plan}
+- Step name: {from Implementation Plan}
 - Goal: {step description}
 
 ### Tech Stack
@@ -293,17 +170,17 @@ When invoking sub-agent for each step:
 |---|---------|------|----------------|--------------|--------|------|
 | {#} | {feature} | {file path} | {component or hook name} | {key props} | {what to implement} | [ ] |
 
-⚠️ Only implement rows where `Impl = [ ]`
-⚠️ Follow existing component patterns in the project
+**WARNING**: Only implement rows where `Impl = [ ]`
+**WARNING**: Follow existing component patterns in the project
 
 ### Design Spec
 {Component Structure, State Management, Route Definition from arch-fe.md}
 
-### Already Created Files (for reference)
-{list of files created in previous steps}
+### Already Created Files
+{list from previous steps}
 
 ### Required Reference Patterns
-**Reference File**: {required reference file path}
+**Reference File**: {path}
 **Patterns to Apply**:
 - Component structure: {folder structure, file naming}
 - Styling approach: {className patterns, CSS conventions}
@@ -317,53 +194,49 @@ When invoking sub-agent for each step:
 
 ### Implementation Rules (Must Follow)
 
-#### 1. Read Existing File First (Top Priority)
-- If target file to modify already exists, **must first Read entire content**
-- Even for new files, **Read at least 1 similar component** in same directory
+**1. Read Existing File First (Top Priority)**
+- If target file exists, **must Read entire content first**
+- For new files, **Read at least 1 similar component** in same directory
 - No Write/Edit without reading first
 
-#### 2. Search and Replicate Similar Component Patterns
-- **Search for similar components with Grep** in project
-- **Replicate folder structure, naming, styling approach** of found patterns
-- Example: When adding Button → Check existing Button components
+**2. Search and Replicate Similar Component Patterns**
+- **Grep for similar components** in project
+- **Replicate folder structure, naming, styling** of found patterns
 
-#### 3. Component Rules
-- Use TypeScript for all files
+**3. Component Rules**
+- TypeScript for all files
 - Define Props interface for all components
 - Handle loading, error, empty states
 - Follow project's styling convention
 
-#### 4. General Rules
+**4. General Rules**
 - Auto-fix lint errors (max 3 attempts)
 - Ensure no TypeScript errors
-- Return list of created/modified files upon completion
+- Return list of created/modified files
 
-#### 5. Update Implementation Status (IMPORTANT)
-- After successfully implementing each Code Mapping row:
-  1. Read the design document (arch-fe.md)
-  2. Find the row by `#` number in Code Mapping table
-  3. Update `[ ]` → `[x]` using StrReplace
-  - Example: `| 3 | Dashboard | ... | [ ] |` → `| 3 | Dashboard | ... | [x] |`
+**5. Update Implementation Status (IMPORTANT)**
+- After implementing each Code Mapping row:
+  1. Read design doc (arch-fe.md)
+  2. Find row by `#` in Code Mapping table
+  3. Update `[ ]` -> `[x]` via StrReplace
 
 ### Return Format
-Report upon completion:
-- created_files: [created file paths]
-- modified_files: [modified file paths]
-- impl_updated: [list of # numbers updated to [x]]
+- created_files: [paths]
+- modified_files: [paths]
+- impl_updated: [# numbers updated to [x]]
 - status: success | failed
-- error: (error content if failed)
+- error: (if failed)
 ```
 
 ---
 
 ## Component Boilerplate Reference
 
-### Basic Component Structure
+### Basic Component (FC with loading state)
 
 ```tsx
-// src/components/ExampleComponent/ExampleComponent.tsx
 import { FC } from 'react';
-import styles from './ExampleComponent.module.css'; // or use Tailwind
+import styles from './ExampleComponent.module.css';
 
 interface ExampleComponentProps {
   title: string;
@@ -372,29 +245,23 @@ interface ExampleComponentProps {
 }
 
 export const ExampleComponent: FC<ExampleComponentProps> = ({
-  title,
-  onAction,
-  isLoading = false,
+  title, onAction, isLoading = false,
 }) => {
   if (isLoading) {
     return <div className={styles.skeleton}>Loading...</div>;
   }
-
   return (
     <div className={styles.container}>
       <h2>{title}</h2>
-      {onAction && (
-        <button onClick={onAction}>Action</button>
-      )}
+      {onAction && <button onClick={onAction}>Action</button>}
     </div>
   );
 };
 ```
 
-### API Hook Structure
+### API Hook (useQuery)
 
 ```tsx
-// src/features/example/api/useExampleList.ts
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/client';
 import type { Example } from '@/types/example';
@@ -403,20 +270,17 @@ export const useExampleList = (params?: { page?: number }) => {
   return useQuery({
     queryKey: ['examples', params],
     queryFn: async () => {
-      const response = await apiClient.get<Example[]>('/api/v1/examples', {
-        params,
-      });
+      const response = await apiClient.get<Example[]>('/api/v1/examples', { params });
       return response.data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
 ```
 
-### Store Structure (Zustand example)
+### Store (Zustand)
 
 ```tsx
-// src/store/exampleStore.ts
 import { create } from 'zustand';
 
 interface ExampleState {
@@ -429,9 +293,66 @@ interface ExampleState {
 export const useExampleStore = create<ExampleState>((set) => ({
   items: [],
   addItem: (item) => set((state) => ({ items: [...state.items, item] })),
-  removeItem: (item) => set((state) => ({ 
-    items: state.items.filter((i) => i !== item) 
+  removeItem: (item) => set((state) => ({
+    items: state.items.filter((i) => i !== item)
   })),
   reset: () => set({ items: [] }),
 }));
+```
+
+---
+
+## Completion Report Template
+
+```markdown
+## Implementation Completion Report
+
+### Execution Summary
+| Step | Status | Created Files | Modified Files |
+|------|--------|--------------|---------------|
+| 1. Types | OK | {count} | {count} |
+| 2. API Layer | OK | {count} | {count} |
+| 3. Store | OK | {count} | {count} |
+| 4. Shared Components | OK | {count} | {count} |
+| 5. Feature Components | OK | {count} | {count} |
+| 6. Pages/Routes | OK | {count} | {count} |
+
+### Created Files
+- `src/types/{name}.ts` - Type definitions
+- `src/api/{name}.ts` - API hooks
+- `src/components/{Name}/` - Component folder
+
+### Modified Files
+- `src/routes/index.tsx` - Added new routes
+- `src/store/index.ts` - Exported new store
+
+### Environment Variables
+(If API endpoints or feature flags added)
+\`\`\`env
+VITE_API_BASE_URL=https://api.example.com
+VITE_FEATURE_FLAG=true
+\`\`\`
+
+### Build Verification
+\`\`\`bash
+npm run type-check  # or tsc --noEmit
+npm run lint
+npm run build
+\`\`\`
+
+### Remaining Manual Tasks
+- [ ] Environment variable setup (.env.local)
+- [ ] Run tests: `npm run test`
+- [ ] Visual verification in browser
+- [ ] Responsive design check
+- [ ] Accessibility check (keyboard navigation, screen reader)
+
+### Git Commit
+(Based on commit strategy) Committed / Not committed
+
+### Next Steps Guide
+> **Implementation Complete**
+> If bugs occur, run `debug` skill.
+> Document paths: `docs/{serviceName}/spec.md`, `arch-fe.md`
+> **Recommended checks:** Storybook: `npm run storybook`, E2E: `npm run test:e2e`
 ```

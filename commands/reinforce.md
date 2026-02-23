@@ -60,7 +60,7 @@ New: /reinforce → spec.md update → /arch → design update (SSOT preserved)
 ## Enhancement Workflow
 
 ```
-New Proposal → /reinforce → /arch → /check → /build
+New Proposal → /reinforce → /arch → /check → /pre-build → /build → /test
 ```
 
 ## Next Step

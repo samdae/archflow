@@ -69,7 +69,7 @@ This skill auto-detects profile from input file:
 
 ## Next Step
 
-If bugs occur, run `/debug` in Debug mode.
+Run `/test` to verify implementation. If bugs occur, run `/debug`.
 
 ## Usage Examples
 

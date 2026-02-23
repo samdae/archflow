@@ -61,7 +61,7 @@ This skill auto-detects profile from input file:
 
 ## Next Step
 
-After validation passes, run `/build` to start implementation.
+After validation passes, run `/pre-build` to verify environment readiness.
 
 ## Usage Examples
 
@@ -71,12 +71,12 @@ After validation passes, run `/build` to start implementation.
 → Checking completeness...
 → ⚠️ Missing: Error handling for POST /users
 → ⚠️ Missing: Index definition for users table
-→ All checks passed → Ready for /build
+→ All checks passed → Ready for /pre-build
 
 /check @docs/dashboard/arch-fe.md
 → Detected: Frontend profile
 → Checking completeness...
 → ⚠️ Missing: Loading state for DataTable
 → ⚠️ Missing: Error boundary definition
-→ All checks passed → Ready for /build
+→ All checks passed → Ready for /pre-build
 ```

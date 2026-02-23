@@ -1,18 +1,10 @@
 # Backend Build Profile
 
-> This profile is for backend implementation.
-> Use when input is `arch-be.md`.
-
-## Input Detection
-
-- Input file: `arch-be.md`
-- Applies automatically when design document is backend-focused
+> Input: `arch-be.md`. Applies automatically for backend design documents.
 
 ---
 
 ## Package Installation (Phase 0.5)
-
-**Backend-specific package managers:**
 
 | Manager | Virtual Env | Install Command | Lock File |
 |---------|-------------|-----------------|-----------|
@@ -20,15 +12,9 @@
 | uv | `uv venv` | `uv pip install -r requirements.txt` | `uv.lock` |
 | poetry | auto-managed | `poetry install` | `poetry.lock` |
 
-**For new projects (project_type: new):**
-1. Create virtual environment if needed
-2. Install packages from Dependencies section
+**New projects**: Create virtual environment first, then install from Dependencies section.
+**Existing projects**: Check if venv exists, install only new packages.
 
-**For existing projects (project_type: existing):**
-1. Check if virtual environment exists
-2. Install only new packages (not already in requirements.txt/pyproject.toml)
-
-**Example commands:**
 ```bash
 # pip with venv
 python -m venv .venv
@@ -36,8 +22,7 @@ source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install fastapi sqlalchemy alembic
 
 # uv
-uv venv
-uv pip install fastapi sqlalchemy alembic
+uv venv && uv pip install fastapi sqlalchemy alembic
 
 # poetry
 poetry add fastapi sqlalchemy alembic
@@ -47,21 +32,23 @@ poetry add fastapi sqlalchemy alembic
 
 ## Project Settings Questions
 
+Ask only what wasn't auto-detected from Tech Stack (0-2.5):
+
 ```json
 {
   "title": "Backend Project Settings",
   "questions": [
     {
       "id": "orm_usage",
-      "prompt": "Do you use ORM (Object-Relational Mapping)?",
+      "prompt": "Do you use ORM?",
       "options": [
-        {"id": "yes", "label": "Yes - I will provide package name (SQLAlchemy, Prisma, TypeORM, etc.)"},
+        {"id": "yes", "label": "Yes - provide package name (SQLAlchemy, Prisma, TypeORM, etc.)"},
         {"id": "no", "label": "No - Using Raw SQL"}
       ]
     },
     {
       "id": "db_type",
-      "prompt": "What database are you using?",
+      "prompt": "What database?",
       "options": [
         {"id": "postgresql", "label": "PostgreSQL"},
         {"id": "mysql", "label": "MySQL / MariaDB"},
@@ -72,19 +59,19 @@ poetry add fastapi sqlalchemy alembic
     },
     {
       "id": "db_version",
-      "prompt": "Do you know the DB version?",
+      "prompt": "DB version?",
       "options": [
-        {"id": "known", "label": "Yes - I will provide version"},
-        {"id": "project", "label": "No - Check from project config files"},
+        {"id": "known", "label": "Yes - will provide version"},
+        {"id": "project", "label": "No - Check from project config"},
         {"id": "unknown", "label": "No - Use standard SQL (ANSI)"}
       ]
     },
     {
       "id": "db_schema_change",
-      "prompt": "Are there DB schema changes (table/column add/modify)? If yes, how to apply?",
+      "prompt": "DB schema changes? How to apply?",
       "options": [
-        {"id": "auto", "label": "Auto-apply on app startup (ORM, etc.)"},
-        {"id": "migration_tool", "label": "Use migration tool (Alembic, Flyway, Prisma Migrate, etc.)"},
+        {"id": "auto", "label": "Auto-apply on startup (ORM)"},
+        {"id": "migration_tool", "label": "Migration tool (Alembic, Flyway, Prisma Migrate)"},
         {"id": "manual_sql", "label": "Manual SQL execution"},
         {"id": "none", "label": "No DB changes"}
       ]
@@ -102,17 +89,17 @@ poetry add fastapi sqlalchemy alembic
       "id": "test_strategy",
       "prompt": "Test code writing?",
       "options": [
-        {"id": "per_feature", "label": "Write test file per feature"},
-        {"id": "per_design", "label": "Only when specified in design document"},
+        {"id": "per_feature", "label": "Write test per feature"},
+        {"id": "per_design", "label": "Only when in design doc"},
         {"id": "none", "label": "No test writing"}
       ]
     },
     {
       "id": "dependency_manager",
-      "prompt": "Where to record when adding new libraries?",
+      "prompt": "Where to record new libraries?",
       "options": [
-        {"id": "project_default", "label": "Project default config file (package.json, pyproject.toml, go.mod, etc.)"},
-        {"id": "manual", "label": "Manual management / separate document"},
+        {"id": "project_default", "label": "Project default (package.json, pyproject.toml, go.mod)"},
+        {"id": "manual", "label": "Manual / separate document"},
         {"id": "none", "label": "No new dependencies"}
       ]
     }
@@ -120,40 +107,20 @@ poetry add fastapi sqlalchemy alembic
 }
 ```
 
-**Additional questions:**
-- When ORM used → Request ORM package name
-- When DB version known → Request version string
+- ORM used -> Request ORM package name
+- DB version known -> Request version string
 
 ---
 
 ## Dependency Graph
 
-Backend implementation follows this dependency order:
-
 ```
-0. shared/common (first)
-   └── Utility functions, constants, types shared across modules
-
-1. Model/Entity (independent)
-   └── Database models, entity definitions
-   └── ORM mappings
-
-2. Repository/DAO (depends on Model)
-   └── Data access layer
-   └── Database queries
-
-3. Service (depends on Repository)
-   └── Business logic
-   └── Validation, transformation
-
-4. API/Controller (depends on Service)
-   └── HTTP endpoints
-   └── Request/Response handling
-   └── Input validation
-
-5. External Integration (independent or depends on API)
-   └── Third-party API clients
-   └── Message queue publishers/consumers
+0. shared/common (first) - utilities, constants, types
+1. Model/Entity (independent) - DB models, ORM mappings
+2. Repository/DAO (depends on Model) - data access, queries
+3. Service (depends on Repository) - business logic, validation
+4. API/Controller (depends on Service) - HTTP endpoints, request/response
+5. External Integration (independent or depends on API) - 3rd-party clients, MQ
 ```
 
 ### Parallel Execution Rules
@@ -169,86 +136,13 @@ Backend implementation follows this dependency order:
 
 ---
 
-## Completion Report Template
-
-```markdown
-## Implementation Completion Report
-
-### Execution Summary
-| Step | Status | Created Files | Modified Files |
-|------|--------|--------------|---------------|
-| 1. Model | ✅ | {count} | {count} |
-| 2. Repository | ✅ | {count} | {count} |
-| 3. Service | ✅ | {count} | {count} |
-| 4. API/Controller | ✅ | {count} | {count} |
-
-### Created Files
-- `path/to/new_file` - Description
-
-### Modified Files
-- `path/to/existing_file` - Change content
-
-### DB Migration
-(Based on project settings)
-
-**When using migration tool:**
-```bash
-# Alembic
-alembic revision --autogenerate -m "{description}"
-alembic upgrade head
-
-# Prisma
-npx prisma migrate dev --name {description}
-
-# Flyway
-flyway migrate
-```
-
-**When manual SQL execution:**
-```sql
--- New table: {table name}
-CREATE TABLE {table name} (
-  -- Generated based on design document Section 2 + {db_type} syntax
-);
-
--- Existing table modification
-ALTER TABLE {table name} ...;
-
--- Index
-CREATE INDEX ...;
-```
-
-### Dependency Changes
-(Based on project settings)
-- `package_name` needs to be added → Record in project config file
-
-### Remaining Manual Tasks
-- [ ] Environment variable setup (if any)
-- [ ] Run tests
-- [ ] Verify FE integration
-
-### Git Commit
-(Based on commit strategy)
-- Committed / Not committed
-
-### Next Steps Guide
-> ✅ **Implementation Complete**
->
-> If bugs occur, run `debug` skill in **Debug mode**.
-> Document paths: `docs/{serviceName}/spec.md`, `arch-be.md`
-```
-
----
-
 ## Sub-agent Prompt Template
-
-When invoking sub-agent for each step:
 
 ```
 ## Implementation Task
 
 ### Step Information
-- Step name: {extracted from Implementation Plan}
+- Step name: {from Implementation Plan}
 - Goal: {step description}
 
 ### Tech Stack
@@ -262,17 +156,17 @@ When invoking sub-agent for each step:
 |---|---------|------|-------|--------|--------|------|
 | {#} | {feature} | {file path} | {class name} | {method name} | {call location and code to add} | [ ] |
 
-⚠️ Only implement rows where `Impl = [ ]`
-⚠️ If method name and call location specified, must implement at that location
+**WARNING**: Only implement rows where `Impl = [ ]`
+**WARNING**: If method name and call location specified, must implement at that location
 
 ### Design Spec
-{API Spec, Sequence Diagram, etc. related parts}
+{API Spec, Sequence Diagram, etc.}
 
-### Already Created Files (for reference)
-{list of files created in previous steps}
+### Already Created Files
+{list from previous steps}
 
 ### Required Reference Patterns
-**Reference File**: {required reference file path}
+**Reference File**: {path}
 **Patterns to Apply**:
 - Naming: {identified naming rules}
 - Structure: {identified code structure}
@@ -284,31 +178,98 @@ When invoking sub-agent for each step:
 
 ### Implementation Rules (Must Follow)
 
-#### 1. Read Existing File First (Top Priority)
-- If target file to modify already exists, **must first Read entire content**
-- Even for new files, **Read at least 1 similar file** in same directory
+**1. Read Existing File First (Top Priority)**
+- If target file exists, **must Read entire content first**
+- For new files, **Read at least 1 similar file** in same directory
 - No Write/Edit without reading first
 
-#### 2. Search and Replicate Similar Code Patterns
-- **Search for similar feature implementations with Grep** in project
-- **Replicate naming, structure, error handling approach** of found patterns
+**2. Search and Replicate Similar Code Patterns**
+- **Grep for similar implementations** in project
+- **Replicate naming, structure, error handling** of found patterns
 
-#### 3. General Rules
+**3. General Rules**
 - Auto-fix lint errors (max 3 attempts)
-- Return list of created/modified files upon completion
+- Return list of created/modified files
 
-#### 4. Update Implementation Status (IMPORTANT)
-- After successfully implementing each Code Mapping row:
-  1. Read the design document (arch-be.md)
-  2. Find the row by `#` number in Code Mapping table
-  3. Update `[ ]` → `[x]` using StrReplace
-  - Example: `| 3 | Refresh | ... | [ ] |` → `| 3 | Refresh | ... | [x] |`
+**4. Update Implementation Status (IMPORTANT)**
+- After implementing each Code Mapping row:
+  1. Read design doc (arch-be.md)
+  2. Find row by `#` in Code Mapping table
+  3. Update `[ ]` -> `[x]` via StrReplace
+  - Example: `| 3 | Refresh | ... | [ ] |` -> `| 3 | Refresh | ... | [x] |`
 
 ### Return Format
-Report upon completion:
-- created_files: [created file paths]
-- modified_files: [modified file paths]
-- impl_updated: [list of # numbers updated to [x]]
+- created_files: [paths]
+- modified_files: [paths]
+- impl_updated: [# numbers updated to [x]]
 - status: success | failed
-- error: (error content if failed)
+- error: (if failed)
+```
+
+---
+
+## Completion Report Template
+
+```markdown
+## Implementation Completion Report
+
+### Execution Summary
+| Step | Status | Created Files | Modified Files |
+|------|--------|--------------|---------------|
+| 1. Model | OK | {count} | {count} |
+| 2. Repository | OK | {count} | {count} |
+| 3. Service | OK | {count} | {count} |
+| 4. API/Controller | OK | {count} | {count} |
+
+### Created Files
+- `path/to/new_file` - Description
+
+### Modified Files
+- `path/to/existing_file` - Change content
+
+### DB Migration
+(Based on project settings)
+
+**When using migration tool:**
+\`\`\`bash
+# Alembic
+alembic revision --autogenerate -m "{description}"
+alembic upgrade head
+
+# Prisma
+npx prisma migrate dev --name {description}
+
+# Flyway
+flyway migrate
+\`\`\`
+
+**When manual SQL execution:**
+\`\`\`sql
+-- New table: {table name}
+CREATE TABLE {table name} (
+  -- Generated based on design doc + {db_type} syntax
+);
+
+-- Existing table modification
+ALTER TABLE {table name} ...;
+
+-- Index
+CREATE INDEX ...;
+\`\`\`
+
+### Dependency Changes
+- `package_name` -> Record in project config file
+
+### Remaining Manual Tasks
+- [ ] Environment variable setup (if any)
+- [ ] Run tests
+- [ ] Verify FE integration
+
+### Git Commit
+(Based on commit strategy) Committed / Not committed
+
+### Next Steps Guide
+> **Implementation Complete**
+> If bugs occur, run `debug` skill.
+> Document paths: `docs/{serviceName}/spec.md`, `arch-be.md`
 ```

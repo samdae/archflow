@@ -55,7 +55,7 @@ docs/{serviceName}/spec.md
 
 ## Next Step
 
-After completion, run `/architect` to start design.
+After completion, run `/arch` to start design.
 
 ## Usage Examples
 
