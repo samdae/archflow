@@ -1,6 +1,6 @@
 ---
 id: sync
-name: Sync
+name: sync
 description: |
   Synchronize trace/enhancement results to arch document.
   Filters design-impacting changes and updates arch.md.

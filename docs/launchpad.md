@@ -35,6 +35,7 @@ Check the current project structure to detect the AI coding tool:
 |-----------|------|
 | `.cursor/` directory exists | **Cursor** |
 | `CLAUDE.md` or `.claude/` exists | **Claude Code** |
+| `AGENTS.md` or `.opencode/` exists | **OpenCode** |
 
 If neither is detected, **ask the user** which tool they are using.
 
@@ -93,6 +94,45 @@ Register the marketplace, install the plugin, and enable it:
 
 > No file copying needed. Claude Code registers the GitHub repository as a plugin and activates it.
 
+### For OpenCode
+
+Clone the repository and copy files:
+
+```bash
+git clone https://github.com/samdae/archflow.git .archflow-tmp
+```
+
+Copy these 4 directories from `.archflow-tmp/` to the project:
+
+| Source | Destination |
+|--------|------------|
+| `.archflow-tmp/skills/` | `.opencode/skills/` |
+| `.archflow-tmp/commands/` | `.opencode/commands/` |
+| `.archflow-tmp/agents/` | `.opencode/agents/` |
+| `.archflow-tmp/rules/` | `.opencode/rules/` |
+
+**Action:** Use your file tools to copy all files recursively.
+
+Then create `opencode.json` in the project root:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [".opencode/rules/archflow-rules.md"]
+}
+```
+
+Then clean up:
+
+```bash
+rm -rf .archflow-tmp
+```
+
+Windows:
+```bash
+rmdir /s /q .archflow-tmp
+```
+
 ---
 
 ## Step 4: Verify Installation
@@ -103,6 +143,7 @@ Check that the installation was successful:
 |------|-------------|
 | Cursor | Check `.cursor/skills/arch/SKILL.md` exists |
 | Claude Code | Run `/plugin` → "Manage Plugins" and verify archflow is enabled |
+| OpenCode | Check `.opencode/skills/arch/SKILL.md` exists |
 
 ---
 
@@ -125,7 +166,7 @@ git commit -m "chore: initialize project with archflow"
 ```
 ✅ Archflow installed successfully!
 
-Available skills (14):
+Available skills (15):
 
 Core Pipeline:
   /spec        Transform materials into spec.md

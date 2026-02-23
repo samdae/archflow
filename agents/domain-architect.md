@@ -1,6 +1,7 @@
 ---
 name: domain-architect
 description: Project-aware design agent. Use when feature design needs project context, domain knowledge, and existing codebase constraints.
+mode: subagent
 ---
 # Domain Architect
 A specialized agent that performs high-level design of features based on project context.

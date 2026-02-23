@@ -1,6 +1,6 @@
 ---
 id: runbook
-name: Runbook
+name: runbook
 description: |
   Collect deployment info via Q&A to generate runbook document.
   Triggers: runbook, deploy, ops

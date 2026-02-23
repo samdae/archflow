@@ -1,6 +1,6 @@
 ---
 id: build
-name: Build
+name: build
 description: |
   Automated implementation based on design document.
   Analyzes arch.md, creates dependency graph, executes step-by-step.

@@ -1,6 +1,6 @@
 ---
 id: test
-name: Test
+name: test
 description: |
   Generate and/or run tests with scoped targeting.
   Default scope: change-based (git diff vs arch commit).

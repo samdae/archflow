@@ -1,6 +1,6 @@
 ---
 id: reverse
-name: Reverse
+name: reverse
 description: |
   Reverse-engineer spec.md and arch.md from existing code.
   Triggers: reverse, reverse engineer, legacy documentation

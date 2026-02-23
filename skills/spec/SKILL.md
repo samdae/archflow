@@ -1,6 +1,6 @@
 ---
 id: spec
-name: Spec
+name: spec
 description: |
   Transform unstructured materials into refined requirements document.
   Triggers: spec, specification, requirements

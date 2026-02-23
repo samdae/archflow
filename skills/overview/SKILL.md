@@ -1,6 +1,6 @@
 ---
 id: overview
-name: Overview
+name: overview
 description: |
   Generate a 1-page project overview from requirements and arch documents.
   Triggers: overview, project overview, onboarding

@@ -1,6 +1,6 @@
 ---
 id: trace
-name: Trace
+name: trace
 description: |
   Record bug fixes, changes, and design impact to trace.md.
   Triggers: trace, log, record, changelog

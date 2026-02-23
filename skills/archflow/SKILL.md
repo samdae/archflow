@@ -1,6 +1,6 @@
 ---
 id: archflow
-name: Archflow
+name: archflow
 description: |
   Show all available archflow skills and recommended workflows.
   Use "/archflow" to see the full skills list.

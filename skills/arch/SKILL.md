@@ -1,6 +1,6 @@
 ---
 id: arch
-name: Arch
+name: arch
 description: |
   Multi-agent debate to derive optimal design through two perspectives.
   Domain Architect + Best Practice Advisor collaborate in round-based debate.

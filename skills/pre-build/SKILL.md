@@ -1,6 +1,6 @@
 ---
 id: pre-build
-name: Pre-build
+name: pre-build
 description: |
   Verify implementation readiness before build.
   Checks external services, infrastructure, business logic, mock data.

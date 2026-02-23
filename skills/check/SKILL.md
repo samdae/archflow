@@ -1,6 +1,6 @@
 ---
 id: check
-name: Check
+name: check
 description: |
   Verify design document completeness before implementation.
   Triggers: check, verify, validate design

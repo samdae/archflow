@@ -1,6 +1,6 @@
 ---
 id: reinforce
-name: Reinforce
+name: reinforce
 description: |
   Add new requirements to spec.md or fill gaps in documents.
   Primary: Add features (replaces /enhance). Secondary: Fill gaps after /reverse.

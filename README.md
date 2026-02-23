@@ -2,7 +2,7 @@
 
 **Document-driven development skills with Multi-Agent Debate for AI coding tools**
 
-Archflow is a skill-based plugin for AI coding tools (Cursor, Claude Code) that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
+Archflow is a skill-based plugin for AI coding tools (Cursor, Claude Code, OpenCode) that enables systematic, document-driven development workflows. It leverages Multi-Agent Debate to produce high-quality architectural designs and maintains full traceability from requirements to implementation.
 
 ## System Workflow
 
@@ -50,7 +50,7 @@ Archflow is a skill-based plugin for AI coding tools (Cursor, Claude Code) that 
 
 - **Document-Driven Development**: Maintain clear requirements, designs, and changelogs throughout the development lifecycle
 - **Multi-Agent Debate**: Two specialized agents (Domain Architect and Best Practice Advisor) collaborate to produce optimal designs
-- **Systematic Workflows**: 14 pre-built skills for common development tasks
+- **Systematic Workflows**: 15 pre-built skills for common development tasks
 - **Full Traceability**: Keep documentation synchronized with code changes
 
 ## Installation
@@ -84,12 +84,33 @@ Inside Claude Code, run these commands:
 /plugin enable archflow@samdae
 ```
 
+#### OpenCode
+
+```bash
+git clone https://github.com/samdae/archflow.git .archflow-tmp
+cp -r .archflow-tmp/skills/ .opencode/skills/
+cp -r .archflow-tmp/commands/ .opencode/commands/
+cp -r .archflow-tmp/agents/ .opencode/agents/
+cp -r .archflow-tmp/rules/ .opencode/rules/
+rm -rf .archflow-tmp
+```
+
+Then create `opencode.json` in the project root:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [".opencode/rules/archflow-rules.md"]
+}
+```
+
 ### Supported Tools
 
 | Tool | Installation |
 |------|-------------|
 | **Cursor** | Clone + copy to `.cursor/skills/`, `.cursor/rules/`, `.cursor/agents/` |
 | **Claude Code** | `/plugin marketplace add samdae/archflow` → install → enable |
+| **OpenCode** | Clone + copy to `.opencode/skills/`, `.opencode/commands/`, `.opencode/agents/` + `opencode.json` |
 
 ## Quick Start
 

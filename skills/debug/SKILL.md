@@ -1,6 +1,6 @@
 ---
 id: debug
-name: Debug
+name: debug
 description: |
   Systematic bug fixing with direct code execution.
   Cross-references error with design flow to find root cause.

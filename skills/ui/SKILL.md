@@ -1,6 +1,6 @@
 ---
 id: ui
-name: UI
+name: ui
 description: |
   Generate UI specification from requirements and backend API design.
   Derives screen list, component hierarchy, and user interactions.
