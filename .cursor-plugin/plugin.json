@@ -1,0 +1,23 @@
+{
+  "name": "archflow",
+  "displayName": "Archflow",
+  "version": "2.0.0",
+  "description": "Document-driven development skills with Multi-Agent Debate. 15 skills for systematic workflows from spec to deployment.",
+  "author": {
+    "name": "samdae"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "archflow",
+    "architecture",
+    "design",
+    "multi-agent",
+    "debate",
+    "document-driven",
+    "workflow",
+    "spec",
+    "build",
+    "test"
+  ],
+  "logo": "assets/logo.svg"
+}
