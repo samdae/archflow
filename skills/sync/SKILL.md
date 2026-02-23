@@ -8,7 +8,7 @@ description: |
 user-invocable: true
 version: 2.0.0
 triggers: ["sync", "synchronize", "design sync"]
-requires: ["debug", "enhance"]
+requires: ["debug", "reinforce"]
 platform: all
 recommended_model: sonnet
 allowed-tools: [Read, Write, Glob, LS]

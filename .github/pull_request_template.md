@@ -32,17 +32,22 @@ Closes #(issue number)
 
 - [ ] spec
 - [ ] arch
+- [ ] ui
 - [ ] check
+- [ ] pre-build
 - [ ] build
+- [ ] test
 - [ ] debug
 - [ ] trace
 - [ ] sync
-- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
+- [ ] overview
 - [ ] runbook
+- [ ] archflow
 - [ ] agents
 - [ ] commands
+- [ ] rules
 - [ ] Other: ___
 
 ## Testing

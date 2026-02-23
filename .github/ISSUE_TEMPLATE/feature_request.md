@@ -31,15 +31,19 @@ Which existing skills would this affect or relate to?
 
 - [ ] spec
 - [ ] arch
+- [ ] ui
 - [ ] check
+- [ ] pre-build
 - [ ] build
+- [ ] test
 - [ ] debug
 - [ ] trace
 - [ ] sync
-- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
+- [ ] overview
 - [ ] runbook
+- [ ] archflow
 - [ ] New skill needed
 - [ ] Core functionality
 

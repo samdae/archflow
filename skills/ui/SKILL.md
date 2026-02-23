@@ -8,7 +8,7 @@ description: |
 user-invocable: true
 version: 1.0.0
 triggers: ["ui", "ui spec", "screen design"]
-requires: ["spec", "arch-be"]
+requires: ["spec", "arch"]
 platform: all
 recommended_model: opus
 allowed-tools: [Read, Write, Glob, LS, AskQuestion]

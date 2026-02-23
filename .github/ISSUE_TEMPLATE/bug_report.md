@@ -26,7 +26,7 @@ What actually happened.
 
 ## Environment
 
-- **Platform**: Claude Code / Cursor
+- **Platform**: Cursor / Claude Code / OpenCode
 - **OS**: Windows / macOS / Linux
 - **Archflow Version**: (check with `/plugin list`)
 
@@ -34,15 +34,19 @@ What actually happened.
 
 - [ ] spec
 - [ ] arch
+- [ ] ui
 - [ ] check
+- [ ] pre-build
 - [ ] build
+- [ ] test
 - [ ] debug
 - [ ] trace
 - [ ] sync
-- [ ] enhance
 - [ ] reinforce
 - [ ] reverse
+- [ ] overview
 - [ ] runbook
+- [ ] archflow
 - [ ] Other: ___
 
 ## Error Messages
