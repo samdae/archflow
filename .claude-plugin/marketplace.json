@@ -1,36 +1,27 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "archflow-marketplace",
-  "version": "1.0.0",
-  "description": "Document-driven development skills with Multi-Agent Debate",
   "owner": {
     "name": "samdae",
-    "email": "dkknt001@gmail.com",
-    "url": "https://github.com/samdae"
+    "email": "dkknt001@gmail.com"
+  },
+  "metadata": {
+    "description": "Structured vibe coding — document-driven development skills with Multi-Agent Debate",
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "archflow",
-      "description": "Document-driven development skills with Multi-Agent Debate for Claude Code. Includes 10 skills, 2 agents for systematic development workflows.",
-      "version": "1.0.0",
+      "source": ".",
+      "description": "Document-driven development skills with Multi-Agent Debate. 15 skills, 2 agents for systematic workflows from spec to deployment.",
+      "version": "2.0.0",
       "author": {
         "name": "samdae",
         "email": "dkknt001@gmail.com"
       },
       "repository": "https://github.com/samdae/archflow",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/samdae/archflow.git"
-      },
-      "category": "development",
-      "keywords": [
-        "skills",
-        "multi-agent",
-        "debate",
-        "document-driven",
-        "architect",
-        "development"
-      ]
+      "license": "Apache-2.0",
+      "keywords": ["archflow", "structured-vibe-coding", "multi-agent", "debate", "document-driven", "architecture"],
+      "category": "development"
     }
   ]
 }

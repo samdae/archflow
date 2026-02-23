@@ -1,20 +1,22 @@
 {
   "name": "archflow",
-  "version": "1.0.0",
-  "description": "Document-driven development skills with Multi-Agent Debate for Claude Code",
+  "description": "Structured vibe coding — document-driven development skills with Multi-Agent Debate. 15 skills for systematic workflows from spec to deployment.",
+  "version": "2.0.0",
   "author": {
     "name": "samdae",
-    "email": "samdae@users.noreply.github.com",
+    "email": "dkknt001@gmail.com",
     "url": "https://github.com/samdae"
   },
   "repository": "https://github.com/samdae/archflow",
+  "homepage": "https://github.com/samdae/archflow#readme",
   "license": "Apache-2.0",
   "keywords": [
-    "skills",
+    "archflow",
+    "structured-vibe-coding",
     "multi-agent",
     "debate",
     "document-driven",
-    "architect",
-    "development"
+    "architecture",
+    "workflow"
   ]
 }
