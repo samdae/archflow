@@ -61,7 +61,7 @@ This skill auto-detects profile from input file:
 
 ## Recommended Model
 
-**Sonnet** (cost-effective) / GPT-5.2 Codex available
+**Sonnet** (cost-effective)
 
 ## Prerequisites
 

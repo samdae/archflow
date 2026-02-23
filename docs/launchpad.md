@@ -96,13 +96,9 @@ The init script will prompt:
 Which AI coding tool are you using?
 
 1) Cursor
-2) Windsurf
-3) Antigravity (Current)
-4) Claude Code
-5) GPT-Codex (OpenAI)
-6) Gemini CLI (Google)
+2) Claude Code
 
-Enter your choice (1-6):
+Enter your choice (1-2):
 ```
 
 ---
@@ -112,31 +108,11 @@ Enter your choice (1-6):
 ### Cursor (Option 1)
 - Copy `skills/` → `.cursor/skills/`
 - Copy `rules/` → `.cursor/rules/`
-- Copy `agents/` (if needed)
+- Copy `agents/` → `.cursor/agents/`
 
-### Windsurf (Option 2)
-- Copy `skills/` → `.windsurf/skills/`
-- Merge `rules/` → `.windsurfrules` (single file)
-- Create `AGENTS.md` in project root
-
-### Antigravity (Option 3)
-- Copy `skills/` → `skills/`
-- Copy `rules/` → `rules/`
-- Copy `agents/` → `agents/`
-
-### Claude Code (Option 4)
+### Claude Code (Option 2)
 - Run: `claude add marketplace samdae/archflow`
 - Run: `claude install archflow`
-
-### GPT-Codex (Option 5)
-- Copy `skills/` → `.codex/skills/`
-- Copy `rules/` → `.codex/rules/`
-- Create `AGENTS.md` in project root
-
-### Gemini CLI (Option 6)
-- Copy `skills/` → `.gemini/skills/`
-- Create/update `settings.json` with rules
-- Create `GEMINI.md` in project root
 
 ---
 
@@ -147,11 +123,7 @@ After installation, verify by checking the tool-specific paths:
 | Tool | Check Path |
 |------|-----------|
 | Cursor | `.cursor/skills/arch/SKILL.md` |
-| Windsurf | `.windsurf/skills/arch/SKILL.md` |
-| Antigravity | `skills/arch/SKILL.md` |
 | Claude Code | Run `claude skills list` |
-| GPT-Codex | `.codex/skills/arch/SKILL.md` |
-| Gemini CLI | `.gemini/skills/arch/SKILL.md` |
 
 ---
 

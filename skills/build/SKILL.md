@@ -36,7 +36,7 @@ Automated implementation based on design document (arch.md).
 
 ## 💡 Recommended Model
 
-**Sonnet recommended** (cost-effective) / GPT-5.2 Codex available
+**Sonnet recommended** (cost-effective)
 
 → Design document is detailed, so high-performance model unnecessary. High token consumption in this phase, so significant cost savings.
 → Run in new session after switching model
@@ -87,7 +87,7 @@ projectRoot/
 
 ### 0-0. Model Guidance (Display at start)
 
-> 💡 **This skill recommends the Sonnet or GPT-5.2 Codex model.**
+> 💡 **This skill recommends the Sonnet model.**
 > Design document is detailed, so high-performance model unnecessary. High token consumption makes cost savings significant.
 > **Switch model in a new session before running.**
 >

@@ -43,22 +43,6 @@ const TOOLS = {
     rulesFormat: 'folder',
     detectPaths: ['.cursor']
   },
-  windsurf: {
-    name: 'Windsurf',
-    skillsPath: '.windsurf/skills',
-    rulesPath: '.windsurfrules',
-    agentsPath: null, // uses AGENTS.md
-    rulesFormat: 'single-file',
-    detectPaths: ['.windsurf', '.codeium']
-  },
-  antigravity: {
-    name: 'Antigravity',
-    skillsPath: 'skills',
-    rulesPath: 'rules',
-    agentsPath: 'agents',
-    rulesFormat: 'folder',
-    detectPaths: ['skills', '.gemini/antigravity']
-  },
   'claude-code': {
     name: 'Claude Code',
     installMethod: 'cli',
@@ -67,22 +51,6 @@ const TOOLS = {
       'claude install archflow'
     ],
     detectPaths: ['CLAUDE.md', '.claude']
-  },
-  'gpt-codex': {
-    name: 'GPT-Codex',
-    skillsPath: '.codex/skills',
-    rulesPath: '.codex/rules',
-    agentsPath: null, // uses AGENTS.md
-    rulesFormat: 'folder',
-    detectPaths: ['.codex']
-  },
-  'gemini-cli': {
-    name: 'Gemini CLI',
-    skillsPath: '.gemini/skills',
-    rulesPath: '.gemini/settings.json',
-    agentsPath: null, // uses GEMINI.md
-    rulesFormat: 'json',
-    detectPaths: ['.gemini', 'GEMINI.md']
   }
 };
 
@@ -170,84 +138,6 @@ function askQuestion(query) {
   });
 }
 
-// Merge rules into single file (for Windsurf)
-function mergeRulesToFile(rulesDir, destFile) {
-  if (!fs.existsSync(rulesDir)) {
-    logError(`Rules directory does not exist: ${rulesDir}`);
-    return false;
-  }
-
-  let content = '# Archflow Rules\n\n';
-  const files = fs.readdirSync(rulesDir).filter(f => f.endsWith('.md'));
-
-  for (const file of files) {
-    const filePath = path.join(rulesDir, file);
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    content += `\n---\n\n${fileContent}\n`;
-  }
-
-  try {
-    fs.writeFileSync(destFile, content, 'utf8');
-    return true;
-  } catch (error) {
-    logError(`Failed to write rules file: ${error.message}`);
-    return false;
-  }
-}
-
-// Convert rules to JSON format (for Gemini CLI)
-function convertRulesToJson(rulesDir, destFile) {
-  if (!fs.existsSync(rulesDir)) {
-    logError(`Rules directory does not exist: ${rulesDir}`);
-    return false;
-  }
-
-  // Read existing settings.json if exists
-  let settings = {};
-  if (fs.existsSync(destFile)) {
-    try {
-      settings = JSON.parse(fs.readFileSync(destFile, 'utf8'));
-    } catch (e) {
-      settings = {};
-    }
-  }
-
-  // Add archflow rules reference
-  settings.archflow = {
-    enabled: true,
-    rulesPath: 'rules/archflow-rules.md',
-    version: require('../package.json').version || '1.0.0'
-  };
-
-  try {
-    ensureDir(path.dirname(destFile));
-    fs.writeFileSync(destFile, JSON.stringify(settings, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    logError(`Failed to write settings.json: ${error.message}`);
-    return false;
-  }
-}
-
-// Create AGENTS.md or GEMINI.md context file
-function createContextFile(cwd, filename, content) {
-  const filePath = path.join(cwd, filename);
-
-  // Don't overwrite if exists
-  if (fs.existsSync(filePath)) {
-    logInfo(`${filename} already exists, skipping`);
-    return true;
-  }
-
-  try {
-    fs.writeFileSync(filePath, content, 'utf8');
-    return true;
-  } catch (error) {
-    logError(`Failed to create ${filename}: ${error.message}`);
-    return false;
-  }
-}
-
 // Execute CLI commands (for Claude Code)
 async function executeCliCommands(commands) {
   for (const cmd of commands) {
@@ -298,28 +188,20 @@ async function choosePlatform() {
 async function promptPlatformChoice() {
   log('\nSelect your AI coding tool:', 'yellow');
   log('1) Cursor');
-  log('2) Windsurf');
-  log('3) Antigravity');
-  log('4) Claude Code');
-  log('5) GPT-Codex (OpenAI)');
-  log('6) Gemini CLI (Google)\n');
+  log('2) Claude Code\n');
 
-  const choice = await askQuestion('Enter your choice (1-6): ');
+  const choice = await askQuestion('Enter your choice (1-2): ');
 
   const mapping = {
     '1': 'cursor',
-    '2': 'windsurf',
-    '3': 'antigravity',
-    '4': 'claude-code',
-    '5': 'gpt-codex',
-    '6': 'gemini-cli'
+    '2': 'claude-code'
   };
 
   if (mapping[choice]) {
     return mapping[choice];
   }
 
-  logError('Invalid choice. Please enter 1-6.');
+  logError('Invalid choice. Please enter 1-2.');
   return await promptPlatformChoice();
 }
 
@@ -364,21 +246,8 @@ async function installForTool(toolKey) {
     const rulesSrc = path.join(archflowRoot, 'rules');
     const rulesDest = path.join(cwd, tool.rulesPath);
 
-    if (tool.rulesFormat === 'folder') {
-      if (copyDirectory(rulesSrc, rulesDest)) {
-        logSuccess(`Rules installed to ${tool.rulesPath}`);
-      }
-    } else if (tool.rulesFormat === 'single-file') {
-      if (mergeRulesToFile(rulesSrc, rulesDest)) {
-        logSuccess(`Rules merged to ${tool.rulesPath}`);
-      }
-    } else if (tool.rulesFormat === 'json') {
-      // Copy rules folder and create settings.json reference
-      const rulesFolder = path.join(cwd, '.gemini', 'rules');
-      copyDirectory(rulesSrc, rulesFolder);
-      if (convertRulesToJson(rulesSrc, rulesDest)) {
-        logSuccess(`Rules configured in ${tool.rulesPath}`);
-      }
+    if (copyDirectory(rulesSrc, rulesDest)) {
+      logSuccess(`Rules installed to ${tool.rulesPath}`);
     }
   }
 
@@ -390,48 +259,6 @@ async function installForTool(toolKey) {
 
     if (copyDirectory(agentsSrc, agentsDest)) {
       logSuccess(`Agents installed to ${tool.agentsPath}`);
-    }
-  }
-
-  // Create context files for tools that use them
-  if (!tool.agentsPath && toolKey !== 'claude-code') {
-    log('\n📝 Creating context file...', 'blue');
-
-    const contextContent = `# Archflow Agent Context
-
-> This project uses Archflow for document-driven development.
-> See the skills folder for available workflows.
-
-## Available Skills
-
-- /spec - Transform requirements into spec.md
-- /arch - Design with Multi-Agent Debate  
-- /ui - Generate UI specification
-- /check - Verify design completeness
-- /build - Implement from design docs
-- /test - Run tests
-- /debug - Debug with document context
-- /trace - Record changes
-- /sync - Sync documentation
-
-## Documentation
-
-docs/{serviceName}/spec.md - Requirements
-docs/{serviceName}/arch-be.md - Backend design
-docs/{serviceName}/arch-fe.md - Frontend design
-docs/{serviceName}/trace.md - Change log
-
-## Rules
-
-See rules/archflow-rules.md for workflow and coding standards.
-`;
-
-    if (toolKey === 'gemini-cli') {
-      createContextFile(cwd, 'GEMINI.md', contextContent);
-      logSuccess('Created GEMINI.md');
-    } else {
-      createContextFile(cwd, 'AGENTS.md', contextContent);
-      logSuccess('Created AGENTS.md');
     }
   }
 

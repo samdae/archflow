@@ -59,7 +59,7 @@ Archflow is a Claude Code plugin that enables systematic, document-driven develo
 
 Use the **Launchpad** document with your AI coding tool:
 
-1. Open `docs/launchpad.md` in your AI tool (Cursor, Windsurf, Claude Code, etc.)
+1. Open `docs/launchpad.md` in your AI tool (Cursor, Claude Code)
 2. Tell the AI: "Follow this launchpad to install archflow"
 3. The AI will guide you through the installation
 
@@ -81,11 +81,7 @@ The postinstall script will automatically:
 | Tool | Installation Method |
 |------|-------------------|
 | **Cursor** | Copy to `.cursor/skills/`, `.cursor/rules/` |
-| **Windsurf** | Copy to `.windsurf/skills/`, create `.windsurfrules` |
-| **Antigravity** | Copy to `skills/`, `rules/`, `agents/` |
 | **Claude Code** | Run `claude add marketplace` + `claude install` |
-| **GPT-Codex** | Copy to `.codex/skills/`, `.codex/rules/` |
-| **Gemini CLI** | Copy to `.gemini/skills/`, update `settings.json` |
 
 ### Manual Installation
 

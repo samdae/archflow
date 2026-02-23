@@ -1,7 +1,7 @@
 {
   "name": "archflow",
   "version": "1.0.0",
-  "description": "Document-driven development skills with Multi-Agent Debate for Cursor, Windsurf, Antigravity, Claude Code, GPT-Codex, and Gemini CLI",
+  "description": "Document-driven development skills with Multi-Agent Debate for Cursor and Claude Code",
   "main": "scripts/init.js",
   "bin": {
     "archflow": "scripts/init.js"
